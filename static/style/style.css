@@ -1,0 +1,13 @@
+body {
+    background-color: #93c572;
+    font-family: 'PT Sans', sans-serif;
+    color: white;
+    font-size: 3em;
+}
+
+.mx-auto {
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    align-items: center;
+}

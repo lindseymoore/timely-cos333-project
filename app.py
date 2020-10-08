@@ -16,4 +16,4 @@ app = Flask(__name__, template_folder='.')
 @app.route('/index')
 def index():
     """Return the index page."""
-    return render_template('index.html')
+    return render_template('templates/index.html')
