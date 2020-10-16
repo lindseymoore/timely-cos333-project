@@ -1,1 +1,1 @@
-web: gunicorn timely:timely
+web: gunicorn timely:app
