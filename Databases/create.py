@@ -1,12 +1,11 @@
-#!/usr/bin/env python
+"""
+Sets up the postgres database on Heroku using SQLalchemy and the database.py module.
+Currently adds sample data for user dlipman to postgres database.
+"""
 
-#-----------------------------------------------------------------------
-# create.py
-# Authors: David Lipman, Lindsey Moore, Mariah Crawford, Jorge Zreik
-#-----------------------------------------------------------------------
 import os
 from os import path
-from sys import argv, exit, stderr
+import sys
 
 from flask_sqlalchemy import SQLAlchemy
 from psycopg2 import connect
@@ -20,8 +19,8 @@ from database import (AssignmentDetails, Assignments, AssignmentTime, Base,
 def main(argv):
 
     if len(argv) != 1:
-        print("Usage: python create.py", file=stderr)
-        exit(1)
+        print("Usage: python create.py", file=sys.stderr)
+        sys.exit(1)
     
     os.environ["DATABASE_URL"] = "postgres://tqclexflqotinz:17a7f4f87e6f11bac2e3de43af17523e0a76790ca79fe0c60e4034b60a8fba45@ec2-54-146-142-58.compute-1.amazonaws.com:5432/dav63a46097qlc"
     DATABASE_URL = os.environ["DATABASE_URL"]
