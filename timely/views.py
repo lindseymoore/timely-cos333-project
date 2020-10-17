@@ -9,4 +9,4 @@ from timely import app
 @app.route('/index')
 def index():
     """Return the index page."""
-    return render_template('templates/index.html')
+    return render_template('index.html')
