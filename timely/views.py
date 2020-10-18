@@ -3,10 +3,13 @@
 from flask import render_template
 
 from timely import app
+from timely.models import User
 
 
 @app.route('/')
 @app.route('/index')
 def index():
     """Return the index page."""
-    return render_template('templates/index.html')
+    model = User.query.filter_by(username='dlipman').first()
+    return render_template('index.html',
+                param=model.password)
