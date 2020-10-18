@@ -1,9 +1,14 @@
 """Initialize the flask application."""
 
-from flask import Flask, render_template
+from os import environ
+
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
+app.config["SQLALCHEMY_DATABASE_URI"] = environ["POSTGRES_URL"]
+db = SQLAlchemy(app)
 
 # pylint: disable=wrong-import-position
-import timely.views
+from timely import models, views
 # pylint: enable=wrong-import-position
