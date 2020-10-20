@@ -50,9 +50,9 @@ def assignment_handler(details: dict):
 		repeating_assigment.repeat_freq = details['repeat_freq']
 		repeating_assigment.repeat_end = details['repeat_end']
 
-	tables = {'assignment': assignment, 'assignment_details': assignment_details, 'assignment_time': assignment_time, 'repeating_assignment': repeating_assigment}
+	assignment_tables = {'assignment': assignment, 'assignment_details': assignment_details, 'assignment_time': assignment_time, 'repeating_assignment': repeating_assigment}
 
-	return tables
+	return assignment_tables
 
 
 # Handler function to deal with the creation of classes for input into "class" table
@@ -69,3 +69,7 @@ def class_handler(class_details: dict):
 	class_details.username = 'Princeton Student'  # TODO UPDATE TO USE CAS AUTHENTICATION
 	class_details.active_status = True
 	class_details.color = class_details['color']
+
+	class_tables = {'class': new_class, 'class_details': class_details}
+	
+	return class_tables

@@ -137,7 +137,6 @@ class AssignmentTime(db.Model):
     timely_prediction = Column(Float)
     actual_time = Column(Float)
 
-
 class User(db.Model):
     '''
     User class represents the user table:
@@ -161,7 +160,6 @@ class User(db.Model):
     password = Column(String)
     school = Column(String)
     email = Column(String)
-
 
 class Class(db.Model):
     '''
