@@ -13,7 +13,7 @@ Base = declarative_base()
 # TODO Should we create globally unique assignment_ids
 # or should we delegate assignment_ids within each class?
 
-class Assignment(db.Model):
+class Assignments(db.Model):
     '''
     Assignments class represents the assignment table:
 
@@ -29,36 +29,12 @@ class Assignment(db.Model):
         Either "F<YEAR> or S<YEAR>", representing iteration of a given class
     class_id: int
         Globally unique class_id given to each class
-          Attributes (columns):
-    priority: int
-        The user's prioritization of an assignment, has values {0, 1, 2}
-    link: str
-        The url for the assignment with assignment_id, class_id
-    due_date: Date
-        The due date for the assignment with assignment_id, class_id
-    due_time: Time
-        The time the assignment with assignment_id, class_id is due on due_date
-    repeat_freq: String
-        The frequency at which an assignment is repeated (i.e. every week, biweekly, every month, etc.)
-    repeat_end: Date
-        Due Date of last occurence of the repeated assignment
-    notes: str
-        Any additional notes about a given assignment
      '''
-    __tablename__ = 'assignment'
+    __tablename__ = 'assignments'
     username = Column()
     assignment_id = Column(Integer, primary_key=True)
     assignment_title = Column(String)
     class_id = Column(Integer, primary_key=True)
-    priority = Column(Integer)
-    link = Column(String) 
-    due_date = Column(Date)
-    due_time = Column(Time)
-    repeat = Column(Boolean)
-    repeat_freq = Column(String)
-    repeat_ends = Column(Date)
-    iteration_number = Column(Integer)
-    notes = Column(String)
 
 class AssignmentTime(db.Model):
     '''
@@ -110,6 +86,49 @@ class User(db.Model):
     password = Column(String)
     school = Column(String)
     email = Column(String)
+
+class AssignmentDetails(db.Model):
+    '''
+    AssignmentDetails class represents the assignment_details table:
+
+    ...
+
+    Attributes (columns):
+    ---------------------
+    assignment_id: int
+        ID of a given assignment in a given class with class_id
+    username: str
+        Username for a given user, retrieved from CAS authentication
+    class_id: int
+        Globally unique class_id given to each class
+    priority: int
+        The user's prioritization of an assignment, has values {0, 1, 2}
+    link: str
+        The url for the assignment with assignment_id, class_id
+    due_date: Date
+        The due date for the assignment with assignment_id, class_id
+    due_time: Time
+        The time the assignment with assignment_id, class_id is due on due_date
+    repeat_freq: String
+        The frequency at which an assignment is repeated (i.e. every week, biweekly, every month, etc.)
+    repeat_end: Date
+        Due Date of last occurence of the repeated assignment
+    notes: str
+        Any additional notes about a given assignment
+     '''
+    __tablename__ = 'assignment_details'
+    assignment_id = Column(Integer, primary_key=True)
+    username = Column(String, primary_key=True)
+    class_id = Column(Integer, primary_key=True)
+    priority = Column(Integer)
+    link = Column(String) 
+    due_date = Column(Date)
+    due_time = Column(Time)
+    repeat = Column(Boolean)
+    repeat_freq = Column(String)
+    repeat_ends = Column(Date)
+    iteration_number = 
+    notes = Column(String)
 
 class Class(db.Model):
     '''
