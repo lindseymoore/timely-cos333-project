@@ -20,6 +20,7 @@ def assignment_handler(details: dict):
 		assignment.repeat = True
 	else:
 		assignment.repeat = False
+	assignment.completed = False
 
 	# Insert into AssignmentDetails table
 	assignment_details.username = 'Princeton Student' # TODO UPDATE TO USE CAS AUTHENTICATION

@@ -30,6 +30,8 @@ class Assignment(db.Model):
         The literal title of a given assignment
     repeat: Boolean
         True if assignment is repeating, False otherwise
+    completed: Boolean
+        True if assignment has been completed already, False otherwise
      '''
     __tablename__ = 'assignment'
     username = Column(String, primary_key = True)
@@ -37,6 +39,7 @@ class Assignment(db.Model):
     class_id = Column(Integer, primary_key=True)
     assignment_title = Column(String)
     repeat = Column(Boolean)
+    completed = Column(Boolean)
 
 
 class AssignmentDetails(db.Model):
