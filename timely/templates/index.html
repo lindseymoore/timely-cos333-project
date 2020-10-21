@@ -1,7 +1,132 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class=container>
-  <h1 class="text-center">Timely</h1>
+<div class="container full-height pb-5" style="max-width: 900px">
+  {% include "components/navbar.html" %}
+  <!-- TODO: Remove lazy styling helper classes -->
+  <div class="row flex-grow-1 dark-4 overflow-auto">
+    <div class="col-4 overflow-auto py-3">
+      <div class="d-flex justify-content-between align-items-center pb-3">
+        <h3>Classes</h3>
+        <button type="button" class="btn btn-add"><i class="fa fa-plus" data-toggle="modal" data-target="#classModal"></i></button>
+      </div>
+      <div class="pill-box">
+        {% for class in class_list: %} 
+          <div class="pill" style="border-left-color: var(--hl-{{class['color']}})">
+            {{class["class_name"]}}<br>
+            <div class="subtle">{{class["class_dept"]}}{{class["class_num"]}}</div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+    <div class="col-8 overflow-auto py-3" id="assignment-col">
+      <div class="d-flex justify-content-between align-items-center pb-3">
+        <h3>Tasks</h3>
+        <button type="button" class="btn btn-add"><i class="fa fa-plus" data-toggle="modal" data-target="#taskModal"></i></button>
+      </div>
+      <div class="pill-box">
+        {% for assignment in assignment_list: %}
+          <div class="pill" style="border-left-color: var(--hl-red)">
+            <div class="d-flex justify-content-between">
+              <div>{{assignment["assignment_title"]}}</div>
+              <div>{{assignment["due_date"]}}</div>
+            </div>
+            <div class="d-flex justify-content-between">
+              <div class="subtle">{{assignment["class"]}}</div>
+              <div class="subtle">{{assignment["estimated_time"]}}</div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Task Modal -->
+<div class="modal fade" id="taskModal" tabindex="-1" role="dialog" aria-labelledby="taskModal" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title" id="taskModal">New Task</h3>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="/assignment_form">
+            <div class="form-group">
+              <label for="name">Name</label>
+              <input type="text" class="form-control" id="name">
+            </div>
+            <div class="form-group">
+              <label for="class">Class</label>
+              <input type="text" class="form-control" id="class">
+            </div>
+            <div class="form-group">
+              <label for="priority">Priority</label>
+              <input type="text" class="form-control" id="priority">
+            </div>
+            <div class="form-group">
+              <label for="estimated_time">Estimated Completion Time</label>
+              <input type="text" class="form-control" id="estimated_time">
+            </div>
+            <div class="form-group">
+              <label for="link">Link</label>
+              <input type="text" class="form-control" id="link">
+            </div>
+            <div class="form-group">
+              <label for="due_date">Due Date</label>
+              <input type="text" class="form-control" id="due_date">
+            </div>
+            <div class="form-group">
+              <label for="notes">Notes</label>
+              <input type="text" class="form-control" id="notes">
+            </div>
+            <div class="form-group d-flex flex-row-reverse">
+              <button type="button" class="btn btn-secondary ml-3" data-dismiss="modal">Cancel</button>
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Class Modal -->
+<div class="modal fade" id="classModal" tabindex="-1" role="dialog" aria-labelledby="classModal" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title" id="classModal">New Class</h3>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="/class_form">
+            <div class="form-group">
+              <label for="name">Name</label>
+              <input type="text" class="form-control" id="name">
+            </div>
+            <div class="form-group">
+              <label for="department">Department</label>
+              <input type="text" class="form-control" id="department">
+            </div>
+            <div class="form-group">
+              <label for="number">Course Number</label>
+              <input type="text" class="form-control" id="number">
+            </div>
+            <div class="form-group">
+              <label for="color">Color</label>
+              <input type="text" class="form-control" id="color">
+            </div>
+            <div class="form-group d-flex flex-row-reverse">
+              <button type="button" class="btn btn-secondary ml-3" data-dismiss="modal">Cancel</button>
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </div>
 {% endblock %}

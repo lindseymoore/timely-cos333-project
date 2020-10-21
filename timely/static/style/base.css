@@ -1,11 +1,12 @@
-@import url('https://fonts.googleapis.com/css2?family=PT+Sans:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@200;400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Yellowtail&display=swap');
 
 :root {
     --dark-5: #1e1e1e;
     --dark-4: #2b2b2b;
     --dark-3: #515151;
-    --dark-2: #828282;
-    --dark-1: #f2f2f2;
+    --dark-2: #b6b6b6;
+    --dark-1: #e5e5e5;
 
     --hl-red: #ff4545;
     --hl-purple: #8e58ff;
@@ -13,12 +14,100 @@
     --hl-green: #a2ff93;
 }
 
+html, body, #content {
+    height: 100%;
+}
+
+.full-height {
+    display: flex; flex-direction: column; height: 100%; 
+}
+
+.subtle {
+    font-size: 0.9em;
+    color: var(--dark-2);
+}
+
+#assignment-col {
+    border-width: 0px;
+    border-left-width: 10px;
+    border-left-color: var(--dark-5);
+    border-style: solid;
+}
+
+.dark-4 {
+    background: var(--dark-4)
+}
+
+.pill-box {
+    background: var(--dark-3);
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.pill {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding: 3px 10px;
+    border-width: 0px;
+    border-bottom-width: 3px;
+    border-bottom-color: var(--dark-4);
+    border-style: solid;
+    border-left-width: 10px;
+}
+
+.pill:last-child {
+    border-bottom-width: 0px ;
+}
+
+.btn-add {
+    font-size: 1.5em;
+    color: var(--dark-1);
+    padding: 0px;
+}
+
+.btn-add:hover {
+    color: var(--dark-2)
+}
+
+.modal-content {
+    background-color: var(--dark-4);
+}
+
+.modal-header {
+    border-bottom-width: 0px;
+}
+
+.modal-footer {
+    border-top-width: 0px;
+}
+
+.close {
+    color: inherit;
+}
+
+.close:hover {
+    color: var(--dark-1);
+}
+
 body {
     background-color: var(--dark-5);
     color: var(--dark-1);
-    font-family: 'PT Sans', sans-serif;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 400;
+}
+
+h1, h2, h3, h4, h5 {
+    font-weight: 200;
 }
 
 .navbar-dark .navbar-nav .nav-link {
     color: var(--dark-1);
+}
+
+#logo {
+    font-family: 'Yellowtail', cursive;
+    font-size: 3em;
 }
