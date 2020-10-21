@@ -7,6 +7,11 @@ from timely.db_queries import fetch_assignment_list, fetch_class_list
 from timely.formhandler import assignment_handler, class_handler
 from timely.models import AssignmentDetails, AssignmentTime, User
 
+# repeat_freq: freq
+# class_dept: dept
+# class_name: title
+# estimated_time: est_time
+# assignment_title: title
 
 @app.route('/')
 @app.route('/index')

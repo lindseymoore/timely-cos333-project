@@ -66,18 +66,18 @@ def class_handler(class_details: dict) -> dict:
     Returns a dictionary of Class, and ClassDetails classes to be inputted into the database as tables. 
     '''
     new_class = Class()
-    class_details = ClassDetails()
+    details = ClassDetails()
 
     # Insert into class table
     new_class.class_id = class_details['class_id']
     new_class.class_title = class_details['class_title']
 
     # Insert into class_details table
-    class_details.class_id = class_details['class_id']
-    class_details.username = 'Princeton Student'  # TODO UPDATE TO USE CAS AUTHENTICATION
-    class_details.active_status = True
-    class_details.color = class_details['color']
+    details.class_id = class_details['class_id']
+    details.username = 'Princeton Student'  # TODO UPDATE TO USE CAS AUTHENTICATION
+    details.active_status = True
+    details.color = class_details['color']
 
-    class_tables = {'class': new_class, 'class_details': class_details}
+    class_tables = {'class': new_class, 'class_details': details}
     
     return class_tables
