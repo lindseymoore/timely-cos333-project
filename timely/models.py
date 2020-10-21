@@ -1,18 +1,18 @@
 """
-Database class using SQLAlchemy. Contains the tables Assignments, AssignmentTime
-User, AssignmentDetails, and Class.
+Database class using SQLAlchemy. Contains the tables Tasks, TaskTime
+User, TaskDetails, and Class.
 """
 
 from sqlalchemy import Boolean, Column, Date, Float, Integer, String, Time
 
 from timely import db
 
-# TODO Should we create globally unique assignment_ids
-# or should we delegate assignment_ids within each class?
+# TODO Should we create globally unique task_ids
+# or should we delegate task_ids within each class?
 
-class Assignment(db.Model):
+class Task(db.Model):
     '''
-    Assignments class represents the assignment table:
+    Tasks class represents the Task table:
 
     ...
 
@@ -20,29 +20,29 @@ class Assignment(db.Model):
     ---------------------
     username: str
         Username for a given user, retrieved from CAS authentication
-    assignment_id: int
-        ID of a given assignment in a given class with class_id
+    task_id: int
+        ID of a given task in a given class with class_id
     class_id: int
         Globally unique class_id given to each class
-    assignment_title: str
-        The literal title of a given assignment
+    title: str
+        The literal title of a given task
     repeat: Boolean
-        True if assignment is repeating, False otherwise
+        True if task is repeating, False otherwise
     completed: Boolean
-        True if assignment has been completed already, False otherwise
+        True if task has been completed already, False otherwise
      '''
-    __tablename__ = 'assignment'
+    __tablename__ = 'task'
     username = Column(String, primary_key = True)
-    assignment_id = Column(Integer, primary_key=True)
+    task_id = Column(Integer, primary_key=True)
     class_id = Column(Integer, primary_key=True)
-    assignment_title = Column(String)
+    title = Column(String)
     repeat = Column(Boolean)
     completed = Column(Boolean)
 
 
-class AssignmentDetails(db.Model):
+class TaskDetails(db.Model):
     '''
-    AssignmentDetails class represents the assignment_details table:
+    TaskDetails class represents the task_details table:
 
     ...
 
@@ -50,28 +50,28 @@ class AssignmentDetails(db.Model):
     ---------------------
     username: str
         Username for a given user, retrieved from CAS authentication
-    assignment_id: int
-        ID of a given assignment in a given class with class_id
+    task_id: int
+        ID of a given task in a given class with class_id
     class_id: int
         Globally unique class_id given to each class
-    assignment_iteration: int
-        Iteration of a given assignment (if repeating - i.e., Weekly Reading 3 will have assignment_iteration=3). If not repeating, assignment_iteration = 1. 
+    iteration: int
+        Iteration of a given task (if repeating - i.e., Weekly Reading 3 will have iteration=3). If not repeating, iteration = 1. 
     priority: int
-        The user's prioritization of an assignment, has values {0, 1, 2}
+        The user's prioritization of an task, has values {0, 1, 2}
     link: str
-        The url for the assignment with assignment_id, class_id
+        The url for the task with task_id, class_id
     due_date: Date
-        The due date for the assignment with assignment_id, class_id
+        The due date for the task with task_id, class_id
     due_time: Time
-        The time the assignment with assignment_id, class_id is due on due_date
+        The time the task with task_id, class_id is due on due_date
     notes: str
-        Any additional notes about a given assignment
+        Any additional notes about a given task
      '''
-    __tablename__ = 'assignment_details'
+    __tablename__ = 'task_details'
     username = Column(String, primary_key = True)
-    assignment_id = Column(Integer, primary_key = True)
+    task_id = Column(Integer, primary_key = True)
     class_id = Column(Integer, primary_key = True)
-    assignment_iteration = Column(Integer, primary_key = True)
+    iteration = Column(Integer, primary_key = True)
     priority = Column(Integer)
     link = Column(String) 
     due_date = Column(Date)
@@ -79,9 +79,9 @@ class AssignmentDetails(db.Model):
     notes = Column(String)
 
 
-class RepeatingAssignment(db.Model):
+class RepeatingTask(db.Model):
     '''
-    RepeatingAssignment class represents the repeating_assignment table:
+    RepeatingTask class represents the repeating_task table:
 
     ...
 
@@ -89,53 +89,53 @@ class RepeatingAssignment(db.Model):
     ---------------------
     username: str
         Username for a given user, retrieved from CAS authentication
-    assignment_id: int
-        ID of a given assignment in a given class with class_id
+    task_id: int
+        ID of a given task in a given class with class_id
     class_id: int
         Globally unique class_id given to each class
     repeat_freq: String
-        The frequency at which an assignment is repeated (i.e. weekly, biweekly, monthly, etc.)
+        The frequency at which an task is repeated (i.e. weekly, biweekly, monthly, etc.)
     repeat_end: Date
-        Due Date of last occurence of the repeated assignment
+        Due Date of last occurence of the repeated task
      '''
-    __tablename__ = 'repeating_assignment'
+    __tablename__ = 'repeating_task'
     username = Column(String, primary_key = True)
-    assignment_id = Column(Integer, primary_key=True)
+    task_id = Column(Integer, primary_key=True)
     class_id = Column(Integer, primary_key=True)
     repeat_freq = Column(String)
     repeat_end = Column(Date)
 
 
-class AssignmentTime(db.Model):
+class TaskTime(db.Model):
     '''
-    AssignmentTime class represents the time table:
+    TaskTime class represents the time table:
 
     ...
 
     Attributes (columns):
     ---------------------
-    assignment_id: int
-        ID of a given assignment in a given class with class_id
+    task_id: int
+        ID of a given task in a given class with class_id
     class_id: int
         Globally unique class_id given to each class
     username: str
         Username for a given user, retrieved from CAS authentication
-    assignment_iteration: int
-        Iteration of a given assignment (if repeating). If not repeating, assignment_iteration = 1.
-    estimated_time: float
-        The amount of time a user estimates the assignment with assignment_id and class_id will take
-    timely_prediction: float
-        Timely's predicted amount of time that the assignment will take
+    iteration: int
+        Iteration of a given task (if repeating). If not repeating, iteration = 1.
+    est_time: float
+        The amount of time a user estimates the task with task_id and class_id will take
+    timely_pred: float
+        Timely's predicted amount of time that the task will take
     actual_time: float
-        The amount of time it actually took to complete assignment with assignment_id and class_id
+        The amount of time it actually took to complete task with task_id and class_id
      '''
     __tablename__ = 'time'
-    assignment_id = Column(Integer, primary_key=True)
+    task_id = Column(Integer, primary_key=True)
     class_id = Column(Integer, primary_key=True)
     username = Column(String, primary_key=True)
-    assignment_iteration = Column(String, primary_key = True)
-    estimated_time = Column(Float)
-    timely_prediction = Column(Float)
+    iteration = Column(String, primary_key = True)
+    est_time = Column(Float)
+    timely_pred = Column(Float)
     actual_time = Column(Float)
 
 class User(db.Model):
@@ -172,12 +172,12 @@ class Class(db.Model):
     ---------------------
     class_id: int
         Globally unique class_id given to each class
-    class_title: str
+    title: str
         The department/number title of the course (i.e. COS333)
      '''
     __tablename__ = 'class'
     class_id = Column(Integer, primary_key=True)
-    class_title = Column(String)
+    title = Column(String)
 
 
 class ClassDetails(db.Model):

@@ -3,15 +3,15 @@
 from flask import render_template, request
 
 from timely import app, db
-from timely.db_queries import fetch_assignment_list, fetch_class_list
-from timely.formhandler import assignment_handler, class_handler
-from timely.models import AssignmentDetails, AssignmentTime, User
+from timely.db_queries import fetch_task_list, fetch_class_list
+from timely.formhandler import task_handler, class_handler
+from timely.models import TaskDetails, TaskTime, User
 
 # repeat_freq: freq
 # class_dept: dept
 # class_name: title
 # estimated_time: est_time
-# assignment_title: title
+# task_title: title
 
 @app.route('/')
 @app.route('/index')
@@ -19,43 +19,43 @@ def index():
     """Return the index page."""
     #model = User.query.filter_by(username='dlipman').first()
     #classes = fetch_class_list("dlipman")
-    assignments = fetch_assignment_list("dlipman")
+    tasks = fetch_task_list("dlipman")
     return render_template('index.html',
-                param=assignments)
+                param=tasks)
                 #param=model.password)
 
-@app.route('/assignment_form', methods = ['GET'])
-def assignment_form():
-    """Retrieve information from the assignment form and insert new table entries into the database.
-       Entries being inserted into tables: assignment, assignment_details, assignment_time, repeating_assignment
+@app.route('/task_form', methods = ['GET'])
+def task_form():
+    """Retrieve information from the task form and insert new table entries into the database.
+       Entries being inserted into tables: task, task_details, task_time, repeating_task
     """
 
-    details = {'assignment_title': None, 'class_dept' : None, 'class_num': None, 'priority': None, 'estimated_time': None, 
+    details = {'task_title': None, 'dept' : None, 'num': None, 'priority': None, 'estimated_time': None, 
     'link': None, 'notes': None, 'due_date': None, 'due_time': None, 'repeat_freq': None, 'repeat_end': None}
 
     for key, item in request.args.items():
         details[key] = item
 
-    details['class_title'] = details['class_dept'] + details['class_num']
+    details['class_title'] = details['dept'] + details['num']
     #TODO Research SQLAlchemy/Postgres built in id generator
     details['class_id'] = hash(details['class_title']) 
-    details['assignemnt_id'] = hash(details['assignment_title'])
+    details['task_id'] = hash(details['task_title'])
 
-    assignment_tables = assignment_handler(details)
-    # Assignment table entry
-    assignment = assignment_tables['assignment']
-    # AssignmentDetails table entry
-    assignment_details = assignment_tables['assignment_details']
-    # AssignmentTime table entry
-    assignment_time = assignment_tables['assignment_time']
+    task_tables = task_handler(details)
+    # task table entry
+    task = task_tables['task']
+    # TaskDetails table entry
+    task_details = task_tables['task_details']
+    # TaskTime table entry
+    task_time = task_tables['task_time']
     # Add new table entries into database
-    db.session.add(assignment)
-    db.session.add(assignment_details)
-    db.session.add(assignment_time)
-    # RepeatingAssignment table entry
-    if assignment_tables['repeating_assignment'] != None:
-        repeating_assignment = assignment_tables['repeating_assignment']
-        db.add(repeating_assignment)
+    db.session.add(task)
+    db.session.add(task_details)
+    db.session.add(task_time)
+    # Repeatingtask table entry
+    if task_tables['repeating_task'] != None:
+        repeating_task = task_tables['repeating_task']
+        db.add(repeating_task)
     db.session.commit()
 
 @app.route('/class_form', methods = ['GET'])

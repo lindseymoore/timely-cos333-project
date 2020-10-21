@@ -1,62 +1,62 @@
-from timely.models import (Assignment, AssignmentDetails, AssignmentTime,
-                           Class, ClassDetails, RepeatingAssignment)
+from timely.models import (Task, TaskDetails, TaskTime,
+                           Class, ClassDetails, Repeatingtask)
 
 
-# Handles the creation of assignments for input into "assignment" table
-def assignment_handler(details: dict) -> dict:
+# Handles the creation of tasks for input into "Task" table
+def task_handler(details: dict) -> dict:
     '''
-    Takes details dictionary (user inputted fields in new assignment form) as input.  
-    Returns a dictionary of Assignment, AssignmentDetails, AssignmentTime, and RepeatingAssignment
+    Takes details dictionary (user inputted fields in new Task form) as input.  
+    Returns a dictionary of Task, TaskDetails, TaskTime, and RepeatingTask
     classes to be inputted into the database as tables. 
     '''
-    assignment = Assignment()
-    assignment_details = AssignmentDetails()
-    assignment_time = AssignmentTime()
-    repeating_assignment = None
+    task = Task()
+    task_details = TaskDetails()
+    task_time = TaskTime()
+    repeating_task = None
 
-    # Insert into Assignment table
-    assignment.username = 'Princeton Student' # TODO UPDATE TO USE CAS AUTHENTICATION
-    assignment.assignment_id = details['assignment_id']
-    assignment.class_id = details['class_id']
-    assignment.assignment_title = details['assignment_title']
+    # Insert into task table
+    task.username = 'Princeton Student' # TODO UPDATE TO USE CAS AUTHENTICATION
+    task.task_id = details['task_id']
+    task.class_id = details['class_id']
+    task.title = details['task_title']
     if details['repeat_freq'] != None:
-        assignment.repeat = True
+        task.repeat = True
     else:
-        assignment.repeat = False
-    assignment.completed = False
+        task.repeat = False
+    task.completed = False
 
-    # Insert into AssignmentDetails table
-    assignment_details.username = 'Princeton Student' # TODO UPDATE TO USE CAS AUTHENTICATION
-    assignment_details.assignment_id = details['assignment_id']
-    assignment_details.class_id = details['class_id']
-    assignment_details.assignment_iteration = 1 #TODO UPDATE COUNTER OF ASSIGNMENT ITERATIONS
-    assignment_details.priority = details['priority']
-    assignment_details.link = details['link']
-    assignment_details.due_date = details['due_date']
-    assignment_details.due_time = details['due_time']
-    assignment.notes = details['notes']
+    # Insert into taskDetails table
+    task_details.username = 'Princeton Student' # TODO UPDATE TO USE CAS AUTHENTICATION
+    task_details.task_id = details['task_id']
+    task_details.class_id = details['class_id']
+    task_details.iteration = 1 #TODO UPDATE COUNTER OF task ITERATIONS
+    task_details.priority = details['priority']
+    task_details.link = details['link']
+    task_details.due_date = details['due_date']
+    task_details.due_time = details['due_time']
+    task.notes = details['notes']
 
-    # Insert into AssignmentTime table
-    assignment_time.username = 'Princeton Student' # TODO UPDATE TO USE CAS AUTHENTICATION
-    assignment_time.assignment_id = details['assignment_id']
-    assignment_time.class_id = details['class_id']
-    assignment_time.assignment_iteration = 1 #TODO UPDATE COUNTER OF ASSIGNMENT ITERATIONS
-    assignment_time.estimated_time = details['estimated_time']
-    assignment_time.actual_time = None
-    assignment_time.timely_prediction = None
+    # Insert into taskTime table
+    task_time.username = 'Princeton Student' # TODO UPDATE TO USE CAS AUTHENTICATION
+    task_time.task_id = details['task_id']
+    task_time.class_id = details['class_id']
+    task_time.iteration = 1 #TODO UPDATE COUNTER OF task ITERATIONS
+    task_time.estimated_time = details['estimated_time']
+    task_time.actual_time = None
+    task_time.timely_prediction = None
 
-    # If assignment is repeating, create RepeatingAssignments table
+    # If task is repeating, create RepeatingTasks table
     if details['repeat_freq'] != None:
-        repeating_assigment = RepeatingAssignment()
+        repeating_assigment = RepeatingTask()
         repeating_assigment.username = 'Princeton Student' # TODO UPDATE TO USE CAS AUTHENTICATION
-        repeating_assigment.assignment_id = details['assignment_id']
+        repeating_assigment.task_id = details['task_id']
         repeating_assigment.class_id = details['class_id']
         repeating_assigment.repeat_freq = details['repeat_freq']
         repeating_assigment.repeat_end = details['repeat_end']
 
-    assignment_tables = {'assignment': assignment, 'assignment_details': assignment_details, 'assignment_time': assignment_time, 'repeating_assignment': repeating_assigment}
+    task_tables = {'task': task, 'task_details': task_details, 'task_time': task_time, 'repeating_task': repeating_assigment}
 
-    return assignment_tables
+    return task_tables
 
 
 # Handler function to deal with the creation of classes for input into "class" table
@@ -70,7 +70,7 @@ def class_handler(class_details: dict) -> dict:
 
     # Insert into class table
     new_class.class_id = class_details['class_id']
-    new_class.class_title = class_details['class_title']
+    new_class.title = class_details['class_title']
 
     # Insert into class_details table
     details.class_id = class_details['class_id']
