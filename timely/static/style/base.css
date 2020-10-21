@@ -64,13 +64,13 @@ html, body, #content {
     margin-bottom: 0px;
 }
 
-.btn-add {
+.add {
     font-size: 1.5em;
     color: var(--dark-1);
     padding: 0px;
 }
 
-.btn-add:hover {
+.add:hover {
     color: var(--dark-2)
 }
 
