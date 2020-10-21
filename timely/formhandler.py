@@ -12,7 +12,7 @@ def assignment_handler(details: dict) -> dict:
 	assignment = Assignment()
 	assignment_details = AssignmentDetails()
 	assignment_time = AssignmentTime()
-	repeating_assigment = None
+	repeating_assignment = None
 
 	# Insert into Assignment table
 	assignment.username = 'Princeton Student' # TODO UPDATE TO USE CAS AUTHENTICATION
