@@ -36,8 +36,10 @@ def fetch_assignment_list(username: str) -> List[dict]:
     # JOIN query to get information from Assignment, Class, AssignmentDetails, and AssignmentTime tables
     assignment_info = db.session.query(Assignment, Class, AssignmentDetails, AssignmentTime,
                       ).filter(Assignment.username == username
-                      ).join(AssignmentDetails, (AssignmentDetails.class_id == Assignment.class_id) & (AssignmentDetails.assignment_id == Assignment.assignment_id) & (AssignmentDetails.username == Assignment.username)
-                      ).join(AssignmentTime, (AssignmentTime.class_id == Assignment.class_id) & (AssignmentTime.assignment_id == Assignment.assignment_id) & (AssignmentTime.username == Assignment.username)
+                      ).join(AssignmentDetails, (AssignmentDetails.class_id == Assignment.class_id) 
+                      & (AssignmentDetails.assignment_id == Assignment.assignment_id) & (AssignmentDetails.username == Assignment.username)
+                      ).join(AssignmentTime, (AssignmentTime.class_id == Assignment.class_id) 
+                      & (AssignmentTime.assignment_id == Assignment.assignment_id) & (AssignmentTime.username == Assignment.username)
                       ).join(Class, Class.class_id == Assignment.class_id).all()
     for (assignment, course, assignment_details, assignment_time) in assignment_info:
         repeat_freq = None
