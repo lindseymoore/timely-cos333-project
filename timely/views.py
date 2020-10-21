@@ -1,9 +1,10 @@
 """Declare application views."""
 
-from flask import render_template
+from flask import render_template, request
 
-from formhandler import assignment_handler, class_handler
 from timely import app, db
+from timely.db_queries import fetch_assignment_list, fetch_class_list
+from timely.formhandler import assignment_handler, class_handler
 from timely.models import AssignmentDetails, AssignmentTime, User
 
 
@@ -11,18 +12,23 @@ from timely.models import AssignmentDetails, AssignmentTime, User
 @app.route('/index')
 def index():
     """Return the index page."""
-    model = User.query.filter_by(username='dlipman').first()
+    #model = User.query.filter_by(username='dlipman').first()
+    #classes = fetch_class_list("dlipman")
+    assignments = fetch_assignment_list("dlipman")
     return render_template('index.html',
-                param=model.password)
+                param=assignments)
+                #param=model.password)
 
 @app.route('/assignment_form', methods = ['GET'])
 def assignment_form():
     """Retrieve information from the assignment form and insert new table entries into the database.
-       Entries being inserted into tables: assignment, assignment_details, assignment_time, repeating_assignment"""
-	details = {'assignment_title': None, 'class_dept' : None, 'class_num': None, 'priority': None, 'estimated_time': None, 
-				'link': None, 'notes': None, 'due_date': None, 'due_time': None, 'repeat_freq': None, 'repeat_end': None, }
+       Entries being inserted into tables: assignment, assignment_details, assignment_time, repeating_assignment
+    """
 
-	for key, item in request.args.items():
+    details = {'assignment_title': None, 'class_dept' : None, 'class_num': None, 'priority': None, 'estimated_time': None, 
+    'link': None, 'notes': None, 'due_date': None, 'due_time': None, 'repeat_freq': None, 'repeat_end': None}
+
+    for key, item in request.args.items():
         details[key] = item
 
     details['class_title'] = details['class_dept'] + details['class_num']

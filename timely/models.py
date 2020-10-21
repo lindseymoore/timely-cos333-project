@@ -4,13 +4,11 @@ User, AssignmentDetails, and Class.
 """
 
 from sqlalchemy import Boolean, Column, Date, Float, Integer, String, Time
-from sqlalchemy.ext.declarative import declarative_base
 
 from timely import db
 
 # TODO Should we create globally unique assignment_ids
 # or should we delegate assignment_ids within each class?
-
 
 class Assignment(db.Model):
     '''

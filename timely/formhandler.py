@@ -1,17 +1,20 @@
-import models 
+from timely.models import (Assignment, AssignmentDetails, AssignmentTime,
+                           Class, ClassDetails, RepeatingAssignment)
 
 
 # Handles the creation of assignments for input into "assignment" table
-def assignment_handler(details: dict):
-	'''Takes details dictionary (user inputted fields in assignment form) as input.  
-	   Returns a dictionary of Assignment, AssignmentDetails, AssignmentTime, and RepeatingAssignment
-	   classes to be inputted into the database as tables. '''
-	assignment = models.Assignment()
-	assignment_details = models.AssignmentDetails()
-	assignment_time = models.AssignmentTime()
+def assignment_handler(details: dict) -> dict:
+	'''
+	Takes details dictionary (user inputted fields in new assignment form) as input.  
+	Returns a dictionary of Assignment, AssignmentDetails, AssignmentTime, and RepeatingAssignment
+	classes to be inputted into the database as tables. 
+	'''
+	assignment = Assignment()
+	assignment_details = AssignmentDetails()
+	assignment_time = AssignmentTime()
 	repeating_assigment = None
 
-	# Inser into Assignment table
+	# Insert into Assignment table
 	assignment.username = 'Princeton Student' # TODO UPDATE TO USE CAS AUTHENTICATION
 	assignment.assignment_id = details['assignment_id']
 	assignment.class_id = details['class_id']
@@ -44,7 +47,7 @@ def assignment_handler(details: dict):
 
 	# If assignment is repeating, create RepeatingAssignments table
 	if details['repeat_freq'] != None:
-		repeating_assigment = models.RepeatingAssignment()
+		repeating_assigment = RepeatingAssignment()
 		repeating_assigment.username = 'Princeton Student' # TODO UPDATE TO USE CAS AUTHENTICATION
 		repeating_assigment.assignment_id = details['assignment_id']
 		repeating_assigment.class_id = details['class_id']
@@ -57,9 +60,13 @@ def assignment_handler(details: dict):
 
 
 # Handler function to deal with the creation of classes for input into "class" table
-def class_handler(class_details: dict):
-	new_class = models.Class()
-	class_details = models.ClassDetails()
+def class_handler(class_details: dict) -> dict:
+	'''
+	Takes class_details dictionary (user inputted fields in new class form) as input.  
+	Returns a dictionary of Class, and ClassDetails classes to be inputted into the database as tables. 
+	'''
+	new_class = Class()
+	class_details = ClassDetails()
 
 	# Insert into class table
 	new_class.class_id = class_details['class_id']
