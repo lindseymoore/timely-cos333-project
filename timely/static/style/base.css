@@ -52,14 +52,16 @@ html, body, #content {
     white-space: nowrap;
     padding: 3px 10px;
     border-width: 0px;
-    border-bottom-width: 3px;
-    border-bottom-color: var(--dark-4);
     border-style: solid;
     border-left-width: 10px;
+    box-shadow: 0 3px 0 var(--dark-4);
+    margin-bottom: 3px;
 }
 
 .pill:last-child {
     border-bottom-width: 0px ;
+    box-shadow: 0 0;
+    margin-bottom: 0px;
 }
 
 .btn-add {
