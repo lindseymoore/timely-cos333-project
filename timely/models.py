@@ -176,7 +176,7 @@ class Class(db.Model):
         The department/number title of the course (i.e. COS333)
      '''
     __tablename__ = 'class'
-    class_id = Column(Integer, primary_key=True)
+    class_id = Column(Integer, primary_key=True, autoincrement=True)
     title = Column(String)
 
 
