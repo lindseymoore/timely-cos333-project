@@ -54,11 +54,11 @@ def main(argv):
     # Add task
     task_333 = Task(username="dlipman", task_id=1, class_id=get_class_id('Advanced Programming Techniques'), title="task 3",
                 repeat=False, completed=True)
-    task_324 = Task(username="dlipman", task_id=1, class_id=get_class_id('Intro to Machine Learning'), title="Homework",
+    task_324 = Task(username="dlipman", task_id=2, class_id=get_class_id('Intro to Machine Learning'), title="Homework",
                 repeat=True, completed=True)
-    task_316 = Task(username="dlipman", task_id=1, class_id=get_class_id('Principles of Computer System Design'), title="Programming task",
+    task_316 = Task(username="dlipman", task_id=3, class_id=get_class_id('Principles of Computer System Design'), title="Programming task",
                 repeat=True, completed=False)
-    task_102 = Task(username="dlipman", task_id=1, class_id=get_class_id('History of Engineering'), title="Homework",
+    task_102 = Task(username="dlipman", task_id=4, class_id=get_class_id('History of Engineering'), title="Homework",
                 repeat=False, completed=False)
     db.session.add(task_333)
     db.session.add(task_324)
@@ -72,15 +72,15 @@ def main(argv):
                 link="https://www.cs.princeton.edu/courses/archive/\
                     fall20/cos333/asgts/03registrarweb/index.html",
                 due_date="2020-10-18", due_time="11:00 PM EST", notes="finished!")
-    task324_details = TaskDetails(task_id=1,
+    task324_details = TaskDetails(task_id=2,
                 username="dlipman", class_id=get_class_id('Intro to Machine Learning'), priority=2, iteration=4, 
                 link=None,
                 due_date="2020-10-20", due_time="11:59 PM EST", notes="finished!")
-    task316_details = TaskDetails(task_id=1,
+    task316_details = TaskDetails(task_id=3,
                 username="dlipman", class_id=get_class_id('Principles of Computer System Design'), priority=2, iteration=4, 
                 link="https://github.com/cos316/task4-thefridge4",
                 due_date="2020-10-28", due_time="11:59 PM EST", notes="working over the weekend")
-    task102_details = TaskDetails(task_id=1,
+    task102_details = TaskDetails(task_id=4,
                 username="dlipman", class_id=get_class_id('History of Engineering'), priority=1, iteration=1, 
                 link=None,
                 due_date="2020-10-28", due_time="11:59 PM EST", notes="working over the weekend, watch lectures first")
@@ -91,8 +91,8 @@ def main(argv):
     db.session.commit()
 
     # Add Repeatingtask
-    task324_rep = RepeatingTask(username="dlipman", task_id=1, class_id=get_class_id('Intro to Machine Learning'), repeat_freq="biweekly", repeat_end="2020-12-15")
-    task316_rep = RepeatingTask(username="dlipman", task_id=1, class_id=get_class_id('Principles of Computer System Design'), repeat_freq="biweekly", repeat_end="2020-12-15")
+    task324_rep = RepeatingTask(username="dlipman", task_id=2, class_id=get_class_id('Intro to Machine Learning'), repeat_freq="biweekly", repeat_end="2020-12-15")
+    task316_rep = RepeatingTask(username="dlipman", task_id=3, class_id=get_class_id('Principles of Computer System Design'), repeat_freq="biweekly", repeat_end="2020-12-15")
     db.session.add(task324_rep)
     db.session.add(task316_rep)
     db.session.commit()
@@ -100,11 +100,11 @@ def main(argv):
     # Add TaskTime
     task333_time = TaskTime(task_id=1, class_id=get_class_id('Advanced Programming Techniques'),
                 username="dlipman", iteration=1, est_time=6.0, actual_time=4.0, timely_pred=None)
-    task324_time = TaskTime(task_id=1, class_id=get_class_id('Intro to Machine Learning'),
+    task324_time = TaskTime(task_id=2, class_id=get_class_id('Intro to Machine Learning'),
                 username="dlipman", iteration=4, est_time=4.0, actual_time=5.0, timely_pred=None)
-    task316_time = TaskTime(task_id=1, class_id=get_class_id('Principles of Computer System Design'),
+    task316_time = TaskTime(task_id=3, class_id=get_class_id('Principles of Computer System Design'),
                 username="dlipman", iteration=4, est_time=6.0, actual_time=None, timely_pred=None)
-    task102_time = TaskTime(task_id=1, class_id=get_class_id('History of Engineering'),
+    task102_time = TaskTime(task_id=4, class_id=get_class_id('History of Engineering'),
                 username="dlipman", iteration=1, est_time=2.0, actual_time=None, timely_pred=None)
     db.session.add(task333_time)
     db.session.add(task324_time)

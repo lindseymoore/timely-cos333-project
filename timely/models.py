@@ -72,7 +72,7 @@ class TaskDetails(db.Model):
     iteration = Column(Integer, primary_key = True)
     priority = Column(Integer)
     link = Column(String) 
-    due_date = Column(Date)
+    due_date = Column(String)
     due_time = Column(Time)
     notes = Column(String)
 
