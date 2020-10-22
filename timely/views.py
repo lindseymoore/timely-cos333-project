@@ -14,7 +14,6 @@ def index():
     #model = User.query.filter_by(username="dlipman").first()
     classes = fetch_class_list("dlipman")
     tasks = fetch_task_list("dlipman")
-    print(classes) # TODO remove
     return render_template("index.html",
                 class_list=classes,
                 task_list=tasks)

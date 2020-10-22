@@ -84,7 +84,7 @@ def get_next_task_id(class_id: int) -> int:
     should be used when adding new tasks into the database, not when searching for a
     task id associated with a given task.
     """
-    task_id = db.session.query(func.max(Task.task_id)).filter(Task.class_id == class_id).first()
+    task_id = db.session.query(Task.task_id).order_by(Task.task_id).first()
     return task_id.task_id + 1
 
 
