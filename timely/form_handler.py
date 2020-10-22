@@ -12,7 +12,8 @@ def class_handler(class_details: dict):
     Takes class_details dictionary (user inputted fields in new class form) as input.
     Configures this dictionary into Class classes and inputs them as new entires in the class table.
     '''
-    new_class = Class(username = 'dlipman', title = class_details['title'], dept = class_details['dept'], num = class_details['num'],
+    new_class = Class(username = 'dlipman', title = class_details['title'],
+                dept = class_details['dept'], num = class_details['num'],
                 active_status = True, color = class_details['color'])
     db.session.add(new_class)
     db.session.commit()
@@ -40,7 +41,7 @@ def task_handler(details: dict):
     task.task_id = task_id
     task.class_id = class_id
     task.title = details['task_title']
-    if details['repeat_freq'] != None:
+    if details['repeat_freq'] is not None:
         task.repeat = True
     else:
         task.repeat = False
@@ -76,7 +77,7 @@ def task_handler(details: dict):
     db.session.commit()
 
     # If task is repeating, insert entry into RepeatingTasks table
-    if details['repeat_freq'] != None:
+    if details['repeat_freq'] is not None:
         repeating_task = RepeatingTask()
         repeating_task.username = 'dlipman' # TODO UPDATE TO USE CAS AUTHENTICATION
         repeating_task.task_id = task_id

@@ -26,8 +26,9 @@ def task_form():
     Entries being inserted into tables: task, task_details, task_time, repeating_task.
     """
 
-    details = {'task_title': None, 'class_title': None, 'dept' : None, 'num': None, 'priority': None, 'est_time': None,
-    'link': None, 'notes': None, 'due_date': None, 'due_time': None, 'repeat_freq': None, 'repeat_end': None}
+    details = {'task_title': None, 'class_title': None, 'dept' : None, 'num': None,
+    'priority': None, 'est_time': None, 'link': None, 'notes': None, 'due_date': None,
+    'due_time': None, 'repeat_freq': None, 'repeat_end': None}
 
     for key, item in request.args.items():
         details[key] = item

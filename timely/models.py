@@ -53,7 +53,8 @@ class TaskDetails(db.Model):
     class_id: int
         Globally unique class_id given to each class
     iteration: int
-        Iteration of a given task (if repeating - i.e., Weekly Reading 3 will have iteration=3). If not repeating, iteration = 1. 
+        Iteration of a given task (if repeating - i.e., Weekly Reading 3 will have iteration=3).
+        If not repeating, iteration = 1. 
     priority: int
         The user's prioritization of an task, has values {0, 1, 2}
     link: str
@@ -94,7 +95,7 @@ class RepeatingTask(db.Model):
     repeat_freq: String
         The frequency at which an task is repeated (i.e. weekly, biweekly, monthly, etc.)
     repeat_end: Date
-        Due Date of last occurence of the repeated task
+        Due Date of last occurrence of the repeated task
      '''
     __tablename__ = 'repeating_task'
     username = Column(String, primary_key = True)
