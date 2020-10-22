@@ -12,8 +12,9 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 from timely import db
-from timely.models import (Class, RepeatingTask, Task,
-                           TaskDetails, TaskTime, User)
+from timely.db_queries import get_class_id
+from timely.models import (Class, RepeatingTask, Task, TaskDetails, TaskTime,
+                           User)
 
 
 def main(argv):
@@ -23,7 +24,7 @@ def main(argv):
         sys.exit(1)
 
     database_url = os.environ["DATABASE_URL"]
-    connect(database_url, sslmode='require')
+    connect(database_url, sslmode="require")
 
     make_session = sessionmaker()
     engine = create_engine(database_url)
@@ -41,10 +42,14 @@ def main(argv):
     db.session.commit()
 
     # Add Class 8321, 9362, 8004, 8080
-    class1 = Class(username = "dlipman", title="Advanced Programming Techniques", dept = 'COS', num = '333', active_status = True, color="red")
-    class2 = Class(username = "dlipman", title="Intro to Machine Learning", dept = 'COS', num = '324', active_status = True, color="purple")
-    class3 = Class(username = "dlipman", title="Principles of Computer System Design", dept = 'COS', num = '316', active_status = True, color="orange")
-    class4 = Class(username = "dlipman", title="History of Engineering", dept = 'CEE', num = '102', active_status = True, color="green")
+    class1 = Class(username = "dlipman", title="Advanced Programming Techniques",
+                dept = "COS", num = "333", active_status = True, color="red")
+    class2 = Class(username = "dlipman", title="Intro to Machine Learning",
+                dept = "COS", num = "324", active_status = True, color="purple")
+    class3 = Class(username = "dlipman", title="Principles of Computer System Design",
+                dept = "COS", num = "316", active_status = True, color="orange")
+    class4 = Class(username = "dlipman", title="History of Engineering",
+                dept = "CEE", num = "102", active_status = True, color="green")
     db.session.add(class1)
     db.session.add(class2)
     db.session.add(class3)
@@ -53,9 +58,9 @@ def main(argv):
 
     # Add task
     task_333 = Task(username="dlipman", class_id=get_class_id('Advanced Programming Techniques'), title="task 3",
-                repeat=False, completed=True)
+                repeat=False, completed=False)
     task_324 = Task(username="dlipman", class_id=get_class_id('Intro to Machine Learning'), title="Homework",
-                repeat=True, completed=True)
+                repeat=True, completed=False)
     task_316 = Task(username="dlipman", class_id=get_class_id('Principles of Computer System Design'), title="Programming task",
                 repeat=True, completed=False)
     task_102 = Task(username="dlipman", class_id=get_class_id('History of Engineering'), title="Homework",
@@ -125,5 +130,5 @@ def main(argv):
 
 #-----------------------------------------------------------------------
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main(sys.argv)

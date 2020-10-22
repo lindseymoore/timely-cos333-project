@@ -21,7 +21,7 @@ def fetch_class_list(username: str) -> List[dict]:
     class_details = db.session.query(Class).filter(Class.username == username).all()
     for course in class_details:
         # Create class_obj dictionary with all columns that will be displayed to the user
-        class_obj = {'title': course.title, 'dept': course.dept, 'num': course.num, 'color': course.color}
+        class_obj = {"title": course.title, "dept": course.dept, "num": course.num, "color": course.color}
         classes.append(class_obj)
 
     return classes
@@ -48,7 +48,7 @@ def fetch_task_list(username: str) -> List[dict]:
         repeat_freq = None
         repeat_end = None
 
-        # If the task is repeating, make an additional query to find it's repeat_freqand repeat_end
+        # If the task is repeating, make an additional query to find it"s repeat_freqand repeat_end
         if task.repeat:
             repeating_task = db.session.query(RepeatingTask).filter((
                         RepeatingTask.task_id == task.task_id
@@ -58,6 +58,7 @@ def fetch_task_list(username: str) -> List[dict]:
             repeat_end = repeating_task.repeat_end
 
         # Create task_obj dictionary with all columns that will be displayed to the user
+<<<<<<< HEAD
         task_obj = {'title': task.title, 'class': course.title,
                     'priority:': task_details.priority,
                     'est_time': task_time.est_time,
@@ -65,6 +66,14 @@ def fetch_task_list(username: str) -> List[dict]:
                     'due_date': task_details.due_date,
                     'repeat_freq': repeat_freq, 'repeat_ends': repeat_end,
                     'color': course.color}
+=======
+        task_obj = {"title": task.title, "class": course.title,
+                    "priority:": task_details.priority,
+                    "est_time": task_time.est_time,
+                    "link": task_details.link, "notes": task_details.notes,
+                    "due_date": task_details.due_date,
+                    "repeat_freq": repeat_freq, "repeat_ends": repeat_end}
+>>>>>>> 2eaa561cd8901e6435a029501747b3288790bd83
         task_list.append(task_obj)
 
     return task_list

@@ -1,5 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@200;400&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Yellowtail&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@200;400&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Yellowtail&display=swap");
 
 :root {
     --dark-5: #1e1e1e;
@@ -22,6 +22,7 @@ html, body, #content {
     display: flex; flex-direction: column; height: 100%; 
 }
 
+/* Custom style for displaying classes and estimated time*/
 .subtle {
     font-size: 0.9em;
     color: var(--dark-2);
@@ -38,6 +39,7 @@ html, body, #content {
     background: var(--dark-4)
 }
 
+/* General container for displaying multiple classes/tasks containers*/
 .pill-box {
     background: var(--dark-3);
     border-radius: 10px;
@@ -46,6 +48,7 @@ html, body, #content {
     overflow: hidden;
 }
 
+/* Container for displaying information for individual classes/tasks */
 .pill {
     overflow: hidden;
     text-overflow: ellipsis;
@@ -58,12 +61,14 @@ html, body, #content {
     margin-bottom: 3px;
 }
 
+ /* Ensures that the last entry of class/task displayed does not show a bottom line */
 .pill:last-child {
     border-bottom-width: 0px ;
     box-shadow: 0 0;
     margin-bottom: 0px;
 }
 
+/* Adds style to the add icon for creating a new class/task */
 .add {
     font-size: 1.5em;
     color: var(--dark-1);
@@ -74,6 +79,7 @@ html, body, #content {
     color: var(--dark-2)
 }
 
+/* Provides consistent theme to the bootstrap modal */
 .modal-content {
     background-color: var(--dark-4);
 }
@@ -86,6 +92,7 @@ html, body, #content {
     border-top-width: 0px;
 }
 
+/* Styles the close/exit icon on the modal */
 .close {
     color: inherit;
 }
@@ -97,7 +104,7 @@ html, body, #content {
 body {
     background-color: var(--dark-5);
     color: var(--dark-1);
-    font-family: 'Montserrat', sans-serif;
+    font-family: "Montserrat", sans-serif;
     font-weight: 400;
 }
 
@@ -110,6 +117,6 @@ h1, h2, h3, h4, h5 {
 }
 
 #logo {
-    font-family: 'Yellowtail', cursive;
+    font-family: "Yellowtail", cursive;
     font-size: 3em;
 }

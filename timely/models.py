@@ -11,7 +11,7 @@ from timely import db
 # to fetch task_id from title (in db_queries, for use in form_handler)
 
 class Task(db.Model):
-    '''
+    """
     Tasks class represents the Task table:
 
     ...
@@ -30,8 +30,8 @@ class Task(db.Model):
         True if task is repeating, False otherwise
     completed: Boolean
         True if task has been completed already, False otherwise
-     '''
-    __tablename__ = 'task'
+     """
+    __tablename__ = "task"
     username = Column(String, primary_key=True)
     task_id = Column(Integer, primary_key=True, autoincrement=True)
     class_id = Column(Integer)
@@ -41,7 +41,7 @@ class Task(db.Model):
 
 
 class TaskDetails(db.Model):
-    '''
+    """
     TaskDetails class represents the task_details table:
 
     ...
@@ -55,9 +55,10 @@ class TaskDetails(db.Model):
     class_id: int
         Globally unique class_id given to each class
     iteration: int
-        Iteration of a given task (if repeating - i.e., Weekly Reading 3 will have iteration=3). If not repeating, iteration = 1. 
+        Iteration of a given task (if repeating - i.e., Weekly Reading 3 will have iteration=3).
+        If not repeating, iteration = 1. 
     priority: int
-        The user's prioritization of an task, has values {0, 1, 2}
+        The user"s prioritization of an task, has values {0, 1, 2}
     link: str
         The url for the task with task_id, class_id
     due_date: Date
@@ -66,8 +67,8 @@ class TaskDetails(db.Model):
         The time the task with task_id, class_id is due on due_date
     notes: str
         Any additional notes about a given task
-     '''
-    __tablename__ = 'task_details'
+     """
+    __tablename__ = "task_details"
     username = Column(String, primary_key = True)
     task_id = Column(Integer, primary_key = True)
     iteration = Column(Integer, primary_key = True)
@@ -80,7 +81,7 @@ class TaskDetails(db.Model):
 
 
 class RepeatingTask(db.Model):
-    '''
+    """
     RepeatingTask class represents the repeating_task table:
 
     ...
@@ -96,9 +97,9 @@ class RepeatingTask(db.Model):
     repeat_freq: String
         The frequency at which an task is repeated (i.e. weekly, biweekly, monthly, etc.)
     repeat_end: Date
-        Due Date of last occurence of the repeated task
-     '''
-    __tablename__ = 'repeating_task'
+        Due Date of last occurrence of the repeated task
+     """
+    __tablename__ = "repeating_task"
     username = Column(String, primary_key=True)
     task_id = Column(Integer, primary_key=True)
     class_id = Column(Integer)
@@ -107,7 +108,7 @@ class RepeatingTask(db.Model):
 
 
 class TaskTime(db.Model):
-    '''
+    """
     TaskTime class represents the time table:
 
     ...
@@ -125,11 +126,11 @@ class TaskTime(db.Model):
     est_time: float
         The amount of time a user estimates the task with task_id and class_id will take
     timely_pred: float
-        Timely's predicted amount of time that the task will take
+        Timely"s predicted amount of time that the task will take
     actual_time: float
         The amount of time it actually took to complete task with task_id and class_id
-     '''
-    __tablename__ = 'time'
+     """
+    __tablename__ = "time"
     task_id = Column(Integer, primary_key=True)
     username = Column(String, primary_key=True)
     iteration = Column(String, primary_key=True)
@@ -139,7 +140,7 @@ class TaskTime(db.Model):
     actual_time = Column(Float)
 
 class User(db.Model):
-    '''
+    """
     User class represents the user table:
 
     ...
@@ -154,16 +155,16 @@ class User(db.Model):
     school: str
         School/University the user attends (in our case Princeton)
     email: str
-        The user's email address
-     '''
-    __tablename__ = 'user'
+        The user"s email address
+     """
+    __tablename__ = "user"
     username = Column(String, primary_key=True)
     password = Column(String)
     school = Column(String)
     email = Column(String)
 
 class Class(db.Model):
-    '''
+    """
     Class class represents the class table:
 
     ...
@@ -177,15 +178,15 @@ class Class(db.Model):
     dept: str
         The department the class is in
     num: int
-        The class's course number
+        The class"s course number
     username: str
         Username for a given user, retrieved from CAS authentication
     active_status: str
         True if class_id is currently being taken, False otherwise
     color: str
         The color of the given course in the UI
-     '''
-    __tablename__ = 'class'
+     """
+    __tablename__ = "class"
     class_id = Column(Integer, primary_key=True, autoincrement=True)
     username = Column(String, primary_key=True)
     title = Column(String)
