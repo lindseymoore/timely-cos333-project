@@ -27,7 +27,7 @@ html, body, #content {
     color: var(--dark-2);
 }
 
-#assignment-col {
+#task-col {
     border-width: 0px;
     border-left-width: 10px;
     border-left-color: var(--dark-5);

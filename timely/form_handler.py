@@ -9,9 +9,9 @@ from timely.models import (Class, ClassDetails, RepeatingTask, Task,
 # Handler function to deal with the creation of classes for input into "class" table
 def class_handler(class_details: dict):
     '''
-    Takes class_details dictionary (user inputted fields in new class form) as input.  
+    Takes class_details dictionary (user inputted fields in new class form) as input.
     Configures this dictionary into Class, and ClassDetails classes and inputs them as
-    new entires in the class and class_details tables respectively. 
+    new entires in the class and class_details tables respectively.
     '''
     new_class = Class(class_title = class_details['class_title'])
     db.session.add(new_class)

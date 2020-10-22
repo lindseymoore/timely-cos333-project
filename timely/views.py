@@ -52,4 +52,3 @@ def class_form():
     class_handler(class_details)
 
     return redirect("/")
- 
