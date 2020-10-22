@@ -40,7 +40,7 @@ def task_form():
 @app.route("/class_form")
 def class_form():
     """Retrieve information from the class form and insert new table entries into the database.
-       Entries being inserted into tables: class, class_details."""
+       Entries being inserted into tables: class."""
     class_details = {'title': None, 'dept': None, 'num': None, 'color': None}
 
     for key, item in request.args.items():

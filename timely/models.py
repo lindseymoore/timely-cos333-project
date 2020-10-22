@@ -30,7 +30,7 @@ class Task(db.Model):
         True if task has been completed already, False otherwise
      '''
     __tablename__ = 'task'
-    username = Column(String, primary_key = True)
+    username = Column(String, primary_key=True)
     task_id = Column(Integer, primary_key=True)
     class_id = Column(Integer, primary_key=True)
     title = Column(String)
@@ -176,34 +176,18 @@ class Class(db.Model):
         The department the class is in
     num: int
         The class's course number
-     '''
-    __tablename__ = 'class'
-    class_id = Column(Integer, primary_key=True, autoincrement=True)
-    title = Column(String)
-    dept = Column(String)
-    num = Column(Integer)
-
-
-class ClassDetails(db.Model):
-    '''
-    Class class represents the class_details table:
-
-    ...
-
-    Attributes (columns):
-    ---------------------
-    class_id: int
-        Globally unique class_id given to each class
     username: str
         Username for a given user, retrieved from CAS authentication
     active_status: str
         True if class_id is currently being taken, False otherwise
     color: str
-        The color a course will be di
+        The color of the given course in the UI
      '''
-    __tablename__ = 'class_details'
-    class_id = Column(Integer, primary_key=True)
+    __tablename__ = 'class'
+    class_id = Column(Integer, primary_key=True, autoincrement=True)
     username = Column(String, primary_key=True)
+    title = Column(String)
+    dept = Column(String)
+    num = Column(Integer)
     active_status = Column(Boolean)
     color = Column(String)
-    # grade = Column(String)

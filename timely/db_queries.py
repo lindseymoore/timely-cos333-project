@@ -5,7 +5,7 @@ from typing import List
 from sqlalchemy import func
 
 from timely import db
-from timely.models import (Class, ClassDetails, RepeatingTask, Task,
+from timely.models import (Class, RepeatingTask, Task,
                            TaskDetails, TaskTime)
 
 
@@ -17,12 +17,11 @@ def fetch_class_list(username: str) -> List[dict]:
     """
     classes = []
 
-    # JOIN query to get information from Class and ClassDetails tables
-    class_details = db.session.query(Class, ClassDetails).join(
-                ClassDetails, ClassDetails.class_id == Class.class_id).all()
-    for course, course_details in class_details:
+    # JOIN query to get information from Class table
+    class_details = db.session.query(Class).filter(Class.username == username).all()
+    for course in class_details:
         # Create class_obj dictionary with all columns that will be displayed to the user
-        class_obj = {'title': course.title, 'dept': course.dept, 'num': course.num, 'color': course_details.color}
+        class_obj = {'title': course.title, 'dept': course.dept, 'num': course.num, 'color': course.color}
         classes.append(class_obj)
 
     return classes

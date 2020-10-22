@@ -2,7 +2,7 @@
 
 from timely.db_queries import get_class_id, get_next_task_id, get_next_task_iteration
 from timely import db
-from timely.models import (Class, ClassDetails, RepeatingTask, Task,
+from timely.models import (Class, RepeatingTask, Task,
                            TaskDetails, TaskTime)
 
 
@@ -10,20 +10,11 @@ from timely.models import (Class, ClassDetails, RepeatingTask, Task,
 def class_handler(class_details: dict):
     '''
     Takes class_details dictionary (user inputted fields in new class form) as input.
-    Configures this dictionary into Class, and ClassDetails classes and inputs them as
-    new entires in the class and class_details tables respectively.
+    Configures this dictionary into Class classes and inputs them as new entires in the class table.
     '''
-    new_class = Class(title = class_details['title'], dept = class_details['dept'], num = class_details['num'])
+    new_class = Class(username = 'dlipman', title = class_details['title'], dept = class_details['dept'], num = class_details['num'],
+                active_status = True, color = class_details['color'])
     db.session.add(new_class)
-    db.session.commit()
-
-    # Insert into class_details table
-    details = ClassDetails()
-    details.class_id = get_class_id(class_details['title'])
-    details.username = 'dlipman'  # TODO UPDATE TO USE CAS AUTHENTICATION
-    details.active_status = True
-    details.color = class_details['color']
-    db.session.add(details)
     db.session.commit()
 
 
