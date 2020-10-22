@@ -6,6 +6,8 @@ from timely import app
 from timely.db_queries import fetch_class_list, fetch_task_list
 from timely.form_handler import class_handler, task_handler
 
+# Include color in task form handler to display correct color in task view.
+
 
 @app.route("/")
 @app.route("/index")

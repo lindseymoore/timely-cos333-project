@@ -63,7 +63,8 @@ def fetch_task_list(username: str) -> List[dict]:
                     'est_time': task_time.est_time,
                     'link': task_details.link, 'notes': task_details.notes,
                     'due_date': task_details.due_date,
-                    'repeat_freq': repeat_freq, 'repeat_ends': repeat_end}
+                    'repeat_freq': repeat_freq, 'repeat_ends': repeat_end,
+                    'color': course.color}
         task_list.append(task_obj)
 
     return task_list
@@ -71,10 +72,18 @@ def fetch_task_list(username: str) -> List[dict]:
 
 def get_class_id(class_title: str) -> int:
     """
-    Returns class_id for a given class_title, where class_id is of type SERIAL
+    Returns class_id for a given class_title, where class_id is autoincrementing
     """
     class_info = db.session.query(Class).filter(Class.title == class_title).first()
     return class_info.class_id
+
+
+def get_task_id(task_title: str, class_id: int) -> int:
+    """
+    Return task_id for a given task_title and class_id, where task_id is autoincrementing
+    """
+    task_info = db.session.query(Task).filter((Task.class_id == class_id) & (Task.title == task_title)).first()
+    return task_info.task_id
 
 
 def get_next_task_id(class_id: int) -> int:

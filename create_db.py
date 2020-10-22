@@ -6,7 +6,7 @@ Currently adds sample data for user dlipman to postgres database.
 import os
 import sys
 
-from timely.db_queries import get_class_id
+from timely.db_queries import get_class_id, get_task_id
 from psycopg2 import connect
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -52,13 +52,13 @@ def main(argv):
     db.session.commit()
 
     # Add task
-    task_333 = Task(username="dlipman", task_id=1, class_id=get_class_id('Advanced Programming Techniques'), title="task 3",
+    task_333 = Task(username="dlipman", class_id=get_class_id('Advanced Programming Techniques'), title="task 3",
                 repeat=False, completed=True)
-    task_324 = Task(username="dlipman", task_id=2, class_id=get_class_id('Intro to Machine Learning'), title="Homework",
+    task_324 = Task(username="dlipman", class_id=get_class_id('Intro to Machine Learning'), title="Homework",
                 repeat=True, completed=True)
-    task_316 = Task(username="dlipman", task_id=3, class_id=get_class_id('Principles of Computer System Design'), title="Programming task",
+    task_316 = Task(username="dlipman", class_id=get_class_id('Principles of Computer System Design'), title="Programming task",
                 repeat=True, completed=False)
-    task_102 = Task(username="dlipman", task_id=4, class_id=get_class_id('History of Engineering'), title="Homework",
+    task_102 = Task(username="dlipman", class_id=get_class_id('History of Engineering'), title="Homework",
                 repeat=False, completed=False)
     db.session.add(task_333)
     db.session.add(task_324)
@@ -66,22 +66,33 @@ def main(argv):
     db.session.add(task_102)
     db.session.commit()
 
+    # Get classids and taskids
+    class_id_333 = get_class_id('Advanced Programming Techniques')
+    class_id_324 = get_class_id('Intro to Machine Learning')
+    class_id_316 = get_class_id('Principles of Computer System Design')
+    class_id_102 = get_class_id('History of Engineering')
+
+    task_id_333 = get_task_id('task 3', class_id_333)
+    task_id_324 = get_task_id('Homework', class_id_324)
+    task_id_316 = get_task_id('Programming task', class_id_316)
+    task_id_102 = get_task_id('Homework', class_id_102)
+
     # Add taskDetails
-    task333_details = TaskDetails(task_id=1,
-                username="dlipman", class_id=get_class_id('Advanced Programming Techniques'), priority=2, iteration=1, 
+    task333_details = TaskDetails(task_id=task_id_333,
+                username="dlipman", class_id=class_id_333, priority=2, iteration=1, 
                 link="https://www.cs.princeton.edu/courses/archive/\
                     fall20/cos333/asgts/03registrarweb/index.html",
                 due_date="2020-10-18", due_time="11:00 PM EST", notes="finished!")
-    task324_details = TaskDetails(task_id=2,
-                username="dlipman", class_id=get_class_id('Intro to Machine Learning'), priority=2, iteration=4, 
+    task324_details = TaskDetails(task_id=task_id_324,
+                username="dlipman", class_id=class_id_324, priority=2, iteration=4, 
                 link=None,
                 due_date="2020-10-20", due_time="11:59 PM EST", notes="finished!")
-    task316_details = TaskDetails(task_id=3,
-                username="dlipman", class_id=get_class_id('Principles of Computer System Design'), priority=2, iteration=4, 
+    task316_details = TaskDetails(task_id=task_id_316,
+                username="dlipman", class_id=class_id_316, priority=2, iteration=4, 
                 link="https://github.com/cos316/task4-thefridge4",
                 due_date="2020-10-28", due_time="11:59 PM EST", notes="working over the weekend")
-    task102_details = TaskDetails(task_id=4,
-                username="dlipman", class_id=get_class_id('History of Engineering'), priority=1, iteration=1, 
+    task102_details = TaskDetails(task_id=task_id_102,
+                username="dlipman", class_id=class_id_102, priority=1, iteration=1, 
                 link=None,
                 due_date="2020-10-28", due_time="11:59 PM EST", notes="working over the weekend, watch lectures first")
     db.session.add(task333_details)
@@ -91,20 +102,20 @@ def main(argv):
     db.session.commit()
 
     # Add Repeatingtask
-    task324_rep = RepeatingTask(username="dlipman", task_id=2, class_id=get_class_id('Intro to Machine Learning'), repeat_freq="biweekly", repeat_end="2020-12-15")
-    task316_rep = RepeatingTask(username="dlipman", task_id=3, class_id=get_class_id('Principles of Computer System Design'), repeat_freq="biweekly", repeat_end="2020-12-15")
+    task324_rep = RepeatingTask(username="dlipman", task_id=task_id_324, class_id=class_id_324, repeat_freq="biweekly", repeat_end="2020-12-15")
+    task316_rep = RepeatingTask(username="dlipman", task_id=task_id_316, class_id=class_id_316, repeat_freq="biweekly", repeat_end="2020-12-15")
     db.session.add(task324_rep)
     db.session.add(task316_rep)
     db.session.commit()
 
     # Add TaskTime
-    task333_time = TaskTime(task_id=1, class_id=get_class_id('Advanced Programming Techniques'),
+    task333_time = TaskTime(task_id=task_id_333, class_id=class_id_333,
                 username="dlipman", iteration=1, est_time=6.0, actual_time=4.0, timely_pred=None)
-    task324_time = TaskTime(task_id=2, class_id=get_class_id('Intro to Machine Learning'),
+    task324_time = TaskTime(task_id=task_id_324, class_id=class_id_324,
                 username="dlipman", iteration=4, est_time=4.0, actual_time=5.0, timely_pred=None)
-    task316_time = TaskTime(task_id=3, class_id=get_class_id('Principles of Computer System Design'),
+    task316_time = TaskTime(task_id=task_id_316, class_id=class_id_316,
                 username="dlipman", iteration=4, est_time=6.0, actual_time=None, timely_pred=None)
-    task102_time = TaskTime(task_id=4, class_id=get_class_id('History of Engineering'),
+    task102_time = TaskTime(task_id=task_id_102, class_id=class_id_102,
                 username="dlipman", iteration=1, est_time=2.0, actual_time=None, timely_pred=None)
     db.session.add(task333_time)
     db.session.add(task324_time)
