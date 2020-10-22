@@ -6,6 +6,7 @@ Currently adds sample data for user dlipman to postgres database.
 import os
 import sys
 
+from timely.db_queries import get_class_id
 from psycopg2 import connect
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -13,7 +14,6 @@ from sqlalchemy.orm import sessionmaker
 from timely import db
 from timely.models import (Class, ClassDetails, RepeatingTask, Task,
                            TaskDetails, TaskTime, User)
-from db_queries import get_class_id
 
 
 def main(argv):
@@ -41,10 +41,10 @@ def main(argv):
     db.session.commit()
 
     # Add Class 8321, 9362, 8004, 8080
-    class1 = Class(title="COS333")
-    class2 = Class(title="COS324")
-    class3 = Class(title="COS316")
-    class4 = Class(title="CEE102")
+    class1 = Class(title="COS333", dept = 'COS', num = '333')
+    class2 = Class(title="COS324", dept = 'COS', num = '324')
+    class3 = Class(title="COS316", dept = 'COS', num = '315')
+    class4 = Class(title="CEE102", dept = 'CEE', num = '102')
     db.session.add(class1)
     db.session.add(class2)
     db.session.add(class3)

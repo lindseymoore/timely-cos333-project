@@ -26,13 +26,11 @@ def task_form():
     Entries being inserted into tables: task, task_details, task_time, repeating_task.
     """
 
-    details = {"task_title": None, "dept" : None, "num": None, "priority": None, "estimated_time": None, 
-    "link": None, "notes": None, "due_date": None, "due_time": None, "repeat_freq": None, "repeat_end": None}
+    details = {'task_title': None, 'class_title': None, 'dept' : None, 'num': None, 'priority': None, 'estimated_time': None, 
+    'link': None, 'notes': None, 'due_date': None, 'due_time': None, 'repeat_freq': None, 'repeat_end': None}
 
     for key, item in request.args.items():
         details[key] = item
-
-    details["class_title"] = details["dept"] + details["num"]
 
     task_handler(details)
 
@@ -42,12 +40,10 @@ def task_form():
 def class_form():
     """Retrieve information from the class form and insert new table entries into the database.
        Entries being inserted into tables: class, class_details."""
-    class_details = {"dept": None, "num": None, "semester": None, "color": None}
+    class_details = {'class_title': None, 'dept': None, 'num': None, 'color': None}
 
     for key, item in request.args.items():
         class_details[key] = item
-
-    class_details["class_title"] = class_details["dept"] + class_details["num"]
 
     class_handler(class_details)
 

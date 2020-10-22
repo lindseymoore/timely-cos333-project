@@ -13,7 +13,7 @@ def class_handler(class_details: dict):
     Configures this dictionary into Class, and ClassDetails classes and inputs them as
     new entires in the class and class_details tables respectively.
     '''
-    new_class = Class(class_title = class_details['class_title'])
+    new_class = Class(class_title = class_details['class_title'], dept = class_details['dept'], num = class_details['num'])
     db.session.add(new_class)
     db.session.commit()
 

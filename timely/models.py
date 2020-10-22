@@ -171,11 +171,17 @@ class Class(db.Model):
     class_id: int
         Globally unique class_id given to each class
     title: str
-        The department/number title of the course (i.e. COS333)
+        The literal title of the course
+    dept: str
+        The department the class is in
+    num: int
+        The class's course number
      '''
     __tablename__ = 'class'
     class_id = Column(Integer, primary_key=True, autoincrement=True)
     title = Column(String)
+    dept = Column(String)
+    num = Column(Integer)
 
 
 class ClassDetails(db.Model):

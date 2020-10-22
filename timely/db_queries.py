@@ -21,11 +21,8 @@ def fetch_class_list(username: str) -> List[dict]:
     class_details = db.session.query(Class, ClassDetails).join(
                 ClassDetails, ClassDetails.class_id == Class.class_id).all()
     for course, course_details in class_details:
-        # Gets course department and number from the title
-        dept = course.title[:3]
-        num = course.title[-3:]
         # Create class_obj dictionary with all columns that will be displayed to the user
-        class_obj = {'title': course.title, 'dept': dept, 'num': num, 'color': course_details.color}
+        class_obj = {'class_title': course.title, 'dept': course.dept, 'num': course.num, 'color': course_details.color}
         classes.append(class_obj)
 
     return classes
