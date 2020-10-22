@@ -7,8 +7,6 @@ from sqlalchemy import Boolean, Column, Date, Float, Integer, String, Time
 
 from timely import db
 
-# TODO Should we create globally unique task_ids
-# or should we delegate task_ids within each class?
 
 class Task(db.Model):
     '''

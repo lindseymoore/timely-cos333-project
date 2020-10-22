@@ -1,3 +1,5 @@
+"""Functions to fetch class and task information."""
+
 from typing import List
 
 from sqlalchemy import func

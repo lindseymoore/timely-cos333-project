@@ -1,3 +1,5 @@
+"""Functions to process user input and insert as new entries in the database."""
+
 from timely.db_queries import get_class_id, get_next_task_id, get_next_task_iteration
 from timely import db
 from timely.models import (Class, ClassDetails, RepeatingTask, Task,
@@ -30,7 +32,7 @@ def task_handler(details: dict):
     '''
     Takes details dictionary (user inputted fields in new Task form) as input.  
     Configures this dictionary into Task, TaskDetails, TaskTime, and RepeatingTask
-    classes and inputs them as new intries into the task, task_details, task_time
+    classes and inputs them as new entries into the task, task_details, task_time
     and repeating_task tables respectively. 
     '''
     task = Task()
@@ -84,12 +86,12 @@ def task_handler(details: dict):
 
     # If task is repeating, insert entry into RepeatingTasks table
     if details['repeat_freq'] != None:
-        repeating_assigment = RepeatingTask()
-        repeating_assigment.username = 'Princeton Student' # TODO UPDATE TO USE CAS AUTHENTICATION
-        repeating_assigment.task_id = task_id
-        repeating_assigment.class_id = class_id
-        repeating_assigment.repeat_freq = details['repeat_freq']
-        repeating_assigment.repeat_end = details['repeat_end']
+        repeating_task = RepeatingTask()
+        repeating_task.username = 'Princeton Student' # TODO UPDATE TO USE CAS AUTHENTICATION
+        repeating_task.task_id = task_id
+        repeating_task.class_id = class_id
+        repeating_task.repeat_freq = details['repeat_freq']
+        repeating_task.repeat_end = details['repeat_end']
 
-        db.session.add(repeating_assigment)
+        db.session.add(repeating_task)
         db.session.commit()
