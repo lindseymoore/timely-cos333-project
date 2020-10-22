@@ -10,6 +10,8 @@
         <h3 class="mb-0">Classes</h3>
         <i class="fa fa-plus add" data-toggle="modal" data-target="#classModal"></i>
       </div>
+
+      <!-- Retrieves the class list and displays the class details -->
       <div class="pill-box">
         {% for class in class_list: %} 
           <div class="pill" style="border-left-color: var(--hl-{{class['color']}})">
@@ -18,12 +20,15 @@
           </div>
         {% endfor %}
       </div>
+
     </div>
     <div class="col-8 overflow-auto py-3" id="task-col">
       <div class="d-flex justify-content-between align-items-center pb-3">
         <h3 class="mb-0">Tasks</h3>
         <i class="fa fa-plus add" data-toggle="modal" data-target="#taskModal"></i>
       </div>
+
+      <!-- Retrieves the task list and displays the task details -->
       <div class="pill-box">
         {% for task in task_list: %}
           <div class="pill" style="border-left-color: var(--hl-red)">
@@ -38,6 +43,7 @@
           </div>
         {% endfor %}
       </div>
+      
     </div>
   </div>
 </div>
