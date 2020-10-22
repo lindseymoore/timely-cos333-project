@@ -14,7 +14,7 @@
         {% for class in class_list: %} 
           <div class="pill" style="border-left-color: var(--hl-{{class['color']}})">
             {{class["title"]}}<br>
-            <div class="subtle">{{class["class_dept"]}}{{class["class_num"]}}</div>
+            <div class="subtle">{{class["dept"]}}{{class["num"]}}</div>
           </div>
         {% endfor %}
       </div>
@@ -28,12 +28,12 @@
         {% for task in task_list: %}
           <div class="pill" style="border-left-color: var(--hl-red)">
             <div class="d-flex justify-content-between">
-              <div>{{task["task_title"]}}</div>
+              <div>{{task["title"]}}</div>
               <div>{{task["due_date"]}}</div>
             </div>
             <div class="d-flex justify-content-between">
               <div class="subtle">{{task["class"]}}</div>
-              <div class="subtle">{{task["estimated_time"]}}</div>
+              <div class="subtle">{{task["est_time"]}} hr</div>
             </div>
           </div>
         {% endfor %}
@@ -56,31 +56,31 @@
         <form action="/task_form">
             <div class="form-group">
               <label for="name">Name</label>
-              <input type="text" class="form-control" id="name">
+              <input type="text" class="form-control" name="name" id="name">
             </div>
             <div class="form-group">
               <label for="class">Class</label>
-              <input type="text" class="form-control" id="class">
+              <input type="text" class="form-control" name="class" id="class">
             </div>
             <div class="form-group">
               <label for="priority">Priority</label>
-              <input type="text" class="form-control" id="priority">
+              <input type="text" class="form-control" name="priority" id="priority">
             </div>
             <div class="form-group">
               <label for="estimated_time">Estimated Completion Time</label>
-              <input type="text" class="form-control" id="estimated_time">
+              <input type="text" class="form-control" name="estimated_time" id="estimated_time">
             </div>
             <div class="form-group">
               <label for="link">Link</label>
-              <input type="text" class="form-control" id="link">
+              <input type="text" class="form-control" name="link" id="link">
             </div>
             <div class="form-group">
               <label for="due_date">Due Date</label>
-              <input type="text" class="form-control" id="due_date">
+              <input type="text" class="form-control" name="due_date" id="due_date">
             </div>
             <div class="form-group">
               <label for="notes">Notes</label>
-              <input type="text" class="form-control" id="notes">
+              <input type="text" class="form-control" name="notes" id="notes">
             </div>
             <div class="form-group d-flex flex-row-reverse">
               <button type="button" class="btn btn-secondary ml-3" data-dismiss="modal">Cancel</button>
@@ -106,19 +106,19 @@
         <form action="/class_form">
             <div class="form-group">
               <label for="name">Name</label>
-              <input type="text" class="form-control" id="name">
+              <input type="text" class="form-control" name="name" id="name">
             </div>
             <div class="form-group">
               <label for="department">Department</label>
-              <input type="text" class="form-control" id="department">
+              <input type="text" class="form-control" name="department" id="department">
             </div>
             <div class="form-group">
               <label for="number">Course Number</label>
-              <input type="text" class="form-control" id="number">
+              <input type="text" class="form-control" name="number" id="number">
             </div>
             <div class="form-group">
               <label for="color">Color</label>
-              <input type="text" class="form-control" id="color">
+              <input type="text" class="form-control" name="color" id="color">
             </div>
             <div class="form-group d-flex flex-row-reverse">
               <button type="button" class="btn btn-secondary ml-3" data-dismiss="modal">Cancel</button>

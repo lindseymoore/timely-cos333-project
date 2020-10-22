@@ -13,14 +13,14 @@ def class_handler(class_details: dict):
     Configures this dictionary into Class, and ClassDetails classes and inputs them as
     new entires in the class and class_details tables respectively.
     '''
-    new_class = Class(class_title = class_details['class_title'], dept = class_details['dept'], num = class_details['num'])
+    new_class = Class(title = class_details['title'], dept = class_details['dept'], num = class_details['num'])
     db.session.add(new_class)
     db.session.commit()
 
     # Insert into class_details table
     details = ClassDetails()
-    details.class_id = get_class_id(class_details['class_title'])
-    details.username = 'Princeton Student'  # TODO UPDATE TO USE CAS AUTHENTICATION
+    details.class_id = get_class_id(class_details['title'])
+    details.username = 'dlipman'  # TODO UPDATE TO USE CAS AUTHENTICATION
     details.active_status = True
     details.color = class_details['color']
     db.session.add(details)
@@ -30,10 +30,10 @@ def class_handler(class_details: dict):
 # Handles the creation of tasks for input into "Task" table
 def task_handler(details: dict):
     '''
-    Takes details dictionary (user inputted fields in new Task form) as input.  
+    Takes details dictionary (user inputted fields in new Task form) as input.
     Configures this dictionary into Task, TaskDetails, TaskTime, and RepeatingTask
     classes and inputs them as new entries into the task, task_details, task_time
-    and repeating_task tables respectively. 
+    and repeating_task tables respectively.
     '''
     task = Task()
     task_details = TaskDetails()
@@ -45,7 +45,7 @@ def task_handler(details: dict):
     iteration = get_next_task_iteration(class_id, task_id)
 
     # Insert into task table
-    task.username = 'Princeton Student' # TODO UPDATE TO USE CAS AUTHENTICATION
+    task.username = 'dlipman' # TODO UPDATE TO USE CAS AUTHENTICATION
     task.task_id = task_id
     task.class_id = class_id
     task.title = details['task_title']
@@ -59,7 +59,7 @@ def task_handler(details: dict):
     db.session.commit()
 
     # Insert into TaskDetails table
-    task_details.username = 'Princeton Student' # TODO UPDATE TO USE CAS AUTHENTICATION
+    task_details.username = 'dlipman' # TODO UPDATE TO USE CAS AUTHENTICATION
     task_details.task_id = task_id
     task_details.class_id = class_id
     task_details.iteration = iteration
@@ -73,11 +73,11 @@ def task_handler(details: dict):
     db.session.commit()
 
     # Insert into TaskTime table
-    task_time.username = 'Princeton Student' # TODO UPDATE TO USE CAS AUTHENTICATION
+    task_time.username = 'dlipman' # TODO UPDATE TO USE CAS AUTHENTICATION
     task_time.task_id = task_id
     task_time.class_id = class_id
     task_time.iteration = iteration
-    task_time.estimated_time = details['estimated_time']
+    task_time.est_time = details['est_time']
     task_time.actual_time = None
     task_time.timely_prediction = None
 
@@ -87,7 +87,7 @@ def task_handler(details: dict):
     # If task is repeating, insert entry into RepeatingTasks table
     if details['repeat_freq'] != None:
         repeating_task = RepeatingTask()
-        repeating_task.username = 'Princeton Student' # TODO UPDATE TO USE CAS AUTHENTICATION
+        repeating_task.username = 'dlipman' # TODO UPDATE TO USE CAS AUTHENTICATION
         repeating_task.task_id = task_id
         repeating_task.class_id = class_id
         repeating_task.repeat_freq = details['repeat_freq']

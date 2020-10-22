@@ -22,7 +22,7 @@ def fetch_class_list(username: str) -> List[dict]:
                 ClassDetails, ClassDetails.class_id == Class.class_id).all()
     for course, course_details in class_details:
         # Create class_obj dictionary with all columns that will be displayed to the user
-        class_obj = {'class_title': course.title, 'dept': course.dept, 'num': course.num, 'color': course_details.color}
+        class_obj = {'title': course.title, 'dept': course.dept, 'num': course.num, 'color': course_details.color}
         classes.append(class_obj)
 
     return classes
@@ -32,7 +32,7 @@ def fetch_task_list(username: str) -> List[dict]:
     """
     Given a user with username, query the database to search for all tasks the user has
     inputted. Return a list of dictionaries, with each dictionary representing one task.
-    Fetches title, , priority, estimated_time, link, notes, due_date, repeat_freq,
+    Fetches title, priority, est_time, link, notes, due_date, repeat_freq,
     and repeat_end.
     """
     task_list = []
@@ -61,7 +61,7 @@ def fetch_task_list(username: str) -> List[dict]:
         # Create task_obj dictionary with all columns that will be displayed to the user
         task_obj = {'title': task.title, 'class': course.title,
                     'priority:': task_details.priority,
-                    'estimated_time': task_time.estimated_time,
+                    'est_time': task_time.est_time,
                     'link': task_details.link, 'notes': task_details.notes,
                     'due_date': task_details.due_date,
                     'repeat_freq': repeat_freq, 'repeat_ends': repeat_end}

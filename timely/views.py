@@ -14,6 +14,7 @@ def index():
     #model = User.query.filter_by(username="dlipman").first()
     classes = fetch_class_list("dlipman")
     tasks = fetch_task_list("dlipman")
+    print(classes) # TODO remove
     return render_template("index.html",
                 class_list=classes,
                 task_list=tasks)
@@ -26,7 +27,7 @@ def task_form():
     Entries being inserted into tables: task, task_details, task_time, repeating_task.
     """
 
-    details = {'task_title': None, 'class_title': None, 'dept' : None, 'num': None, 'priority': None, 'estimated_time': None, 
+    details = {'task_title': None, 'class_title': None, 'dept' : None, 'num': None, 'priority': None, 'est_time': None,
     'link': None, 'notes': None, 'due_date': None, 'due_time': None, 'repeat_freq': None, 'repeat_end': None}
 
     for key, item in request.args.items():
@@ -40,7 +41,7 @@ def task_form():
 def class_form():
     """Retrieve information from the class form and insert new table entries into the database.
        Entries being inserted into tables: class, class_details."""
-    class_details = {'class_title': None, 'dept': None, 'num': None, 'color': None}
+    class_details = {'title': None, 'dept': None, 'num': None, 'color': None}
 
     for key, item in request.args.items():
         class_details[key] = item
