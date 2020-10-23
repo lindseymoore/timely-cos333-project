@@ -59,17 +59,24 @@ def fetch_task_list(username: str) -> List[dict]:
             repeat_end = repeating_task.repeat_end
 
         # Create task_obj dictionary with all columns that will be displayed to the user
-        task_obj = {'title': task.title, 'class': course.title,
-                    'priority:': task_details.priority,
-                    'est_time': task_time.est_time,
-                    'link': task_details.link, 'notes': task_details.notes,
-                    'due_date': task_details.due_date,
-                    'repeat_freq': repeat_freq, 'repeat_end': repeat_end,
-                    'color': course.color}
+        task_obj = {"title": task.title, "class": course.title, "task_id": task.task_id,
+                    "color": course.color,
+                    "priority:": task_details.priority,
+                    "completed": task.completed,
+                    "est_time": task_time.est_time,
+                    "link": task_details.link, "notes": task_details.notes,
+                    "due_date": task_details.due_date,
+                    "repeat_freq": repeat_freq, "repeat_ends": repeat_end}
+
         task_list.append(task_obj)
 
     return task_list
 
+def mark_task_complete(task_id: int):
+    """Update the task given by task_id as complete in the db."""
+    task = db.session.query(Task).filter(Task.task_id == task_id).first()
+    task.completed = True
+    db.session.commit()
 
 def get_class_id(class_title: str) -> int:
     """
@@ -83,19 +90,9 @@ def get_task_id(task_title: str, class_id: int) -> int:
     """
     Return task_id for a given task_title and class_id, where task_id is autoincrementing
     """
-    task_info = db.session.query(Task).filter((Task.class_id == class_id) & (Task.title == task_title)).first()
+    task_info = db.session.query(Task).filter((Task.class_id == class_id) &
+                (Task.title == task_title)).first()
     return task_info.task_id
-
-
-def get_next_task_id(class_id: int) -> int:
-    """
-    Returns the next sequential task id available in the class with class_id.
-    This is because task_ids are update sequentially within each class. This function
-    should be used when adding new tasks into the database, not when searching for a
-    task id associated with a given task.
-    """
-    task_id = db.session.query(Task.task_id).order_by(Task.task_id).first()
-    return task_id.task_id + 1
 
 
 def get_next_task_iteration(class_id: int, task_id: int) -> int:

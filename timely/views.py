@@ -3,8 +3,10 @@
 from flask import redirect, render_template, request
 
 from timely import app
-from timely.db_queries import fetch_class_list, fetch_task_list
+from timely.db_queries import (fetch_class_list, fetch_task_list,
+                               mark_task_complete)
 from timely.form_handler import class_handler, task_handler
+
 
 @app.route("/")
 @app.route("/index")
@@ -23,8 +25,9 @@ def task_form():
     Entries being inserted into tables: task, task_details, task_time, repeating_task.
     """
 
-    details = {'task_title': None, 'class_id': None, 'dept' : None, 'num': None, 'priority': None, 'est_time': None,
-    'link': None, 'notes': None, 'due_date': None, 'due_time': None, 'repeat_freq': None, 'repeat_end': None}
+    details = {'task_title': None, 'class_id': None, 'dept' : None, 'num': None,
+    'priority': None, 'est_time': None, 'link': None, 'notes': None, 'due_date': None,
+    'due_time': None, 'repeat_freq': None, 'repeat_end': None}
 
     for key, item in request.args.items():
         details[key] = item
@@ -44,4 +47,14 @@ def class_form():
 
     class_handler(class_details)
 
+    return redirect("/")
+
+@app.route("/completion_form")
+def completion_form():
+    """
+    Retrieves the status of tasks that are marked complete
+    and updates the database completed column.
+    """
+    for task_id in request.args.values():
+        mark_task_complete(int(task_id))
     return redirect("/")
