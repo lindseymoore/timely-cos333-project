@@ -53,8 +53,7 @@ def class_form():
 @app.route("/completion_form")
 def completion_form():
     """Retrieves the status of tasks that are marked complete and updates the database completed column."""
-    form_task_ids = request.form.getlist("task_ids")
-    for form_complete_id in form_task_ids:
-            mark_task_complete(int(form_complete_id))
+    for name, task_id in request.args.items():
+            mark_task_complete(int(task_id))
     return redirect("/")
     
