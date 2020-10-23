@@ -3,7 +3,7 @@
 from flask import redirect, render_template, request
 
 from timely import app
-from timely.db_queries import fetch_class_list, fetch_task_list
+from timely.db_queries import fetch_class_list, fetch_task_list, mark_task_complete
 from timely.form_handler import class_handler, task_handler
 
 
@@ -49,3 +49,12 @@ def class_form():
     class_handler(class_details)
 
     return redirect("/")
+
+@app.route("/completion_form")
+def completion_form():
+    """Retrieves the status of tasks that are marked complete and updates the database completed column."""
+    form_task_ids = request.form.getlist("task_ids")
+    for form_complete_id in form_task_ids:
+            mark_task_complete(int(form_complete_id))
+    return redirect("/")
+    
