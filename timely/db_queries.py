@@ -21,7 +21,8 @@ def fetch_class_list(username: str) -> List[dict]:
     class_details = db.session.query(Class).filter(Class.username == username).all()
     for course in class_details:
         # Create class_obj dictionary with all columns that will be displayed to the user
-        class_obj = {"title": course.title, "dept": course.dept, "num": course.num, "color": course.color}
+        class_obj = {"class_id": course.class_id, "title": course.title, "dept": course.dept,
+                    "num": course.num, "color": course.color}
         classes.append(class_obj)
 
     return classes
@@ -65,6 +66,7 @@ def fetch_task_list(username: str) -> List[dict]:
                     "link": task_details.link, "notes": task_details.notes,
                     "due_date": task_details.due_date,
                     "repeat_freq": repeat_freq, "repeat_ends": repeat_end}
+
         task_list.append(task_obj)
 
     return task_list
@@ -76,10 +78,18 @@ def mark_task_complete(task_id: int):
 
 def get_class_id(class_title: str) -> int:
     """
-    Returns class_id for a given class_title, where class_id is of type SERIAL
+    Returns class_id for a given class_title, where class_id is autoincrementing
     """
     class_info = db.session.query(Class).filter(Class.title == class_title).first()
     return class_info.class_id
+
+
+def get_task_id(task_title: str, class_id: int) -> int:
+    """
+    Return task_id for a given task_title and class_id, where task_id is autoincrementing
+    """
+    task_info = db.session.query(Task).filter((Task.class_id == class_id) & (Task.title == task_title)).first()
+    return task_info.task_id
 
 
 def get_next_task_id(class_id: int) -> int:

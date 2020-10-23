@@ -62,7 +62,7 @@
       <div class="pill-box">
         {% for task in task_list: %}
         {% if task["completed"] is true %}
-          <div class="pill" style="border-left-color: var(--hl-red)">
+          <div class="pill" style="border-left-color: var(--hl-{{task['color']}})">
             <div class="d-flex justify-content-between">
               <div>{{task["title"]}}</div>
               <div>{{task["due_date"]}}</div>
@@ -70,7 +70,7 @@
             <div class="d-flex justify-content-between">
               <div class="subtle">{{task["class"]}}</div>
               <div class="subtle">{{task["est_time"]}} hr</div>
-            </div >
+            </div>
           </div>
         {% endif %}
         {% endfor %}
@@ -97,8 +97,14 @@
               <input type="text" class="form-control" name="task_title" id="task_title">
             </div>
             <div class="form-group">
-              <label for="class_title">Class</label>
-              <input type="text" class="form-control" name="class_title" id="class_title">
+              <label for="class_id">Class</label>
+              <select class="form-control" name="class_id" id="class_id">
+                {% for class in class_list %}
+                  <option value="{{class['class_id']}}">
+                    {{ class["title"] }}
+                  </option>
+                {% endfor %}
+              </select>
             </div>
             <div class="form-group">
               <label for="priority">Priority</label>
