@@ -1,15 +1,122 @@
-@import url('https://fonts.googleapis.com/css2?family=PT+Sans:wght@400;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@200;400&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Yellowtail&display=swap");
+
+:root {
+    --dark-5: #1e1e1e;
+    --dark-4: #2b2b2b;
+    --dark-3: #515151;
+    --dark-2: #b6b6b6;
+    --dark-1: #e5e5e5;
+
+    --hl-red: #ff4545;
+    --hl-purple: #8e58ff;
+    --hl-orange: #ffad4e;
+    --hl-green: #a2ff93;
+}
+
+html, body, #content {
+    height: 100%;
+}
+
+.full-height {
+    display: flex; flex-direction: column; height: 100%; 
+}
+
+/* Custom style for displaying classes and estimated time*/
+.subtle {
+    font-size: 0.9em;
+    color: var(--dark-2);
+}
+
+#task-col {
+    border-width: 0px;
+    border-left-width: 10px;
+    border-left-color: var(--dark-5);
+    border-style: solid;
+}
+
+.dark-4 {
+    background: var(--dark-4)
+}
+
+/* General container for displaying multiple classes/tasks containers*/
+.pill-box {
+    background: var(--dark-3);
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* Container for displaying information for individual classes/tasks */
+.pill {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding: 3px 10px;
+    border-width: 0px;
+    border-style: solid;
+    border-left-width: 10px;
+    box-shadow: 0 3px 0 var(--dark-4);
+    margin-bottom: 3px;
+}
+
+ /* Ensures that the last entry of class/task displayed does not show a bottom line */
+.pill:last-child {
+    border-bottom-width: 0px ;
+    box-shadow: 0 0;
+    margin-bottom: 0px;
+}
+
+/* Adds style to the add icon for creating a new class/task */
+.add {
+    font-size: 1.5em;
+    color: var(--dark-1);
+    padding: 0px;
+}
+
+.add:hover {
+    color: var(--dark-2)
+}
+
+/* Provides consistent theme to the bootstrap modal */
+.modal-content {
+    background-color: var(--dark-4);
+}
+
+.modal-header {
+    border-bottom-width: 0px;
+}
+
+.modal-footer {
+    border-top-width: 0px;
+}
+
+/* Styles the close/exit icon on the modal */
+.close {
+    color: inherit;
+}
+
+.close:hover {
+    color: var(--dark-1);
+}
 
 body {
-    background-color: #93c572;
-    font-family: 'PT Sans', sans-serif;
-    color: white;
+    background-color: var(--dark-5);
+    color: var(--dark-1);
+    font-family: "Montserrat", sans-serif;
+    font-weight: 400;
 }
 
-h1 {
-    font-size: 6em;
+h1, h2, h3, h4, h5 {
+    font-weight: 200;
 }
 
-p {
+.navbar-dark .navbar-nav .nav-link {
+    color: var(--dark-1);
+}
+
+#logo {
+    font-family: "Yellowtail", cursive;
     font-size: 3em;
 }
