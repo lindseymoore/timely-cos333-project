@@ -58,8 +58,9 @@ def fetch_task_list(username: str) -> List[dict]:
             repeat_end = repeating_task.repeat_end
 
         # Create task_obj dictionary with all columns that will be displayed to the user
-        task_obj = {"title": task.title, "class": course.title,
+        task_obj = {"title": task.title, "class": course.title, "task_id": task.task_id,
                     "priority:": task_details.priority,
+                    "completed": task.completed,
                     "est_time": task_time.est_time,
                     "link": task_details.link, "notes": task_details.notes,
                     "due_date": task_details.due_date,
@@ -68,6 +69,10 @@ def fetch_task_list(username: str) -> List[dict]:
 
     return task_list
 
+def mark_task_complete(task_id: int):
+    task = db.session.query(Task).filter(Task.task_id == task_id).first()
+    task.completed = True
+    db.session.commit()
 
 def get_class_id(class_title: str) -> int:
     """
