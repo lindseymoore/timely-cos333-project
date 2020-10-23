@@ -1,8 +1,7 @@
 """Functions to process user input and insert as new entries in the database."""
 
 from timely import db
-from timely.db_queries import (get_class_id, get_next_task_id,
-                               get_next_task_iteration, get_task_id)
+from timely.db_queries import get_next_task_iteration, get_task_id
 from timely.models import Class, RepeatingTask, Task, TaskDetails, TaskTime
 
 
@@ -31,12 +30,9 @@ def task_handler(details: dict):
     task_details = TaskDetails()
     task_time = TaskTime()
 
-    # Query database for class_id, task_id
-    class_id = get_class_id(details['class_title'])
-
     # Insert into task table
     task.username = 'dlipman' # TODO UPDATE TO USE CAS AUTHENTICATION
-    task.class_id = class_id
+    task.class_id = details['class_id']
     task.title = details["task_title"]
     if details["repeat_freq"] is not None:
         task.repeat = True
@@ -47,14 +43,15 @@ def task_handler(details: dict):
     db.session.add(task)
     db.session.commit()
 
-    # Get task_id for inserted task, as task_id is autoincrementing. Get iteration of task with task_id.
-    task_id = get_task_id(details['task_title'], class_id)
-    iteration = get_next_task_iteration(class_id, task_id)
+    # Get task_id for inserted task, as task_id is autoincrementing.
+    # Get iteration of task with task_id.
+    task_id = get_task_id(details['task_title'], details['class_id'])
+    iteration = get_next_task_iteration(details['class_id'], task_id)
 
     # Insert into TaskDetails table
     task_details.username = "dlipman" # TODO UPDATE TO USE CAS AUTHENTICATION
     task_details.task_id = task_id
-    task_details.class_id = class_id
+    task_details.class_id = details['class_id']
     task_details.iteration = iteration
     task_details.priority = details["priority"]
     task_details.link = details["link"]
@@ -68,7 +65,7 @@ def task_handler(details: dict):
     # Insert into TaskTime table
     task_time.username = "dlipman" # TODO UPDATE TO USE CAS AUTHENTICATION
     task_time.task_id = task_id
-    task_time.class_id = class_id
+    task_time.class_id = details['class_id']
     task_time.iteration = iteration
     task_time.est_time = details["est_time"]
     task_time.actual_time = None
@@ -82,7 +79,7 @@ def task_handler(details: dict):
         repeating_task = RepeatingTask()
         repeating_task.username = "dlipman" # TODO UPDATE TO USE CAS AUTHENTICATION
         repeating_task.task_id = task_id
-        repeating_task.class_id = class_id
+        repeating_task.class_id = details['class_id']
         repeating_task.repeat_freq = details["repeat_freq"]
         repeating_task.repeat_end = details["repeat_end"]
 

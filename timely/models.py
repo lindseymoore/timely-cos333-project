@@ -56,7 +56,7 @@ class TaskDetails(db.Model):
         Globally unique class_id given to each class
     iteration: int
         Iteration of a given task (if repeating - i.e., Weekly Reading 3 will have iteration=3).
-        If not repeating, iteration = 1. 
+        If not repeating, iteration = 1.
     priority: int
         The user"s prioritization of an task, has values {0, 1, 2}
     link: str
@@ -74,7 +74,7 @@ class TaskDetails(db.Model):
     iteration = Column(Integer, primary_key = True)
     class_id = Column(Integer)
     priority = Column(Integer)
-    link = Column(String) 
+    link = Column(String)
     due_date = Column(String)
     due_time = Column(Time)
     notes = Column(String)

@@ -29,8 +29,39 @@
       </div>
 
       <!-- Retrieves the task list and displays the task details -->
+      <form action="/completion_form" name="task_list">
+        <div class="pill-box">
+          {% for task in task_list: %}
+          {% if task["completed"] is false %}
+            <div class="pill" style="border-left-color: var(--hl-{{task['color']}})">
+              <div class="d-flex justify-content-between">
+                <div>
+                  {{task["title"]}} 
+                  <label class="checkbox">
+                    <input type="checkbox" name="task_ids" value="{{task['task_id']}}"/>
+                  </label>
+                </div>
+                <div>{{task["due_date"]}}</div>
+              </div>
+              <div class="d-flex justify-content-between">
+                <div class="subtle">{{task["class"]}}</div>
+                <div class="subtle">{{task["est_time"]}} hr</div>
+              </div>
+            </div>
+          {% endif %}
+          {% endfor %}
+        </div>
+        <div class="field is-grouped d-flex flex-row-reverse">
+          <div class="control">
+            <button type="submit" class="btn btn-secondary btn-custom mt-3 btn-sm" >Mark as Completed</button>
+          </div>
+        </div>
+      </form>
+      <br>
+      <h3>Completed Tasks</h3>
       <div class="pill-box">
         {% for task in task_list: %}
+        {% if task["completed"] is true %}
           <div class="pill" style="border-left-color: var(--hl-{{task['color']}})">
             <div class="d-flex justify-content-between">
               <div>{{task["title"]}}</div>
@@ -41,9 +72,10 @@
               <div class="subtle">{{task["est_time"]}} hr</div>
             </div>
           </div>
+        {% endif %}
         {% endfor %}
       </div>
-      
+
     </div>
   </div>
 </div>
@@ -65,12 +97,28 @@
               <input type="text" class="form-control" name="task_title" id="task_title">
             </div>
             <div class="form-group">
-              <label for="class_title">Class</label>
-              <input type="text" class="form-control" name="class_title" id="class_title">
+              <label for="class_id">Class</label>
+              <select class="form-control" name="class_id" id="class_id">
+                {% for class in class_list %}
+                  <option value="{{class['class_id']}}">
+                    {{ class["title"] }}
+                  </option>
+                {% endfor %}
+              </select>
             </div>
             <div class="form-group">
               <label for="priority">Priority</label>
-              <input type="text" class="form-control" name="priority" id="priority">
+              <select class="form-control" name="priority" id="priority">
+                <option value=0>
+                  Low
+                </option>
+                <option value=1>
+                  Medium
+                </option>
+                <option value=2>
+                  High
+                </option>
+              </select>
             </div>
             <div class="form-group">
               <label for="est_time">Estimated Completion Time</label>
@@ -124,7 +172,20 @@
             </div>
             <div class="form-group">
               <label for="color">Color</label>
-              <input type="text" class="form-control" name="color" id="color">
+              <select class="form-control" name="color" id="color">
+                 <option value="red">
+                   Red
+                 </option>
+                 <option value="purple">
+                   Purple
+                 </option>
+                 <option value="orange">
+                   Orange
+                 </option>
+                 <option value="green">
+                   Green
+                 </option>
+               </select>
             </div>
             <div class="form-group d-flex flex-row-reverse">
               <button type="button" class="btn btn-secondary ml-3" data-dismiss="modal">Cancel</button>
