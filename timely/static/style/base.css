@@ -28,6 +28,13 @@ html, body, #content {
     color: var(--dark-2);
 }
 
+button.button.is-danger.is-small{
+    margin-top: 10px;
+    background-color: var(--dark-3);
+    color: white;
+    float: right;
+}
+
 #task-col {
     border-width: 0px;
     border-left-width: 10px;
