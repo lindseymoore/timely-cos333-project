@@ -29,34 +29,54 @@
       </div>
 
       <!-- Retrieves the task list and displays the task details -->
-      <form action="/completion_form" name="task_list"></form>
+      <form action="/completion_form" name="task_list">
         <div class="pill-box">
           {% for task in task_list: %}
           {% if task["completed"] is false %}
             <div class="pill" style="border-left-color: var(--hl-red)">
               <div class="d-flex justify-content-between">
-                <div>{{task["title"]}}</div>
+                <div>
+                  {{task["title"]}} 
+                  <label class="checkbox">
+                    <input type="checkbox" name="task_ids" value="{{task['task_id']}}"/>
+                  </label>
+                </div>
                 <div>{{task["due_date"]}}</div>
               </div>
               <div class="d-flex justify-content-between">
                 <div class="subtle">{{task["class"]}}</div>
                 <div class="subtle">{{task["est_time"]}} hr</div>
-              </div >
-              
-              <label class="checkbox">
-                <input type="checkbox" name="task_ids" value="{{task['task_id']}}"/>
-              </label>
-
+              </div>
             </div>
           {% endif %}
           {% endfor %}
         </div>
         <div class="field is-grouped">
           <div class="control">
-            <button class="button is-danger is-small">Mark All as Complete</button>
+            <button type="submit" class="button is-danger is-small" >Mark as Completed</button>
           </div>
         </div>
       </form>
+      <br>
+      <br>
+      <h3>Completed Tasks</h3>
+      <div class="pill-box">
+        {% for task in task_list: %}
+        {% if task["completed"] is true %}
+          <div class="pill" style="border-left-color: var(--hl-red)">
+            <div class="d-flex justify-content-between">
+              <div>{{task["title"]}}</div>
+              <div>{{task["due_date"]}}</div>
+            </div>
+            <div class="d-flex justify-content-between">
+              <div class="subtle">{{task["class"]}}</div>
+              <div class="subtle">{{task["est_time"]}} hr</div>
+            </div >
+          </div>
+        {% endif %}
+        {% endfor %}
+      </div>
+
     </div>
   </div>
 </div>
