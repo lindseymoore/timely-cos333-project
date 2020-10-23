@@ -68,7 +68,7 @@
               <label for="class_id">Class</label>
               <select class="form-control" name="class_id" id="class_id">
                 {% for class in class_list %}
-                  <option value="{{class['id']}}">
+                  <option value="{{class['class_id']}}">
                     {{ class["title"] }}
                   </option>
                 {% endfor %}
@@ -130,20 +130,7 @@
             </div>
             <div class="form-group">
               <label for="color">Color</label>
-              <select class="form-control" name="color" id="color">
-                <option value="red">
-                  Red
-                </option>
-                <option value="purple">
-                  Purple
-                </option>
-                <option value="orange">
-                  Orange
-                </option>
-                <option value="green">
-                  Green
-                </option>
-              </select>
+              <input type="text" class="form-control" name="color" id="color">
             </div>
             <div class="form-group d-flex flex-row-reverse">
               <button type="button" class="btn btn-secondary ml-3" data-dismiss="modal">Cancel</button>
