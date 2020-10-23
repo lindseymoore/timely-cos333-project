@@ -1,8 +1,7 @@
 """Functions to process user input and insert as new entries in the database."""
 
 from timely import db
-from timely.db_queries import (get_class_id, get_next_task_id,
-                               get_next_task_iteration, get_task_id)
+from timely.db_queries import get_next_task_iteration, get_task_id
 from timely.models import Class, RepeatingTask, Task, TaskDetails, TaskTime
 
 
@@ -44,7 +43,8 @@ def task_handler(details: dict):
     db.session.add(task)
     db.session.commit()
 
-    # Get task_id for inserted task, as task_id is autoincrementing. Get iteration of task with task_id.
+    # Get task_id for inserted task, as task_id is autoincrementing.
+    # Get iteration of task with task_id.
     task_id = get_task_id(details['task_title'], details['class_id'])
     iteration = get_next_task_iteration(details['class_id'], task_id)
 

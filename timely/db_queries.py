@@ -72,6 +72,7 @@ def fetch_task_list(username: str) -> List[dict]:
     return task_list
 
 def mark_task_complete(task_id: int):
+    """Update the task given by task_id as complete in the db."""
     task = db.session.query(Task).filter(Task.task_id == task_id).first()
     task.completed = True
     db.session.commit()
@@ -88,19 +89,9 @@ def get_task_id(task_title: str, class_id: int) -> int:
     """
     Return task_id for a given task_title and class_id, where task_id is autoincrementing
     """
-    task_info = db.session.query(Task).filter((Task.class_id == class_id) & (Task.title == task_title)).first()
+    task_info = db.session.query(Task).filter((Task.class_id == class_id) &
+                (Task.title == task_title)).first()
     return task_info.task_id
-
-
-def get_next_task_id(class_id: int) -> int:
-    """
-    Returns the next sequential task id available in the class with class_id.
-    This is because task_ids are update sequentially within each class. This function
-    should be used when adding new tasks into the database, not when searching for a
-    task id associated with a given task.
-    """
-    task_id = db.session.query(Task.task_id).order_by(Task.task_id).first()
-    return task_id.task_id + 1
 
 
 def get_next_task_iteration(class_id: int, task_id: int) -> int:
