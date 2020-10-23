@@ -65,8 +65,14 @@
               <input type="text" class="form-control" name="task_title" id="task_title">
             </div>
             <div class="form-group">
-              <label for="class_title">Class</label>
-              <input type="text" class="form-control" name="class_title" id="class_title">
+              <label for="class_id">Class</label>
+              <select class="form-control" name="class_id" id="class_id">
+                {% for class in class_list %}
+                  <option value="{{class['id']}}">
+                    {{ class["title"] }}
+                  </option>
+                {% endfor %}
+              </select>
             </div>
             <div class="form-group">
               <label for="priority">Priority</label>

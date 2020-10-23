@@ -21,7 +21,8 @@ def fetch_class_list(username: str) -> List[dict]:
     class_details = db.session.query(Class).filter(Class.username == username).all()
     for course in class_details:
         # Create class_obj dictionary with all columns that will be displayed to the user
-        class_obj = {"title": course.title, "dept": course.dept, "num": course.num, "color": course.color}
+        class_obj = {"class_id": course.class_id, "title": course.title, "dept": course.dept,
+                    "num": course.num, "color": course.color}
         classes.append(class_obj)
 
     return classes
@@ -63,7 +64,7 @@ def fetch_task_list(username: str) -> List[dict]:
                     'est_time': task_time.est_time,
                     'link': task_details.link, 'notes': task_details.notes,
                     'due_date': task_details.due_date,
-                    'repeat_freq': repeat_freq, 'repeat_ends': repeat_end,
+                    'repeat_freq': repeat_freq, 'repeat_end': repeat_end,
                     'color': course.color}
         task_list.append(task_obj)
 
