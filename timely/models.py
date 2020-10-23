@@ -7,6 +7,8 @@ from sqlalchemy import Boolean, Column, Date, Float, Integer, String, Time
 
 from timely import db
 
+# Make task_id autoincrementing, class_id no longer primary key in Task, write helper function
+# to fetch task_id from title (in db_queries, for use in form_handler)
 
 class Task(db.Model):
     """
@@ -31,8 +33,8 @@ class Task(db.Model):
      """
     __tablename__ = "task"
     username = Column(String, primary_key=True)
-    task_id = Column(Integer, primary_key=True)
-    class_id = Column(Integer, primary_key=True)
+    task_id = Column(Integer, primary_key=True, autoincrement=True)
+    class_id = Column(Integer)
     title = Column(String)
     repeat = Column(Boolean)
     completed = Column(Boolean)
@@ -69,8 +71,8 @@ class TaskDetails(db.Model):
     __tablename__ = "task_details"
     username = Column(String, primary_key = True)
     task_id = Column(Integer, primary_key = True)
-    class_id = Column(Integer, primary_key = True)
     iteration = Column(Integer, primary_key = True)
+    class_id = Column(Integer)
     priority = Column(Integer)
     link = Column(String) 
     due_date = Column(String)
@@ -98,9 +100,9 @@ class RepeatingTask(db.Model):
         Due Date of last occurrence of the repeated task
      """
     __tablename__ = "repeating_task"
-    username = Column(String, primary_key = True)
+    username = Column(String, primary_key=True)
     task_id = Column(Integer, primary_key=True)
-    class_id = Column(Integer, primary_key=True)
+    class_id = Column(Integer)
     repeat_freq = Column(String)
     repeat_end = Column(Date)
 
@@ -130,9 +132,9 @@ class TaskTime(db.Model):
      """
     __tablename__ = "time"
     task_id = Column(Integer, primary_key=True)
-    class_id = Column(Integer, primary_key=True)
     username = Column(String, primary_key=True)
-    iteration = Column(String, primary_key = True)
+    iteration = Column(String, primary_key=True)
+    class_id = Column(Integer)
     est_time = Column(Float)
     timely_pred = Column(Float)
     actual_time = Column(Float)
