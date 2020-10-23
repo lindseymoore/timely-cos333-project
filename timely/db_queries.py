@@ -60,6 +60,7 @@ def fetch_task_list(username: str) -> List[dict]:
 
         # Create task_obj dictionary with all columns that will be displayed to the user
         task_obj = {"title": task.title, "class": course.title, "task_id": task.task_id,
+                    "color": course.color,
                     "priority:": task_details.priority,
                     "completed": task.completed,
                     "est_time": task_time.est_time,

@@ -3,8 +3,10 @@
 from flask import redirect, render_template, request
 
 from timely import app
-from timely.db_queries import fetch_class_list, fetch_task_list, mark_task_complete
+from timely.db_queries import (fetch_class_list, fetch_task_list,
+                               mark_task_complete)
 from timely.form_handler import class_handler, task_handler
+
 
 @app.route("/")
 @app.route("/index")

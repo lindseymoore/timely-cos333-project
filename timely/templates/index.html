@@ -33,7 +33,7 @@
         <div class="pill-box">
           {% for task in task_list: %}
           {% if task["completed"] is false %}
-            <div class="pill" style="border-left-color: var(--hl-red)">
+            <div class="pill" style="border-left-color: var(--hl-{{task['color']}})">
               <div class="d-flex justify-content-between">
                 <div>
                   {{task["title"]}} 
