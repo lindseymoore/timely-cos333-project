@@ -9,6 +9,11 @@ from timely.db_queries import (fetch_class_list, fetch_task_list,
 from timely.form_handler import class_handler, task_handler
 
 
+# To run the application locally with CAS authentication, check out:
+# "https://stackoverflow.com/questions/50236117/scraping-ssl-certificate-verify-failed-error-for-http-en-wikipedia-org
+# It may be necessary to install certificates
+
+
 @app.route("/")
 @app.route("/index")
 def index():
