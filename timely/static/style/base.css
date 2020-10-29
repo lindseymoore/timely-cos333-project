@@ -85,6 +85,15 @@ html, body, #content {
     color: var(--dark-2)
 }
 
+/* Adds style to the trash icon for deleting a class/task */
+.trash {
+    color: var(--dark-1);
+}
+
+.trash:hover {
+    color: var(--dark-2)
+}
+
 /* Provides consistent theme to the bootstrap modal */
 .modal-content {
     background-color: var(--dark-4);

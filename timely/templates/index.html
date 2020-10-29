@@ -16,7 +16,10 @@
         {% for class in class_list: %} 
           <div class="pill" style="border-left-color: var(--hl-{{class['color']}})">
             {{class["title"]}}<br>
-            <div class="subtle">{{class["dept"]}}{{class["num"]}}</div>
+            <div class="d-flex justify-content-between">
+              <div class="subtle">{{class["dept"]}}{{class["num"]}}</div>
+              <i class="fa fa-trash trash" data-toggle="modal" data-target="#deleteClassModal" data-id="{{class['class_id']}}"></i>
+            </div>
           </div>
         {% endfor %}
       </div>
@@ -34,12 +37,13 @@
           {% for task in task_list: %}
           {% if task["completed"] is false %}
             <div class="pill" style="border-left-color: var(--hl-{{task['color']}})">
-              <div class="d-flex justify-content-between">
+              <div class="d-flex justify-content-between align-items-center">
                 <div>
                   {{task["title"]}} 
-                  <label class="checkbox">
+                  <label class="checkbox mb-0">
                     <input type="checkbox" name="task_ids" value="{{task['task_id']}}"/>
                   </label>
+                  <i class="fa fa-trash trash ml-1" data-toggle="modal" data-target="#deleteTaskModal" data-id="{{task['task_id']}}"></i>
                 </div>
                 <div>{{task["due_date"]}}</div>
               </div>
@@ -196,4 +200,47 @@
     </div>
   </div>
 </div>
+
+<!-- Delete Class Modal -->
+<div class="modal fade" id="deleteClassModal" tabindex="-1" role="dialog" aria-labelledby="deleteClassModal" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title" id="classModal">Delete Class</h3>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Are you sure you want to delete this class and all tasks associated with it?
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button type="submit" class="btn btn-danger">Delete</button>
+        <button type="button" class="btn btn-secondary ml-3" data-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Class Modal -->
+<div class="modal fade" id="deleteTaskModal" tabindex="-1" role="dialog" aria-labelledby="deleteTaskModal" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title" id="classModal">Delete Task</h3>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Are you sure you want to delete this task and all its iterations?
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button type="submit" class="btn btn-danger">Delete</button>
+        <button type="button" class="btn btn-secondary ml-3" data-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 {% endblock %}

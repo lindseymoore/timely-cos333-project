@@ -58,3 +58,20 @@ def completion_form():
     for task_id in request.args.values():
         mark_task_complete(int(task_id))
     return redirect("/")
+
+@app.route("/delete_task")
+def delete_task():
+    """
+    Deletes the task given by the request argument task_id.
+    """
+    # Delete task
+    return redirect("/")
+
+@app.route("/delete_class")
+def delete_class():
+    """
+    Deletes the class given by the request argument class_id and
+    all of the tasks related to it.
+    """
+    # Delete class
+    return redirect("/")

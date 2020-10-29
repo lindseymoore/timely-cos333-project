@@ -111,3 +111,13 @@ def get_next_task_iteration(class_id: int, task_id: int) -> int:
     except:
         # If there is no entry yet for the task in TaskDetails, its iteration is 1
         return 1
+
+
+def delete_class(class_id: int):
+    """Delete a class and all associated tasks."""
+    db.session.query(Class).filter(Class.class_id == class_id).first().delete()
+    db.session.query(Task).filter(Task.class_id == class_id).all().delete()
+    db.session.query(TaskDetails).filter(TaskDetails.class_id == class_id).all().delete()
+    db.session.query(RepeatingTask).filter(RepeatingTask.class_id == class_id).all().delete()
+    db.session.query(TaskTime).filter(TaskTime.class_id == class_id).all().delete()
+    db.session.commit()
