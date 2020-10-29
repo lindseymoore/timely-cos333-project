@@ -6,24 +6,22 @@ from re import sub, match
 from flask import request, session, redirect, abort
 from sys import stderr
 
-#-----------------------------------------------------------------------
 
 class CASClient:
-
-    #-------------------------------------------------------------------
-    
-    # Initialize a new CASClient object so it uses the given CAS
-    # server, or fed.princeton.edu if no server is given.
     
     def __init__(self, url='https://fed.princeton.edu/cas/'):
+        """
+        Initialize a new CASClient object so it uses the given CAS
+        server, or fed.princeton.edu if no server is given.
+        """
         self.cas_url = url
 
-    #-------------------------------------------------------------------
-
-    # Return the URL of the current request after stripping out the
-    # "ticket" parameter added by the CAS server.
 	
     def stripTicket(self):
+        """ 
+        Return the URL of the current request after stripping out the
+        "ticket" parameter added by the CAS server.
+        """
         url = request.url
         if url is None:
             return "something is badly wrong"
@@ -31,12 +29,12 @@ class CASClient:
         url = sub(r'\?&?$|&$', '', url)
         return url
         
-    #-------------------------------------------------------------------
-
-    # Validate a login ticket by contacting the CAS server. If
-    # valid, return the user's username; otherwise, return None.
 
     def validate(self, ticket):
+        """ 
+        Validate a login ticket by contacting the CAS server. If
+        valid, return the user's username; otherwise, return None.
+        """
         val_url = self.cas_url + "validate" + \
             '?service=' + quote(self.stripTicket()) + \
             '&ticket=' + quote(ticket)
@@ -49,12 +47,12 @@ class CASClient:
             return None
         return secondLine
         
-    #-------------------------------------------------------------------
 
-    # Authenticate the remote user, and return the user's username.
-    # Do not return unless the user is successfully authenticated.
-   	
     def authenticate(self):
+        """
+        Authenticate the remote user, and return the user's username.
+        Do not return unless the user is successfully authenticated.
+        """
         
         # If the user's username is in the session, then the user was
         # authenticated previously.  So return the user's username.
@@ -79,11 +77,11 @@ class CASClient:
             
         abort(redirect(login_url))
 
-    #-------------------------------------------------------------------
-
-    # Logout the user.
     
     def logout(self):
+        """
+        Logout the user.
+        """
         
         # Delete the user's username from the session.
         session.pop('username')
@@ -92,7 +90,6 @@ class CASClient:
         logout_url = self.cas_url + 'logout'
         abort(redirect(logout_url))
         
-#-----------------------------------------------------------------------
 
 def main():
     print("CASClient does not run standalone")
