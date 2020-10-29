@@ -65,8 +65,10 @@ def completion_form():
     Retrieves the status of tasks that are marked complete
     and updates the database completed column.
     """
+    username = CASClient().authenticate()
+
     for task_id in request.args.values():
-        mark_task_complete(int(task_id))
+        mark_task_complete(int(task_id), username)
     return redirect("/")
 
 @app.route('/logout', methods=['GET'])
