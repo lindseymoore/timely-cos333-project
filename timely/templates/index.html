@@ -58,13 +58,13 @@
         </div>
       </form>
       <br>
-      <h3>Completed Tasks</h3>
+      <h5>Completed Tasks</h5>
       <div class="pill-box">
         {% for task in task_list: %}
         {% if task["completed"] == true %}
           <div class="pill" style="border-left-color: var(--hl-{{task['color']}})">
             <div class="d-flex justify-content-between">
-              <div>{{task["title"]}}</div>
+              <div><del>{{task["title"]}}</del></div>
               <div>{{task["due_date"]}}</div>
             </div>
             <div class="d-flex justify-content-between">

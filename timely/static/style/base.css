@@ -126,3 +126,10 @@ h1, h2, h3, h4, h5 {
     font-family: "Yellowtail", cursive;
     font-size: 3em;
 }
+
+/* Circular highlight around an icon */
+.circle-icon {
+    background: var(--hl-purple);
+    padding: .5em;
+    border-radius: 50%;
+}
