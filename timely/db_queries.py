@@ -72,9 +72,9 @@ def fetch_task_list(username: str) -> List[dict]:
 
     return task_list
 
-def mark_task_complete(task_id: int):
+def mark_task_complete(task_id: int, username: str):
     """Update the task given by task_id as complete in the db."""
-    task = db.session.query(Task).filter(Task.task_id == task_id).first()
+    task = db.session.query(Task).filter((Task.username == username) & (Task.task_id == task_id)).first()
     task.completed = True
     db.session.commit()
 

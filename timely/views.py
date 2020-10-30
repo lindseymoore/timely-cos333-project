@@ -3,17 +3,27 @@
 from flask import redirect, render_template, request
 
 from timely import app
+from timely.CASClient import CASClient
 from timely.db_queries import (fetch_class_list, fetch_task_list,
                                mark_task_complete, delete_class, delete_task)
 from timely.form_handler import class_handler, task_handler
+
+
+# To run the application locally with CAS authentication, check out:
+# "https://stackoverflow.com/questions/50236117/scraping-ssl-certificate-verify-failed-error-for-http-en-wikipedia-org
+# It may be necessary to install certificates
 
 
 @app.route("/")
 @app.route("/index")
 def index():
     """Return the index page."""
-    classes = fetch_class_list("dlipman")
-    tasks = fetch_task_list("dlipman")
+    username = CASClient().authenticate()
+
+    # classes = fetch_class_list("dlipman")
+    # tasks = fetch_task_list("dlipman")
+    classes = fetch_class_list(username)
+    tasks = fetch_task_list(username)
     return render_template("index.html",
                 class_list=classes,
                 task_list=tasks)
@@ -25,9 +35,11 @@ def task_form():
     Entries being inserted into tables: task, task_details, task_time, repeating_task.
     """
 
+    username = CASClient().authenticate()
+
     details = {'task_title': None, 'class_id': None, 'dept' : None, 'num': None,
     'priority': None, 'est_time': None, 'link': None, 'notes': None, 'due_date': None,
-    'due_time': None, 'repeat_freq': None, 'repeat_end': None}
+    'due_time': None, 'repeat_freq': None, 'repeat_end': None, 'username': username}
 
     for key, item in request.args.items():
         details[key] = item
@@ -40,7 +52,10 @@ def task_form():
 def class_form():
     """Retrieve information from the class form and insert new table entries into the database.
        Entries being inserted into tables: class."""
-    class_details = {'title': None, 'dept': None, 'num': None, 'color': None}
+
+    username = CASClient().authenticate()
+
+    class_details = {'title': None, 'dept': None, 'num': None, 'color': None, 'username': username}
 
     for key, item in request.args.items():
         class_details[key] = item
@@ -55,8 +70,10 @@ def completion_form():
     Retrieves the status of tasks that are marked complete
     and updates the database completed column.
     """
+    username = CASClient().authenticate()
+
     for task_id in request.args.values():
-        mark_task_complete(int(task_id))
+        mark_task_complete(int(task_id), username)
     return redirect("/")
 
 @app.route("/delete_class")
@@ -75,3 +92,10 @@ def delete_task_endpoint():
     """
     delete_task(request.args["task_id"])
     return redirect("/")
+
+@app.route('/logout', methods=['GET'])
+def logout():
+    """Log the user out of the application."""
+    casClient = CASClient()
+    casClient.authenticate()
+    casClient.logout()
