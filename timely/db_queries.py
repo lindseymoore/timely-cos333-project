@@ -115,9 +115,17 @@ def get_next_task_iteration(class_id: int, task_id: int) -> int:
 
 def delete_class(class_id: int):
     """Delete a class and all associated tasks."""
-    db.session.query(Class).filter(Class.class_id == class_id).first().delete()
-    db.session.query(Task).filter(Task.class_id == class_id).all().delete()
-    db.session.query(TaskDetails).filter(TaskDetails.class_id == class_id).all().delete()
-    db.session.query(RepeatingTask).filter(RepeatingTask.class_id == class_id).all().delete()
-    db.session.query(TaskTime).filter(TaskTime.class_id == class_id).all().delete()
+    db.session.query(Class).filter(Class.class_id == class_id).delete()
+    db.session.query(Task).filter(Task.class_id == class_id).delete()
+    db.session.query(TaskDetails).filter(TaskDetails.class_id == class_id).delete()
+    db.session.query(RepeatingTask).filter(RepeatingTask.class_id == class_id).delete()
+    db.session.query(TaskTime).filter(TaskTime.class_id == class_id).delete()
+    db.session.commit()
+
+def delete_task(task_id: int):
+    """Delete a task and all associated instances."""
+    db.session.query(Task).filter(Task.task_id == task_id).delete()
+    db.session.query(TaskDetails).filter(TaskDetails.task_id == task_id).delete()
+    db.session.query(RepeatingTask).filter(RepeatingTask.task_id == task_id).delete()
+    db.session.query(TaskTime).filter(TaskTime.task_id == task_id).delete()
     db.session.commit()
