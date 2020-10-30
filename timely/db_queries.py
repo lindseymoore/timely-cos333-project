@@ -88,7 +88,7 @@ def fetch_task_details(task_id: int, username: str):
             (TaskTime.task_id == Task.task_id)).all()
 
     for (task, task_details, task_time) in details:
-        task_details_obj = {"title": task.title, "class": get_class_id(task.class_id),
+        task_details_obj = {"title": task.title, "class": get_class_title(task.class_id),
                     "repeating": task.repeat, "iteration": task_details.iteration,
                     "priority": task_details.priority, "link": task_details.link,
                     "due_date": task_details.due_date, "notes": task_details.notes,
@@ -103,12 +103,21 @@ def mark_task_complete(task_id: int, username: str):
     task.completed = True
     db.session.commit()
 
+
 def get_class_id(class_title: str) -> int:
     """
     Returns class_id for a given class_title, where class_id is autoincrementing
     """
     class_info = db.session.query(Class).filter(Class.title == class_title).first()
     return class_info.class_id
+
+
+def get_class_title(class_id: int) -> str:
+    """
+    Return class_title for a given class_id
+    """
+    class_info = db.session.query(Class).filter(Class.class_id == class_id).first()
+    return class_info.title
 
 
 def get_task_id(task_title: str, class_id: int) -> int:

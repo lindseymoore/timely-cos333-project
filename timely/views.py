@@ -20,8 +20,6 @@ def index():
     """Return the index page."""
     username = CASClient().authenticate()
 
-    # classes = fetch_class_list("dlipman")
-    # tasks = fetch_task_list("dlipman")
     classes = fetch_class_list(username)
     tasks = fetch_task_list(username)
     return render_template("index.html",
