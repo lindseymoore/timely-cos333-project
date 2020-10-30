@@ -82,7 +82,7 @@ def logout():
     casClient.logout()
 
 @app.route("/task_details")
-def task_details():
+def task_details_modal():
     """
     Show the task details modal.
     """

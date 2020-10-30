@@ -197,31 +197,33 @@
   </div>
 </div>
 
+{% if "task_details" in request.url_rule.rule%}
 <!-- Task Details Modal -->
 <div class="modal fade" id="taskDetailsModal" tabindex="-1" role="dialog" aria-labelledby="taskDetailsModal" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        {% for details in task_details %}
-          <h3 class="modal-title" id="taskDetailsModal">details["title"]</h3>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <h4>Class: </h4> <p>details["class"]</p>
-          <h4>Repeating: </h4> <p>details["repeating"]</p>
-          <h4>Due Date: </h4> <p>details["due_date"]</p>
-          <h4>Priority: </h4> <p>details["priority"]</p>
-          <h4>Link: </h4> <p><a href="#">details["link"]</a></p>
-          <h4>Estimated Time: </h4> <p>details["est_time"]</p>
-          <h4>Notes: </h4> <p>details["notes"]</p>
-        {% endfor %}
+        <h3 class="modal-title" id="taskDetailsModal">{{task_details["title"]}}</h3>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <h4>Class: </h4> <p>{{task_details["class"]}}</p>
+        <h4>Repeating: </h4> <p>{{task_details["repeating"]}}</p>
+        <h4>Due Date: </h4> <p>{{task_details["due_date"]}}</p>
+        <h4>Priority: </h4> <p>{{task_details["priority"]}}</p>
+        <h4>Link: </h4> <p><a href="#">{{task_details["link"]}}</a></p>
+        <h4>Estimated Time: </h4> <p>{{task_details["est_time"]}}</p>
+        <h4>Notes: </h4> <p>{{task_details["notes"]}}</p>
       </div>
     </div>
   </div>
 </div>
-{% if task_details %}
-  <script>$('#taskDetailsModal').modal('toggle')</script>
+<script>
+  $(document).ready(function() {
+    $('#taskDetailsModal').modal('toggle');
+  });
+</script>
 {% endif %}
 {% endblock %}
