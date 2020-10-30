@@ -5,7 +5,7 @@ from flask import redirect, render_template, request
 from timely import app
 from timely.CASClient import CASClient
 from timely.db_queries import (fetch_class_list, fetch_task_list,
-                               mark_task_complete)
+                               mark_task_complete, delete_class, delete_task)
 from timely.form_handler import class_handler, task_handler
 
 
@@ -76,10 +76,26 @@ def completion_form():
         mark_task_complete(int(task_id), username)
     return redirect("/")
 
+@app.route("/delete_class")
+def delete_class_endpoint():
+    """
+    Deletes the class given by the request argument class_id and
+    all of the tasks related to it.
+    """
+    delete_class(request.args["class_id"])
+    return redirect("/")
+
+@app.route("/delete_task")
+def delete_task_endpoint():
+    """
+    Deletes the task given by the request argument task_id.
+    """
+    delete_task(request.args["task_id"])
+    return redirect("/")
+
 @app.route('/logout', methods=['GET'])
 def logout():
-    
+    """Log the user out of the application."""
     casClient = CASClient()
     casClient.authenticate()
     casClient.logout()
-    
