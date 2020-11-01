@@ -5,8 +5,8 @@ from typing import List
 from sqlalchemy import func
 
 from timely import db
-from timely.models import (Class, RepeatingTask, Task,
-                           TaskDetails, TaskTime)
+from timely.models import (Class, Task,
+                           TaskIteration)
 
 
 def fetch_class_list(username: str) -> List[dict]:
@@ -37,13 +37,13 @@ def fetch_task_list(username: str) -> List[dict]:
     """
     task_list = []
 
-    # JOIN query to get information from task, Class, taskDetails, and taskTime tables
-    task_info = db.session.query(Task, Class, TaskDetails, TaskTime,
+    # JOIN query to get information from task, Class, TaskIteration, and TaskIteration tables
+    task_info = db.session.query(Task, Class, TaskIteration
                 ).filter(Task.username == username
-                ).join(TaskDetails, (TaskDetails.class_id == Task.class_id)
-                & (TaskDetails.task_id == Task.task_id) & (TaskDetails.username == Task.username)
-                ).join(TaskTime, (TaskTime.class_id == Task.class_id)
-                & (TaskTime.task_id == Task.task_id) & (TaskTime.username == Task.username)
+                ).join(TaskIteration, (TaskIteration.class_id == Task.class_id)
+                & (TaskIteration.task_id == Task.task_id) & (TaskIteration.username == Task.username)
+                ).join(TaskIteration, (TaskIteration.class_id == Task.class_id)
+                & (TaskIteration.task_id == Task.task_id) & (TaskIteration.username == Task.username)
                 ).join(Class, Class.class_id == Task.class_id).all()
     for (task, course, task_details, task_time) in task_info:
         repeat_freq = None
@@ -51,10 +51,10 @@ def fetch_task_list(username: str) -> List[dict]:
 
         # If the task is repeating, make an additional query to find it"s repeat_freqand repeat_end
         if task.repeat:
-            repeating_task = db.session.query(RepeatingTask).filter((
-                        RepeatingTask.task_id == task.task_id
-                        ) & (RepeatingTask.class_id == task.class_id
-                        ) & (RepeatingTask.username == task.username)).first()
+            repeating_task = db.session.query(Task).filter((
+                        Task.task_id == task.task_id
+                        ) & (Task.class_id == task.class_id
+                        ) & (Task.username == task.username)).first()
             repeat_freq = repeating_task.repeat_freq
             repeat_end = repeating_task.repeat_end
 
@@ -107,10 +107,10 @@ def get_next_task_iteration(class_id: int, task_id: int) -> int:
     try:
         # If a repeating assignment already has details,
         # get the next iteration value of the repeating assignment
-        iteration = db.session.query(func.max(TaskDetails.iteration)).filter((
-                    TaskDetails.class_id == class_id
-                    ) & (TaskDetails.task_id == task_id)).first()
+        iteration = db.session.query(func.max(TaskIteration.iteration)).filter((
+                    TaskIteration.class_id == class_id
+                    ) & (TaskIteration.task_id == task_id)).first()
         return iteration.iteration+1
     except:
-        # If there is no entry yet for the task in TaskDetails, its iteration is 1
+        # If there is no entry yet for the task in TaskIteration, its iteration is 1
         return 1
