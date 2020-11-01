@@ -87,7 +87,7 @@ class TaskIteration(db.Model):
     priority = Column(Integer)
     completed = Column(Boolean)
     link = Column(String) 
-    due_date = Column(String)
+    due_date = Column(Date)
     due_time = Column(Time)
     notes = Column(String)
     est_time = Column(Float)

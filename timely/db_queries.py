@@ -42,19 +42,13 @@ def fetch_task_list(username: str) -> List[dict]:
                 ).filter(Task.username == username
                 ).join(TaskIteration, (TaskIteration.class_id == Task.class_id)
                 & (TaskIteration.task_id == Task.task_id) & (TaskIteration.username == Task.username)
-                ).join(TaskIteration, (TaskIteration.class_id == Task.class_id)
-                & (TaskIteration.task_id == Task.task_id) & (TaskIteration.username == Task.username)
                 ).join(Class, Class.class_id == Task.class_id).all()
-    for (task, course, task_details, task_time) in task_info:
+    for (task, course) in task_info:
         repeat_freq = None
         repeat_end = None
 
         # If the task is repeating, make an additional query to find it"s repeat_freqand repeat_end
         if task.repeat:
-            repeating_task = db.session.query(Task).filter((
-                        Task.task_id == task.task_id
-                        ) & (Task.class_id == task.class_id
-                        ) & (Task.username == task.username)).first()
             repeat_freq = repeating_task.repeat_freq
             repeat_end = repeating_task.repeat_end
 
