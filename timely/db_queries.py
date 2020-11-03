@@ -59,10 +59,42 @@ def fetch_task_list(username: str) -> List[dict]:
                     'link': task_iteration.link, 'notes': task_iteration.notes,
                     'due_date': task_iteration.due_date,
                     'repeat_freq': task.repeat_freq, 'repeat_end': task.repeat_end,
-                    'color': course.color}
+                    'iteration': task_iteration.iteration, 'color': course.color}
+
         task_list.append(task_obj)
 
     return task_list
+
+# TBD whether we need this: Will this be neccessary for the details modal? 
+# def fetch_task_details(task_id: int, username: str):
+#     """
+#     Given a user with username and task with task_id, query the database to search for the details
+#     of the class the user has clicked on. Return a dictionary representing the details of one task.
+#     Fetches title, class, repeat, iteration, priority, link, due_date, notes, est_time.
+#     """
+#     task_details_obj = {}
+
+#     details = db.session.query(Task, TaskDetails, TaskTime).filter((Task.username == username) &
+#             (Task.task_id == task_id)).join(TaskDetails, (TaskDetails.username == Task.username) &
+#             (TaskDetails.task_id == Task.task_id)).join(
+#             TaskTime, (TaskTime.username == Task.username) &
+#             (TaskTime.task_id == Task.task_id)).all()
+
+#     for (task, task_details, task_time) in details:
+#         task_details_obj = {"title": task.title, "class": get_class_title(task.class_id),
+#                     "repeating": task.repeat, "iteration": task_details.iteration,
+#                     "priority": task_details.priority, "link": task_details.link,
+#                     "due_date": task_details.due_date, "notes": task_details.notes,
+#                     "est_time": task_time.est_time}
+
+#     return task_details_obj
+
+
+def mark_task_complete(task_id: int, username: str):
+    """Update the task given by task_id as complete in the db."""
+    task = db.session.query(Task).filter((Task.username == username) & (Task.task_id == task_id)).first()
+    task.completed = True
+    db.session.commit()
 
 
 def get_class_id(class_title: str) -> int:
@@ -73,23 +105,21 @@ def get_class_id(class_title: str) -> int:
     return class_info.class_id
 
 
+def get_class_title(class_id: int) -> str:
+    """
+    Return class_title for a given class_id
+    """
+    class_info = db.session.query(Class).filter(Class.class_id == class_id).first()
+    return class_info.title
+
+
 def get_task_id(task_title: str, class_id: int) -> int:
     """
     Return task_id for a given task_title and class_id, where task_id is autoincrementing
     """
-    task_info = db.session.query(Task).filter((Task.class_id == class_id) & (Task.title == task_title)).first()
+    task_info = db.session.query(Task).filter((Task.class_id == class_id) &
+                (Task.title == task_title)).first()
     return task_info.task_id
-
-
-def get_next_task_id(class_id: int) -> int:
-    """
-    Returns the next sequential task id available in the class with class_id.
-    This is because task_ids are update sequentially within each class. This function
-    should be used when adding new tasks into the database, not when searching for a
-    task id associated with a given task.
-    """
-    task_id = db.session.query(Task.task_id).order_by(Task.task_id).first()
-    return task_id.task_id + 1
 
 
 def get_next_task_iteration(class_id: int, task_id: int) -> int:
@@ -108,3 +138,22 @@ def get_next_task_iteration(class_id: int, task_id: int) -> int:
     except:
         # If there is no entry yet for the task in TaskIteration, its iteration is 1
         return 1
+
+      
+def delete_class(class_id: int):
+    """Delete a class and all associated tasks."""
+    db.session.query(Class).filter(Class.class_id == class_id).delete()
+    db.session.query(Task).filter(Task.class_id == class_id).delete()
+    db.session.query(TaskDetails).filter(TaskDetails.class_id == class_id).delete()
+    db.session.query(RepeatingTask).filter(RepeatingTask.class_id == class_id).delete()
+    db.session.query(TaskTime).filter(TaskTime.class_id == class_id).delete()
+    db.session.commit()
+    
+
+def delete_task(task_id: int):
+    """Delete a task and all associated instances."""
+    db.session.query(Task).filter(Task.task_id == task_id).delete()
+    db.session.query(TaskDetails).filter(TaskDetails.task_id == task_id).delete()
+    db.session.query(RepeatingTask).filter(RepeatingTask.task_id == task_id).delete()
+    db.session.query(TaskTime).filter(TaskTime.task_id == task_id).delete()
+    db.session.commit()

@@ -16,7 +16,10 @@
         {% for class in class_list: %} 
           <div class="pill" style="border-left-color: var(--hl-{{class['color']}})">
             {{class["title"]}}<br>
-            <div class="subtle">{{class["dept"]}}{{class["num"]}}</div>
+            <div class="d-flex justify-content-between">
+              <div class="subtle">{{class["dept"]}}{{class["num"]}}</div>
+              <i class="fa fa-trash trash open-DeleteClass" data-toggle="modal" data-target="#deleteClassModal" data-id="{{class['class_id']}}"></i>
+            </div>
           </div>
         {% endfor %}
       </div>
@@ -29,11 +32,43 @@
       </div>
 
       <!-- Retrieves the task list and displays the task details -->
+      <form action="/completion_form" name="task_list">
+        <div class="pill-box">
+          {% for task in task_list: %}
+          {% if task["completed"] == false %}
+            <div onclick="location.href='/task_details?task_id={{task['task_id']}}'" class="pill" style="border-left-color: var(--hl-{{task['color']}})">
+              <div class="d-flex justify-content-between">
+                <div>
+                  {{task["title"]}} 
+                  <label class="checkbox mb-0">
+                    <input type="checkbox" name="task_ids" value="{{task['task_id']}}"/>
+                  </label>
+                  <i class="fa fa-trash trash ml-1 open-DeleteTask" data-toggle="modal" data-target="#deleteTaskModal" data-id="{{task['task_id']}}"></i>
+                </div>
+                <div>{{task["due_date"]}}</div>
+              </div>
+              <div class="d-flex justify-content-between">
+                <div class="subtle">{{task["class"]}}</div>
+                <div class="subtle">{{task["est_time"]}} hr</div>
+              </div>
+            </div>
+          {% endif %}
+          {% endfor %}
+        </div>
+        <div class="field is-grouped d-flex flex-row-reverse">
+          <div class="control">
+            <button type="submit" class="btn btn-secondary btn-custom mt-3 btn-sm" >Mark as Completed</button>
+          </div>
+        </div>
+      </form>
+      <br>
+      <h5>Completed Tasks</h5>
       <div class="pill-box">
         {% for task in task_list: %}
+        {% if task["completed"] == true %}
           <div class="pill" style="border-left-color: var(--hl-{{task['color']}})">
             <div class="d-flex justify-content-between">
-              <div>{{task["title"]}}</div>
+              <div><del>{{task["title"]}}</del></div>
               <div>{{task["due_date"]}}</div>
             </div>
             <div class="d-flex justify-content-between">
@@ -41,9 +76,10 @@
               <div class="subtle">{{task["est_time"]}} hr</div>
             </div>
           </div>
+        {% endif %}
         {% endfor %}
       </div>
-      
+
     </div>
   </div>
 </div>
@@ -76,7 +112,17 @@
             </div>
             <div class="form-group">
               <label for="priority">Priority</label>
-              <input type="text" class="form-control" name="priority" id="priority">
+              <select class="form-control" name="priority" id="priority">
+                <option value=0>
+                  Low
+                </option>
+                <option value=1>
+                  Medium
+                </option>
+                <option value=2>
+                  High
+                </option>
+              </select>
             </div>
             <div class="form-group">
               <label for="est_time">Estimated Completion Time</label>
@@ -130,7 +176,20 @@
             </div>
             <div class="form-group">
               <label for="color">Color</label>
-              <input type="text" class="form-control" name="color" id="color">
+              <select class="form-control" name="color" id="color">
+                 <option value="red">
+                   Red
+                 </option>
+                 <option value="purple">
+                   Purple
+                 </option>
+                 <option value="orange">
+                   Orange
+                 </option>
+                 <option value="green">
+                   Green
+                 </option>
+               </select>
             </div>
             <div class="form-group d-flex flex-row-reverse">
               <button type="button" class="btn btn-secondary ml-3" data-dismiss="modal">Cancel</button>
@@ -141,4 +200,88 @@
     </div>
   </div>
 </div>
+
+{% if "task_details" in request.url_rule.rule%}
+<!-- Task Details Modal -->
+<div class="modal fade" id="taskDetailsModal" tabindex="-1" role="dialog" aria-labelledby="taskDetailsModal" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title" id="taskDetailsModal">{{task_details["title"]}}</h3>
+        <h4>Class: </h4> <p>{{task_details["class"]}}</p>
+        <h4>Repeating: </h4> <p>{{task_details["repeating"]}}</p>
+        <h4>Due Date: </h4> <p>{{task_details["due_date"]}}</p>
+        <h4>Priority: </h4> <p>{{task_details["priority"]}}</p>
+        <h4>Link: </h4> <p><a href="#">{{task_details["link"]}}</a></p>
+        <h4>Estimated Time: </h4> <p>{{task_details["est_time"]}}</p>
+        <h4>Notes: </h4> <p>{{task_details["notes"]}}</p>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  $(document).ready(function() {
+    $('#taskDetailsModal').modal('toggle');
+  });
+</script>
+{% endif %}
+
+<!-- Delete Class Modal -->
+<div class="modal fade" id="deleteClassModal" tabindex="-1" role="dialog" aria-labelledby="deleteClassModal" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title" id="classModal">Delete Class</h3>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Are you sure you want to delete this class and all tasks associated with it?
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button type="button" id="btn-deleteClass" class="btn btn-danger">Delete</button>
+        <button type="button" class="btn btn-secondary ml-3" data-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+  </div>
+  <script>
+    $(document).ready(function() {
+      $(document).on("click", ".open-DeleteClass", function () {
+        let classId = $(this).data('id');
+        $(".modal-footer #btn-deleteClass").attr("onclick", "location.href='/delete_class?class_id=" + classId + "';");
+      });
+    });
+  </script>
+</div>
+
+<!-- Delete Task Modal -->
+<div class="modal fade" id="deleteTaskModal" tabindex="-1" role="dialog" aria-labelledby="deleteTaskModal" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title" id="classModal">Delete Task</h3>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Are you sure you want to delete this task and all its iterations?
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button type="button" id="btn-deleteTask" class="btn btn-danger">Delete</button>
+        <button type="button" class="btn btn-secondary ml-3" data-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+  </div>
+  <script>
+    $(document).ready(function() {
+      $(document).on("click", ".open-DeleteTask", function () {
+        let taskId = $(this).data('id');
+        $(".modal-footer #btn-deleteTask").attr("onclick", "location.href='/delete_task?task_id=" + taskId + "';");
+      });
+    });
+  </script>
+</div>
+
 {% endblock %}

@@ -1,6 +1,7 @@
 """Functions to process user input and insert as new entries in the database."""
 
 from timely import db
+
 from timely.db_queries import (get_class_id, get_next_task_id,
                                get_next_task_iteration, get_task_id)
 from timely.models import Class, Task, TaskIteration
@@ -15,9 +16,9 @@ def class_handler(class_iteration: dict):
     new_class = Class(username = "dlipman", title = class_iteration["title"],
                 dept = class_iteration["dept"], num = class_iteration["num"],
                 active_status = True, color = class_iteration["color"])
+
     db.session.add(new_class)
     db.session.commit()
-
 
 # Handles the creation of tasks for input into "Task" table
 def task_handler(details: dict):
@@ -30,10 +31,9 @@ def task_handler(details: dict):
     task = Task()
     task_iteration = TaskIteration()
 
-
     # Insert into task table
-    task.username = 'dlipman' # TODO UPDATE TO USE CAS AUTHENTICATION
-    task.class_id = details['class_id']
+    task.username = details["username"]
+    task.class_id = details["class_id"]
     task.title = details["task_title"]
     if details["repeat_freq"] is not None:
         task.repeat = True
@@ -45,7 +45,8 @@ def task_handler(details: dict):
     db.session.add(task)
     db.session.commit()
 
-    # Get task_id for inserted task, as task_id is autoincrementing. Get iteration of task with task_id.
+    # Get task_id for inserted task, as task_id is autoincrementing.
+    # Get iteration of task with task_id.
     task_id = get_task_id(details['task_title'], details['class_id'])
     iteration = get_next_task_iteration(details['class_id'], task_id)
 
@@ -58,6 +59,7 @@ def task_handler(details: dict):
     task_iteration.link = details["link"]
     task_iteration.due_date = details["due_date"]
     task_iteration.due_time = details["due_time"]
+
     task.notes = details["notes"]
     task_iteration.completed = False
 

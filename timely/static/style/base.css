@@ -28,6 +28,12 @@ html, body, #content {
     color: var(--dark-2);
 }
 
+.btn-custom{
+    background-color: var(--dark-3);
+    color: white;
+    border-radius: 7px;
+}
+
 #task-col {
     border-width: 0px;
     border-left-width: 10px;
@@ -79,6 +85,15 @@ html, body, #content {
     color: var(--dark-2)
 }
 
+/* Adds style to the trash icon for deleting a class/task */
+.trash {
+    color: var(--dark-1);
+}
+
+.trash:hover {
+    color: var(--dark-2)
+}
+
 /* Provides consistent theme to the bootstrap modal */
 .modal-content {
     background-color: var(--dark-4);
@@ -119,4 +134,11 @@ h1, h2, h3, h4, h5 {
 #logo {
     font-family: "Yellowtail", cursive;
     font-size: 3em;
+}
+
+/* Circular highlight around an icon */
+.circle-icon {
+    background: var(--hl-purple);
+    padding: .5em;
+    border-radius: 50%;
 }
