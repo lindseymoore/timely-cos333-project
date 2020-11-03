@@ -36,8 +36,8 @@
         <div class="pill-box">
           {% for task in task_list: %}
           {% if task["completed"] == false %}
-            <div class="pill" style="border-left-color: var(--hl-{{task['color']}})">
-              <div class="d-flex justify-content-between align-items-center">
+            <div onclick="location.href='/task_details?task_id={{task['task_id']}}'" class="pill" style="border-left-color: var(--hl-{{task['color']}})">
+              <div class="d-flex justify-content-between">
                 <div>
                   {{task["title"]}} 
                   <label class="checkbox mb-0">
@@ -200,6 +200,31 @@
     </div>
   </div>
 </div>
+
+{% if "task_details" in request.url_rule.rule%}
+<!-- Task Details Modal -->
+<div class="modal fade" id="taskDetailsModal" tabindex="-1" role="dialog" aria-labelledby="taskDetailsModal" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title" id="taskDetailsModal">{{task_details["title"]}}</h3>
+        <h4>Class: </h4> <p>{{task_details["class"]}}</p>
+        <h4>Repeating: </h4> <p>{{task_details["repeating"]}}</p>
+        <h4>Due Date: </h4> <p>{{task_details["due_date"]}}</p>
+        <h4>Priority: </h4> <p>{{task_details["priority"]}}</p>
+        <h4>Link: </h4> <p><a href="#">{{task_details["link"]}}</a></p>
+        <h4>Estimated Time: </h4> <p>{{task_details["est_time"]}}</p>
+        <h4>Notes: </h4> <p>{{task_details["notes"]}}</p>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  $(document).ready(function() {
+    $('#taskDetailsModal').modal('toggle');
+  });
+</script>
+{% endif %}
 
 <!-- Delete Class Modal -->
 <div class="modal fade" id="deleteClassModal" tabindex="-1" role="dialog" aria-labelledby="deleteClassModal" aria-hidden="true">

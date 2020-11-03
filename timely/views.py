@@ -4,8 +4,7 @@ from flask import redirect, render_template, request
 
 from timely import app
 from timely.CASClient import CASClient
-from timely.db_queries import (fetch_class_list, fetch_task_list,
-                               mark_task_complete, delete_class, delete_task)
+from timely.db_queries import (fetch_class_list, fetch_task_list, mark_task_complete, fetch_task_details, delete_class, delete_task)
 from timely.form_handler import class_handler, task_handler
 
 
@@ -20,8 +19,6 @@ def index():
     """Return the index page."""
     username = CASClient().authenticate()
 
-    # classes = fetch_class_list("dlipman")
-    # tasks = fetch_task_list("dlipman")
     classes = fetch_class_list(username)
     tasks = fetch_task_list(username)
     return render_template("index.html",
@@ -99,3 +96,18 @@ def logout():
     casClient = CASClient()
     casClient.authenticate()
     casClient.logout()
+
+
+@app.route("/task_details")
+def task_details_modal():
+    """
+    Show the task details modal.
+    """
+    username = CASClient().authenticate()
+    task_details = fetch_task_details(request.args["task_id"], username)
+    classes = fetch_class_list(username)
+    tasks = fetch_task_list(username)
+    return render_template("index.html",
+                class_list=classes,
+                task_list=tasks,
+                task_details=task_details)

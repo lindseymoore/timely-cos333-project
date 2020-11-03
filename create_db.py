@@ -29,22 +29,21 @@ def main(argv):
     make_session = sessionmaker()
     engine = create_engine(database_url)
     make_session.configure(bind=engine)
-    session = make_session()
 
     db.create_all()
 
     # INSERT SAMPLE DATA FOR USER dlipman INTO DATABASE
 
     # Add User
-    user = User(username="dlipman", password="timelyiscool",
+    user = User(username="princeton_student", password="timelyiscool",
                 school="Princeton University", email="dlipman@princeton.edu")
     db.session.add(user)
     db.session.commit()
 
     # Add Class 8321, 9362, 8004, 8080
-    class1 = Class(username = "dlipman", title="Advanced Programming Techniques",
+    class1 = Class(username = "princeton_student", title="Advanced Programming Techniques",
                 dept = "COS", num = "333", active_status = True, color="red")
-    class2 = Class(username = "dlipman", title="Intro to Machine Learning",
+    class2 = Class(username = "princeton_student", title="Intro to Machine Learning",
                 dept = "COS", num = "324", active_status = True, color="purple")
     # class3 = Class(username = "dlipman", title="Principles of Computer System Design",
     #             dept = "COS", num = "316", active_status = True, color="orange")
@@ -57,9 +56,9 @@ def main(argv):
     db.session.commit()
 
     # Add task
-    task_333 = Task(username="dlipman", class_id=get_class_id('Advanced Programming Techniques'), title="task 3",
+    task_333 = Task(username="princeton_student", class_id=get_class_id('Advanced Programming Techniques'), title="task 3",
                 repeat=False, completed=False)
-    task_324 = Task(username="dlipman", class_id=get_class_id('Intro to Machine Learning'), title="Homework",
+    task_324 = Task(username="princeton_student", class_id=get_class_id('Intro to Machine Learning'), title="Homework",
                 repeat=True, completed=False)
     # task_316 = Task(username="dlipman", class_id=get_class_id('Principles of Computer System Design'), title="Programming task",
     #             repeat=True, completed=False)
@@ -84,12 +83,12 @@ def main(argv):
 
     # Add taskDetails
     task333_details = TaskDetails(task_id=task_id_333,
-                username="dlipman", class_id=class_id_333, priority=2, iteration=1, 
+                username="princeton_student", class_id=class_id_333, priority=2, iteration=1, 
                 link="https://www.cs.princeton.edu/courses/archive/\
                     fall20/cos333/asgts/03registrarweb/index.html",
                 due_date="2020-10-18", due_time="11:00 PM EST", notes="finished!")
     task324_details = TaskDetails(task_id=task_id_324,
-                username="dlipman", class_id=class_id_324, priority=2, iteration=4, 
+                username="princeton_student", class_id=class_id_324, priority=2, iteration=4, 
                 link=None,
                 due_date="2020-10-20", due_time="11:59 PM EST", notes="finished!")
     # task316_details = TaskDetails(task_id=task_id_316,
@@ -107,7 +106,7 @@ def main(argv):
     db.session.commit()
 
     # Add Repeatingtask
-    task324_rep = RepeatingTask(username="dlipman", task_id=task_id_324, class_id=class_id_324, repeat_freq="biweekly", repeat_end="2020-12-15")
+    task324_rep = RepeatingTask(username="princeton_student", task_id=task_id_324, class_id=class_id_324, repeat_freq="biweekly", repeat_end="2020-12-15")
     #task316_rep = RepeatingTask(username="dlipman", task_id=task_id_316, class_id=class_id_316, repeat_freq="biweekly", repeat_end="2020-12-15")
     db.session.add(task324_rep)
     #db.session.add(task316_rep)
@@ -115,9 +114,9 @@ def main(argv):
 
     # Add TaskTime
     task333_time = TaskTime(task_id=task_id_333, class_id=class_id_333,
-                username="dlipman", iteration=1, est_time=6.0, actual_time=4.0, timely_pred=None)
+                username="princeton_student", iteration=1, est_time=6.0, actual_time=4.0, timely_pred=None)
     task324_time = TaskTime(task_id=task_id_324, class_id=class_id_324,
-                username="dlipman", iteration=4, est_time=4.0, actual_time=5.0, timely_pred=None)
+                username="princeton_student", iteration=4, est_time=4.0, actual_time=5.0, timely_pred=None)
     # task316_time = TaskTime(task_id=task_id_316, class_id=class_id_316,
     #             username="dlipman", iteration=4, est_time=6.0, actual_time=None, timely_pred=None)
     # task102_time = TaskTime(task_id=task_id_102, class_id=class_id_102,
