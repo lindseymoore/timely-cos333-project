@@ -21,6 +21,7 @@ def index():
 
     classes = fetch_class_list(username)
     tasks = fetch_task_list(username)
+    print(tasks)
     return render_template("index.html",
                 class_list=classes,
                 task_list=tasks)
