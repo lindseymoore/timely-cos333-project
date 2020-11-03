@@ -37,28 +37,28 @@ def fetch_task_list(username: str) -> List[dict]:
     """
     task_list = []
 
-    # JOIN query to get information from task, Class, TaskIteration, and TaskIteration tables
+    # JOIN query to get information from task, Class, and TaskIteration tables
     task_info = db.session.query(Task, Class, TaskIteration
                 ).filter(Task.username == username
                 ).join(TaskIteration, (TaskIteration.class_id == Task.class_id)
                 & (TaskIteration.task_id == Task.task_id) & (TaskIteration.username == Task.username)
                 ).join(Class, Class.class_id == Task.class_id).all()
-    for (task, course) in task_info:
+    for (task, course, task_iteration) in task_info:
         repeat_freq = None
         repeat_end = None
 
         # If the task is repeating, make an additional query to find it"s repeat_freqand repeat_end
         if task.repeat:
-            repeat_freq = repeating_task.repeat_freq
-            repeat_end = repeating_task.repeat_end
+            repeat_freq = task.repeat_freq
+            repeat_end = task.repeat_end
 
         # Create task_obj dictionary with all columns that will be displayed to the user
         task_obj = {'title': task.title, 'class': course.title,
-                    'priority:': task_details.priority,
-                    'est_time': task_time.est_time,
-                    'link': task_details.link, 'notes': task_details.notes,
-                    'due_date': task_details.due_date,
-                    'repeat_freq': repeat_freq, 'repeat_end': repeat_end,
+                    'priority:': task_iteration.priority,
+                    'est_time': task_iteration.est_time,
+                    'link': task_iteration.link, 'notes': task_details.notes,
+                    'due_date': task_iteration.due_date,
+                    'repeat_freq': task.repeat_freq, 'repeat_end': task.repeat_end,
                     'color': course.color}
         task_list.append(task_obj)
 
