@@ -56,7 +56,7 @@ def fetch_task_list(username: str) -> List[dict]:
         task_obj = {'title': task.title, 'class': course.title,
                     'priority:': task_iteration.priority,
                     'est_time': task_iteration.est_time,
-                    'link': task_iteration.link, 'notes': task_details.notes,
+                    'link': task_iteration.link, 'notes': task_iteration.notes,
                     'due_date': task_iteration.due_date,
                     'repeat_freq': task.repeat_freq, 'repeat_end': task.repeat_end,
                     'color': course.color}
