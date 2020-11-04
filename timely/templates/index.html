@@ -41,9 +41,9 @@
                   <div>
                     {{task["title"]}} 
                     <label class="checkbox mb-0">
-                      <input type="checkbox" name="task_ids" value="{{task['task_id']}}"/>
+                      <input type="checkbox" id="completebox" name="task_ids" value="{{task['task_id']}}"/>
                     </label>
-                    <i class="fa fa-trash trash ml-1 open-DeleteTask" data-toggle="modal" data-target="#deleteTaskModal" data-id="{{task['task_id']}}"></i>
+                    <i class="fa fa-trash trash ml-1 open-DeleteTask" id="trash" data-toggle="modal" data-target="#deleteTaskModal" data-id="{{task['task_id']}}"></i>
                   </div>
                   <div>{{task["due_date"]}}</div>
                 </div>
@@ -55,6 +55,17 @@
             {% endif %}
           {% endfor %}
         </div>
+        <script>
+          // Stop the icons from propagating the click event for displaying class details
+          $("#completebox").click(function(e) {
+            // Do something
+            e.stopPropagation();
+          });
+          $("#trash").click(function(e) {
+            // Do something
+            e.stopPropagation();
+          });
+        </script>
         <div class="field is-grouped d-flex flex-row-reverse">
           <div class="control">
             <button type="submit" class="btn btn-secondary btn-custom mt-3 btn-sm" >Mark as Completed</button>
