@@ -21,7 +21,6 @@ def index():
 
     classes = fetch_class_list(username)
     tasks = fetch_task_list(username)
-    print(tasks)
     return render_template("index.html",
                 class_list=classes,
                 task_list=tasks)
@@ -106,6 +105,7 @@ def task_details_modal():
     """
     username = CASClient().authenticate()
     task_details = fetch_task_details(request.args["task_id"], username)
+    print(task_details)
     classes = fetch_class_list(username)
     tasks = fetch_task_list(username)
     return render_template("index.html",

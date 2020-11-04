@@ -58,8 +58,9 @@ def fetch_task_list(username: str) -> List[dict]:
                     'est_time': task_iteration.est_time,
                     'link': task_iteration.link, 'notes': task_iteration.notes,
                     'due_date': task_iteration.due_date.strftime("%m/%d/%Y"),
-                    'repeat_freq': repeat_freq, 'repeat_end': repeat_end,
-                    'iteration': task_iteration.iteration, 'color': course.color}
+                    'repeat_freq': repeat_freq, 'repeat_end': repeat_end, 
+                    'completed': task_iteration.completed, 'iteration': task_iteration.iteration, 
+                    'color': course.color}
 
         task_list.append(task_obj)
 
@@ -79,7 +80,7 @@ def fetch_task_details(task_id: int, username: str):
             & (TaskIteration.task_id == Task.task_id)).all()
 
     for (task, task_iteration) in details:
-        task_details_obj = {"title": task.title, "class": get_class_title(task.class_id),
+        task_details_obj = {"title": task.title, "class": get_class_title(task.class_id), "id": task.id,
                     "repeating": task.repeat, "iteration": task_iteration.iteration,
                     "priority": task_iteration.priority, "link": task_iteration.link,
                     "due_date": task_iteration.due_date.strftime("%m/%d/%Y"), 
