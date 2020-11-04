@@ -53,7 +53,7 @@ def fetch_task_list(username: str) -> List[dict]:
             repeat_end = task.repeat_end
 
         # Create task_obj dictionary with all columns that will be displayed to the user
-        task_obj = {'title': task.title, 'class': course.title,
+        task_obj = {'title': task.title, 'class': course.title, 'task_id': task.task_id,
                     'priority:': task_iteration.priority,
                     'est_time': task_iteration.est_time,
                     'link': task_iteration.link, 'notes': task_iteration.notes,
@@ -80,7 +80,7 @@ def fetch_task_details(task_id: int, username: str):
             & (TaskIteration.task_id == Task.task_id)).all()
 
     for (task, task_iteration) in details:
-        task_details_obj = {"title": task.title, "class": get_class_title(task.class_id), "id": task.id,
+        task_details_obj = {"title": task.title, "class": get_class_title(task.class_id), "id": task.task_id,
                     "repeating": task.repeat, "iteration": task_iteration.iteration,
                     "priority": task_iteration.priority, "link": task_iteration.link,
                     "due_date": task_iteration.due_date.strftime("%m/%d/%Y"), 
