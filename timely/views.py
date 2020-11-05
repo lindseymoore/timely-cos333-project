@@ -3,10 +3,12 @@
 from flask import redirect, render_template, request
 
 from timely import app
+from timely.canvas_handler import fetch_canvas_courses, fetch_canvas_tasks
 from timely.CASClient import CASClient
-from timely.db_queries import (fetch_class_list, fetch_task_list, mark_task_complete, fetch_task_details, delete_class, delete_task)
+from timely.db_queries import (delete_class, delete_task, fetch_class_list,
+                               fetch_task_details, fetch_task_list,
+                               mark_task_complete)
 from timely.form_handler import class_handler, task_handler
-
 
 # To run the application locally with CAS authentication, check out:
 # "https://stackoverflow.com/questions/50236117/scraping-ssl-certificate-verify-failed-error-for-http-en-wikipedia-org
@@ -18,6 +20,9 @@ from timely.form_handler import class_handler, task_handler
 def index():
     """Return the index page."""
     username = CASClient().authenticate()
+
+    # fetch_canvas_courses('F2020', username)
+    # fetch_canvas_tasks('F2020', username)
 
     classes = fetch_class_list(username)
     tasks = fetch_task_list(username)
