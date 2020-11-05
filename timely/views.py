@@ -21,9 +21,6 @@ def index():
     """Return the index page."""
     username = CASClient().authenticate()
 
-    # fetch_canvas_courses('F2020', username)
-    # fetch_canvas_tasks('F2020', username)
-
     classes = fetch_class_list(username)
     tasks = fetch_task_list(username)
     return render_template("index.html",
@@ -36,7 +33,6 @@ def task_form():
     Retrieve information from the task form and insert new table entries into the database.
     Entries being inserted into tables: task, task_details, task_time, repeating_task.
     """
-
     username = CASClient().authenticate()
 
     details = {'task_title': None, 'class_id': None, 'dept' : None, 'num': None,
@@ -98,9 +94,9 @@ def delete_task_endpoint():
 @app.route('/logout', methods=['GET'])
 def logout():
     """Log the user out of the application."""
-    casClient = CASClient()
-    casClient.authenticate()
-    casClient.logout()
+    cas_client = CASClient()
+    cas_client.authenticate()
+    cas_client.logout()
 
 
 @app.route("/canvas_class")
@@ -128,7 +124,6 @@ def task_details_modal():
     """
     username = CASClient().authenticate()
     task_details = fetch_task_details(request.args["task_id"], username)
-    print(task_details)
     classes = fetch_class_list(username)
     tasks = fetch_task_list(username)
     return render_template("index.html",
