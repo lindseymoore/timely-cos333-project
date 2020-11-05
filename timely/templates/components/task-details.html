@@ -1,0 +1,23 @@
+<!-- Task Details Modal -->
+<div class="modal fade" id="taskDetailsModal" tabindex="-1" role="dialog"
+aria-labelledby="taskDetailsModal" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title" id="taskDetailsModal">{{task_details["title"]}}</h3>
+        <h4>Class: </h4> <p>{{task_details["class"]}}</p>
+        <h4>Repeating: </h4> <p>{{task_details["repeating"]}}</p>
+        <h4>Due Date: </h4> <p>{{task_details["due_date"]}}</p>
+        <h4>Priority: </h4> <p>{{task_details["priority"]}}</p>
+        <h4>Link: </h4> <p><a href="#">{{task_details["link"]}}</a></p>
+        <h4>Estimated Time: </h4> <p>{{task_details["est_time"]}}</p>
+        <h4>Notes: </h4> <p>{{task_details["notes"]}}</p>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  $(document).ready(function() {
+    $('#taskDetailsModal').modal('toggle');
+  });
+</script>

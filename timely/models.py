@@ -10,6 +10,7 @@ from timely import db
 # Make task_id autoincrementing, class_id no longer primary key in Task, write helper function
 # to fetch task_id from title (in db_queries, for use in form_handler)
 
+
 class Task(db.Model):
     """
     Tasks class represents the Task table:
@@ -59,7 +60,7 @@ class TaskIteration(db.Model):
         Globally unique class_id given to each class
     iteration: int
         Iteration of a given task (if repeating - i.e., Weekly Reading 3 will have iteration=3).
-        If not repeating, iteration = 1. 
+        If not repeating, iteration = 1.
     priority: int
         The user"s prioritization of an task, has values {0, 1, 2}
     completed: Boolean
@@ -94,6 +95,7 @@ class TaskIteration(db.Model):
     timely_pred = Column(Float)
     actual_time = Column(Float)
 
+
 class User(db.Model):
     """
     User class represents the user table:
@@ -117,6 +119,7 @@ class User(db.Model):
     password = Column(String)
     school = Column(String)
     email = Column(String)
+
 
 class Class(db.Model):
     """
