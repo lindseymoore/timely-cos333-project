@@ -45,9 +45,3 @@ def find_avg_prediction(iteration_times: List[dict]):
     curr_iteration_time_predict = iteration_times[index]["timely_pred"] = sum/index
 
     return curr_iteration_time_predict
-
-if __name__ == "__main__":
-
-       
-
-    
