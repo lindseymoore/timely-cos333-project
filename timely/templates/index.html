@@ -63,7 +63,7 @@
                 $("#clickablepill").click(function(e) {
                   // Check if sender is the <div> element e.g.
                   if($(e.target).is("div")) {
-                    window.location = $("#clickablepill").attr("href", "/task_details?task_id={{ task['task_id']}}");;
+                    window.location.href = "/task_details?task_id={{ task['task_id']}}";
                     return true;
                   }
                 });
