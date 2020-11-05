@@ -46,7 +46,12 @@
                     </label>
                     <i class="fa fa-trash trash ml-1 open-DeleteTask" id="trash" data-toggle="modal" data-target="#deleteTaskModal" data-id="{{task['task_id']}}"></i>
                   </div>
-                  <div>{{task["due_date"]}}</div>
+                  <div>
+                    {% if task["repeat"] is true %}
+                    <i class="fa fa-repeat"></i>
+                    {% endif %}
+                    {{task["due_date"]}}
+                  </div>
                 </div>
                 <div class="d-flex justify-content-between">
                   <div class="subtle">{{task["class"]}}</div>
@@ -147,6 +152,30 @@
             <div class="form-group">
               <label for="due_date">Due Date</label>
               <input type="text" class="form-control" name="due_date" id="due_date">
+            </div>
+            <div class="form-group">
+              <label for="repeat_freq">Repeat</label>
+              <select class="form-control" name="repeat_freq" id="repeat_freq">
+                <option value="">
+                  Does Not Repeat
+                </option>
+                <option value="daily">
+                  Daily
+                </option>
+                <option value="weekly">
+                  Weekly
+                </option>
+                <option value="biweekly">
+                  Bi-Weekly
+                </option>
+                <option value="monthly">
+                  Monthly
+                </option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="repeat_end">Recurrence End Date</label>
+              <input type="text" class="form-control" name="repeat_end" id="repeat_end">
             </div>
             <div class="form-group">
               <label for="notes">Notes</label>
