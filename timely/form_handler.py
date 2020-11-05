@@ -34,10 +34,13 @@ def task_handler(details: dict):
     task.username = details["username"]
     task.class_id = details["class_id"]
     task.title = details["task_title"]
-    if details["repeat_freq"] is not None:
+    if details["repeat_freq"] != "":
         task.repeat = True
         task.repeat_freq = details["repeat_freq"]
-        task.repeat_end = details["repeat_end"]
+        if details["repeat_end"] != "":
+            task.repeat_end = details["repeat_end"]
+        else:
+            task.repeat_end = None
     else:
         task.repeat = False
 
@@ -59,7 +62,7 @@ def task_handler(details: dict):
     task_iteration.due_date = details["due_date"]
     task_iteration.due_time = details["due_time"]
 
-    task.notes = details["notes"]
+    task_iteration.notes = details["notes"]
     task_iteration.completed = False
 
     # Insert times into TaskIteration table
