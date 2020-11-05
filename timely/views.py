@@ -103,6 +103,24 @@ def logout():
     casClient.logout()
 
 
+@app.route("/canvas_class")
+def canvas_class():
+    """
+    Fetches the classes from canvas for a particular user
+    """
+    username = CASClient().authenticate()
+    fetch_canvas_courses("F2020", username)
+    return redirect("/")
+
+@app.route("/canvas_task")
+def canvas_task():
+    """
+    Fetches the tasks from canvas for a particular user
+    """
+    username = CASClient().authenticate()
+    fetch_canvas_tasks("F2020", username)
+    return redirect("/")
+
 @app.route("/task_details")
 def task_details_modal():
     """
