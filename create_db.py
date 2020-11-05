@@ -71,12 +71,12 @@ def main(argv):
                 username="princeton_student", class_id=class_id_333, priority=2, iteration=1, 
                 link="https://www.cs.princeton.edu/courses/archive/\
                     fall20/cos333/asgts/03registrarweb/index.html",
-                due_date="2020-10-18", due_time="11:00 PM EST", notes="finished!", completed=False, 
+                due_date="2020-10-18", due_time="11:00 PM EST", notes="finished!", completed=False,
                 est_time=6.0, actual_time=4.0, timely_pred=None)
     task324_details = TaskIteration(task_id=task_id_324,
-                username="princeton_student", class_id=class_id_324, priority=2, iteration=1, 
+                username="princeton_student", class_id=class_id_324, priority=2, iteration=1,
                 link=None,
-                due_date="2020-10-20", due_time="11:59 PM EST", notes="finished!", completed=False, 
+                due_date="2020-10-20", due_time="11:59 PM EST", notes="finished!", completed=False,
                 est_time=4.0, actual_time=5.0, timely_pred=None)
 
     db.session.add(task333_details)
