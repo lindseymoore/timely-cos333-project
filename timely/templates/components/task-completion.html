@@ -26,9 +26,9 @@ aria-labelledby="taskCompletionModal" aria-hidden="true">
       $(document).on("click", ".open-CompleteTask", function () {
         let taskId = $(this).data('id');
         let iteration = $(this).data('iteration');
-        let time = $("#time-taken").val();
+        let time = $("input#time-taken").val();
         $(".modal-footer #btn-completeTask").attr("onclick",
-        "location.href='/completion_form?task_id=" + taskId + "&iteration" + iteration +
+        "location.href='/completion_form?task_id=" + taskId + "&iteration=" + iteration +
          "&time=" + time + "';");
       });
     });

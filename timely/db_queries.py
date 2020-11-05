@@ -1,6 +1,5 @@
 """Functions to fetch class and task information."""
 
-
 from datetime import timedelta
 from typing import List
 
@@ -56,7 +55,7 @@ def fetch_task_list(username: str) -> List[dict]:
         # Create task_obj dictionary with all columns that will be displayed to the user
         task_obj = {'title': task.title, 'class': course.title, 'task_id': task.task_id,
                     'priority:': task_iteration.priority, 'repeat': task.repeat,
-                    'est_time': task_iteration.est_time,
+                    'est_time': task_iteration.est_time, 'timely_pred': task_iteration.timely_pred,
                     'link': task_iteration.link, 'notes': task_iteration.notes,
                     'due_date': task_iteration.due_date.strftime("%m/%d/%Y"),
                     'repeat_freq': repeat_freq, 'repeat_end': repeat_end, 
@@ -96,7 +95,7 @@ def mark_task_complete(task_id: int, username: str):
     # Grab first iteration that is not complete
     task, task_iteration = db.session.query(Task, TaskIteration).filter((Task.username == username) &
             (Task.task_id == task_id)).join(TaskIteration, (TaskIteration.username == Task.username)
-            & (TaskIteration.task_id == Task.task_id) & (TaskIteration.completed == False)).first()
+            & (TaskIteration.task_id == Task.task_id) & (TaskIteration.completed is False)).first()
 
     task_iteration.completed = True
     db.session.commit()
@@ -140,7 +139,7 @@ def mark_task_complete(task_id: int, username: str):
             # Insert times into TaskIteration table
             new_task_iteration.est_time = task_iteration.est_time
             new_task_iteration.actual_time = None
-            new_task_iteration.timely_prediction = None
+            new_task_iteration.timely_pred = None
 
             db.session.add(new_task_iteration)
             db.session.commit()

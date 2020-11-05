@@ -3,6 +3,7 @@
 from typing import List
 from timely import db
 from timely.models import Task, TaskIteration
+import sys
 
 def fetch_task_times(task_id: str, username: str) -> List[dict]:
     """
@@ -36,11 +37,14 @@ def find_avg_prediction(iteration_times: List[dict]):
 
     index = 0
     sum = 0
+    print(len(iteration_times))
+    print(index)
+    sys.stdout(index)
     while(iteration_times[index]["completed"] == True):
         sum += iteration_times[index]["actual_time"]
         index += 1
     
-    curr_iteration_time_predict = iteration_times[index]["timely_pred"] = sum/index
+    curr_iteration_time_predict = iteration_times[index]["timely_pred"] = sum/(index+1)
 
     return curr_iteration_time_predict
 
@@ -57,10 +61,15 @@ def update_completion_time(task_id: int, iteration: int, username: str, actual_t
 def update_timely_pred(task_id: int, iteration: int, username: str):
     """ Update the timely prediction for a given by task_id as complete in the db."""
     task_iteration = db.session.query(TaskIteration).filter((TaskIteration.username == username) &
-                (TaskIteration.task_id == task_id) & 
+                (TaskIteration.task_id == task_id) &
                 (TaskIteration.iteration == iteration)).first()
     iteration_times = fetch_task_times(task_id, username)
-    task_iteration.timely_pred = find_avg_prediction(iteration_times)
+
+    next_task_iteration = db.session.query(TaskIteration).filter(
+                (TaskIteration.username == username) &
+                (TaskIteration.task_id == task_id) & 
+                (TaskIteration.iteration == int(iteration) + 1)).first()
+    next_task_iteration.timely_pred = find_avg_prediction(iteration_times)
     db.session.commit()
 
 

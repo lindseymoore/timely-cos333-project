@@ -69,7 +69,7 @@ def task_handler(details: dict):
     # Insert times into TaskIteration table
     task_iteration.est_time = details["est_time"]
     task_iteration.actual_time = None
-    task_iteration.timely_prediction = None
+    task_iteration.timely_pred = details["est_time"]
 
     db.session.add(task_iteration)
     db.session.commit()
