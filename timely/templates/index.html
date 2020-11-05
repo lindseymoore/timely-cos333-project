@@ -21,13 +21,15 @@
         <!-- Retrieves the class list and displays the class details -->
         <div class="pill-box">
           {% for class in class_list: %} 
-            <div class="pill" style="border-left-color: var(--hl-{{class['color']}})">
-              {{class["title"]}}<br>
-              <div class="d-flex justify-content-between">
-                <div class="subtle">{{class["dept"]}}{{class["num"]}}</div>
-                <i class="fa fa-trash open-DeleteClass" data-toggle="modal"
-                data-target="#deleteClassModal" data-id="{{class['class_id']}}">
-                </i>
+            <div class="pill-row">
+              <div class="pill" style="border-left-color: var(--hl-{{class['color']}})">
+                {{class["title"]}}<br>
+                <div class="d-flex justify-content-between">
+                  <div class="subtle">{{class["dept"]}}{{class["num"]}}</div>
+                  <i class="fa fa-trash open-DeleteClass" data-toggle="modal"
+                  data-target="#deleteClassModal" data-id="{{class['class_id']}}">
+                  </i>
+                </div>
               </div>
             </div>
           {% endfor %}
@@ -46,29 +48,33 @@
           <div class="pill-box">
             {% for task in task_list: %}
               {% if task["completed"] == false %}
-                <div class="pill" style="border-left-color: var(--hl-{{task['color']}})">
-                  <div class="d-flex justify-content-between">
-                    <div>
-                      <a href="/task_details?task_id={{task['task_id']}}" class="title-link">
-                        {{task["title"]}}
-                      </a>
-                      <label class="checkbox mb-0">
-                        <input type="checkbox" name="task_ids" value="{{task['task_id']}}"/>
-                      </label>
-                      <i class="fa fa-trash ml-1 open-DeleteTask" data-toggle="modal"
-                      data-target="#deleteTaskModal" data-id="{{task['task_id']}}">
-                      </i>
+                <div class="pill-row">
+                  <div class="pill" style="border-left-color: var(--hl-{{task['color']}})">
+                    <div class="d-flex justify-content-between">
+                      <div>
+                        <a href="/task_details?task_id={{task['task_id']}}" class="title-link">
+                          {{task["title"]}}
+                        </a>
+                        <label class="checkbox mb-0">
+                          <input type="checkbox" name="task_ids" value="{{task['task_id']}}"/>
+                        </label>
+                        <i class="fa fa-trash ml-1 open-DeleteTask" data-toggle="modal"
+                        data-target="#deleteTaskModal" data-id="{{task['task_id']}}">
+                        </i>
+                      </div>
+                      <div>
+                        {{task["due_date"]}}
+                      </div>
                     </div>
-                    <div>
+                    <div class="d-flex justify-content-between">
+                      <div class="subtle">{{task["class"]}}</div>
                       {% if task["repeat"] is true %}
                         <span class="fa fa-repeat"></span>
                       {% endif %}
-                      {{task["due_date"]}}
                     </div>
                   </div>
-                  <div class="d-flex justify-content-between">
-                    <div class="subtle">{{task["class"]}}</div>
-                    <div class="subtle">{{task["est_time"]}} hr</div>
+                  <div class="text-right">
+                    <h2 class="time-prediction">{{task["est_time"]}} h</h2>
                   </div>
                 </div>
               {% endif %}
@@ -94,7 +100,7 @@
                 </div>
                 <div class="d-flex justify-content-between">
                   <div class="subtle">{{task["class"]}}</div>
-                  <div class="subtle">{{task["est_time"]}} hr</div>
+                  <div class="subtle">{{task["est_time"]}} h</div>
                 </div>
               </div>
             {% endif %}
