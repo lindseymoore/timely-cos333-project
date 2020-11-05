@@ -27,6 +27,7 @@ def index():
                 class_list=classes,
                 task_list=tasks)
 
+
 @app.route("/task_form")
 def task_form():
     """
@@ -46,6 +47,7 @@ def task_form():
 
     return redirect("/")
 
+
 @app.route("/class_form")
 def class_form():
     """Retrieve information from the class form and insert new table entries into the database.
@@ -62,6 +64,7 @@ def class_form():
 
     return redirect("/")
 
+
 @app.route("/completion_form")
 def completion_form():
     """
@@ -74,6 +77,7 @@ def completion_form():
         mark_task_complete(int(task_id), username)
     return redirect("/")
 
+
 @app.route("/delete_class")
 def delete_class_endpoint():
     """
@@ -83,6 +87,7 @@ def delete_class_endpoint():
     delete_class(request.args["class_id"])
     return redirect("/")
 
+
 @app.route("/delete_task")
 def delete_task_endpoint():
     """
@@ -90,6 +95,7 @@ def delete_task_endpoint():
     """
     delete_task(request.args["task_id"])
     return redirect("/")
+
 
 @app.route('/logout', methods=['GET'])
 def logout():
@@ -108,6 +114,7 @@ def canvas_class():
     fetch_canvas_courses("F2020", username)
     return redirect("/")
 
+
 @app.route("/canvas_task")
 def canvas_task():
     """
@@ -116,6 +123,7 @@ def canvas_task():
     username = CASClient().authenticate()
     fetch_canvas_tasks("F2020", username)
     return redirect("/")
+
 
 @app.route("/task_details")
 def task_details_modal():
