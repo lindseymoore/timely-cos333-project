@@ -85,6 +85,7 @@ def delete_class_endpoint():
     delete_class(request.args["class_id"])
     return redirect("/")
 
+
 @app.route("/delete_task")
 def delete_task_endpoint():
     """Delete the task given by the request argument task_id."""
