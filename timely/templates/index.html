@@ -34,6 +34,7 @@
         </div>
 
       </div>
+      
       <div class="col-8 overflow-auto py-3" id="task-col">
         <div class="d-flex justify-content-between align-items-center pb-3">
           <h3 class="mb-0">Tasks</h3>
@@ -45,11 +46,12 @@
           <div class="pill-box">
             {% for task in task_list: %}
               {% if task["completed"] == false %}
-                <div onclick="location.href='/task_details?task_id={{task['task_id']}}'" class="pill"
-                style="border-left-color: var(--hl-{{task['color']}})">
+                <div class="pill" style="border-left-color: var(--hl-{{task['color']}})">
                   <div class="d-flex justify-content-between">
                     <div>
-                      {{task["title"]}} 
+                      <a href="/task_details?task_id={{task['task_id']}}" class="title-link">
+                        {{task["title"]}}
+                      </a>
                       <label class="checkbox mb-0">
                         <input type="checkbox" name="task_ids" value="{{task['task_id']}}"/>
                       </label>
@@ -57,7 +59,12 @@
                       data-target="#deleteTaskModal" data-id="{{task['task_id']}}">
                       </i>
                     </div>
-                    <div>{{task["due_date"]}}</div>
+                    <div>
+                      {% if task["repeat"] is true %}
+                        <span class="fa fa-repeat"></span>
+                      {% endif %}
+                      {{task["due_date"]}}
+                    </div>
                   </div>
                   <div class="d-flex justify-content-between">
                     <div class="subtle">{{task["class"]}}</div>
@@ -93,7 +100,6 @@
             {% endif %}
           {% endfor %}
         </div>
-
       </div>
     </div>
   </div>
