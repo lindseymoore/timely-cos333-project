@@ -15,77 +15,99 @@
       <div class="col-4 overflow-auto py-3">
         <div class="d-flex justify-content-between align-items-center pb-3">
           <h3 class="mb-0">Classes</h3>
-          <i class="fa fa-plus add" data-toggle="modal" data-target="#classModal"></i>
+          <div class="d-flex">
+            <img src="{{ url_for('static', filename='image/canvas-logo.png') }}"
+            height="24px" onclick="location.href='/canvas_task?'">
+            <i class="fa fa-plus add ml-2" data-toggle="modal" data-target="#classModal"></i>
+          </div>
         </div>
 
         <!-- Retrieves the class list and displays the class details -->
         <div class="pill-box">
           {% for class in class_list: %} 
-            <div class="pill" style="border-left-color: var(--hl-{{class['color']}})">
-              {{class["title"]}}<br>
-              <div class="d-flex justify-content-between">
-                <div class="subtle">{{class["dept"]}}{{class["num"]}}</div>
-                <i class="fa fa-trash open-DeleteClass" data-toggle="modal"
-                data-target="#deleteClassModal" data-id="{{class['class_id']}}">
-                </i>
+            <div class="pill-row">
+              <div class="pill" style="border-left-color: var(--hl-{{class['color']}})">
+                {{class["title"]}}<br>
+                <div class="d-flex justify-content-between">
+                  <div class="subtle">{{class["dept"]}}{{class["num"]}}</div>
+                  <i class="fa fa-trash open-DeleteClass" data-toggle="modal"
+                  data-target="#deleteClassModal" data-id="{{class['class_id']}}">
+                  </i>
+                </div>
               </div>
             </div>
           {% endfor %}
         </div>
-
       </div>
+
       <div class="col-8 overflow-auto py-3" id="task-col">
         <div class="d-flex justify-content-between align-items-center pb-3">
           <h3 class="mb-0">Tasks</h3>
-          <i class="fa fa-plus add" data-toggle="modal" data-target="#taskModal"></i>
+          <div class="d-flex">
+            <img src="{{ url_for('static', filename='image/canvas-logo.png') }}"
+            height="24px" onclick="location.href='/canvas_task?'">
+            <i class="fa fa-plus add ml-2" data-toggle="modal" data-target="#taskModal"></i>
+          </div>
         </div>
 
         <!-- Retrieves the task list and displays the task details -->
-        <div class="pill-box">
-          {% for task in task_list: %}
-            {% if task["completed"] == false %}
-              <div onclick="location.href='/task_details?task_id={{task['task_id']}}'" class="pill"
-              style="border-left-color: var(--hl-{{task['color']}})">
-                <div class="d-flex justify-content-between">
-                  <div>
-                    {{task["title"]}}
-                    <i class="fa fa-check-square ml-1 open-CompleteTask" data-toggle="modal"
-                    data-target="#taskCompletionModal" data-id="{{task['task_id']}}" 
-                    data-iteration="{{task['iteration']}}">
-                    </i>
-                    <i class="fa fa-trash ml-1 open-DeleteTask" data-toggle="modal"
-                    data-target="#deleteTaskModal" data-id="{{task['task_id']}}">
-                    </i>
+        <form action="/completion_form" name="task_list">
+          <div class="pill-box">
+            {% for task in task_list: %}
+              {% if task["completed"] == false %}
+                <div class="pill-row">
+                  <div class="pill" style="border-left-color: var(--hl-{{task['color']}})">
+                    <div class="d-flex justify-content-between">
+                      <div>
+                        <a href="/task_details?task_id={{task['task_id']}}" class="title-link">
+                          {{task["title"]}}
+                        </a>
+                        <label class="checkbox mb-0 ml-1">
+                          <input type="checkbox" name="task_ids" value="{{task['task_id']}}"/>
+                        </label>
+                        <i class="fa fa-trash ml-1 open-DeleteTask" data-toggle="modal"
+                        data-target="#deleteTaskModal" data-id="{{task['task_id']}}">
+                        </i>
+                      </div>
+                      <div>
+                        {{task["due_date"]}}
+                      </div>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                      <div class="subtle">{{task["class"]}}</div>
+                      {% if task["repeat"] %}
+                        <span class="fa fa-repeat"></span>
+                      {% endif %}
+                    </div>
                   </div>
-                  <div>{{task["due_date"]}}</div>
+                  <div class="text-right">
+                    <h2 class="time-prediction">{{task["est_time"]}} h</h2>
+                  </div>
                 </div>
-                <div class="d-flex justify-content-between">
-                  <div class="subtle">{{task["class"]}}</div>
-                  <div class="subtle">{{task["est_time"]}} hr</div>
-                </div>
-              </div>
-            {% endif %}
-          {% endfor %}
-        </div>
+              {% endif %}
+            {% endfor %}
+          </div>
+        </form>
         <br>
         <h5>Completed Tasks</h5>
         <div class="pill-box">
           {% for task in task_list: %}
             {% if task["completed"] == true %}
-              <div class="pill" style="border-left-color: var(--hl-{{task['color']}})">
-                <div class="d-flex justify-content-between">
-                  <div><del>{{task["title"]}}</del></div>
-                  <div>{{task["due_date"]}}</div>
-                </div>
-                <div class="d-flex justify-content-between">
-                  <div class="subtle">{{task["class"]}}</div>
-                  <div class="subtle">{{task["est_time"]}} hr</div>
+              <div class="pill-row">
+                <div class="pill" style="border-left-color: var(--hl-{{task['color']}})">
+                  <div class="d-flex justify-content-between">
+                    <div><del>{{task["title"]}}</del></div>
+                    <div>{{task["due_date"]}}</div>
+                  </div>
+                  <div class="d-flex justify-content-between">
+                    <div class="subtle">{{task["class"]}}</div>
+                    <div class="subtle">{{task["est_time"]}} h</div>
+                  </div>
                 </div>
               </div>
             {% endif %}
           {% endfor %}
         </div>
-
       </div>
     </div>
   </div>

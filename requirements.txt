@@ -4,3 +4,4 @@ sqlalchemy
 flask_sqlalchemy
 psycopg2-binary
 python-cas==1.5.0
+canvasapi

@@ -49,7 +49,7 @@ def update_completion_time(task_id: int, iteration: int, username: str, actual_t
     a task upon completion fo the task."""
 
     task_iteration = db.session.query(TaskIteration).filter((TaskIteration.username == username) &
-                (TaskIteration.task_id == task_id)) & (TaskIteration.iteration == iteration)).first()
+                (TaskIteration.task_id == task_id) & (TaskIteration.iteration == iteration)).first()
     task_iteration.actual_time = actual_time
     db.session.commit()
 
@@ -57,7 +57,7 @@ def update_completion_time(task_id: int, iteration: int, username: str, actual_t
 def update_timely_pred(task_id: int, iteration: int, username: str):
     """ Update the timely prediction for a given by task_id as complete in the db."""
     task_iteration = db.session.query(TaskIteration).filter((TaskIteration.username == username) &
-                (TaskIteration.task_id == task_id)) & 
+                (TaskIteration.task_id == task_id) & 
                 (TaskIteration.iteration == iteration)).first()
     iteration_times = fetch_task_times(task_id, username)
     task_iteration.timely_pred = find_avg_prediction(iteration_times)

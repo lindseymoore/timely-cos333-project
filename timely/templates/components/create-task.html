@@ -1,6 +1,5 @@
-<!-- Create Task Modal -->
-<div class="modal fade" id="taskModal" tabindex="-1" role="dialog"
-aria-labelledby="taskModal" aria-hidden="true">
+<!-- Task Modal -->
+<div class="modal fade" id="taskModal" tabindex="-1" role="dialog" aria-labelledby="taskModal" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -52,13 +51,35 @@ aria-labelledby="taskModal" aria-hidden="true">
               <input type="text" class="form-control" name="due_date" id="due_date">
             </div>
             <div class="form-group">
+              <label for="repeat_freq">Repeat</label>
+              <select class="form-control" name="repeat_freq" id="repeat_freq">
+                <option value="">
+                  Does Not Repeat
+                </option>
+                <option value="daily">
+                  Daily
+                </option>
+                <option value="weekly">
+                  Weekly
+                </option>
+                <option value="biweekly">
+                  Bi-Weekly
+                </option>
+                <option value="monthly">
+                  Monthly
+                </option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="repeat_end">Recurrence End Date</label>
+              <input type="text" class="form-control" name="repeat_end" id="repeat_end">
+            </div>
+            <div class="form-group">
               <label for="notes">Notes</label>
               <input type="text" class="form-control" name="notes" id="notes">
             </div>
             <div class="form-group d-flex flex-row-reverse">
-              <button type="button" class="btn btn-secondary ml-3" data-dismiss="modal">
-                Cancel
-              </button>
+              <button type="button" class="btn btn-secondary ml-3" data-dismiss="modal">Cancel</button>
               <button type="submit" class="btn btn-primary">Submit</button>
             </div>
         </form>
