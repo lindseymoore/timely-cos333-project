@@ -62,9 +62,10 @@
                         <a href="/task_details?task_id={{task['task_id']}}" class="title-link">
                           {{task["title"]}}
                         </a>
-                        <label class="checkbox mb-0 ml-1">
-                          <input type="checkbox" name="task_ids" value="{{task['task_id']}}"/>
-                        </label>
+                        <i class="fa fa-check-square ml-1 open-CompleteTask" data-toggle="modal"
+                        data-target="#taskCompletionModal" data-id="{{task['task_id']}}" 
+                        data-iteration="{{task['iteration']}}">
+                        </i>
                         <i class="fa fa-trash ml-1 open-DeleteTask" data-toggle="modal"
                         data-target="#deleteTaskModal" data-id="{{task['task_id']}}">
                         </i>
@@ -81,7 +82,7 @@
                     </div>
                   </div>
                   <div class="text-right">
-                    <h2 class="time-prediction">{{task["est_time"]}} h</h2>
+                    <h2 class="time-prediction">{{task["timely_pred"]}} h</h2>
                   </div>
                 </div>
               {% endif %}
