@@ -103,3 +103,11 @@ h1, h2, h3, h4, h5 {
     padding: .5em;
     border-radius: 50%;
 }
+
+.title-link {
+    color: var(--dark-1)
+}
+
+.title-link:hover {
+    color: var(--dark-2)
+}
