@@ -1,9 +1,10 @@
 """Functions to fetch class and task information."""
 
-from datetime import datetime, timedelta
+
+from datetime import timedelta
 from typing import List
 
-from sqlalchemy import desc, func
+from sqlalchemy import desc
 
 from timely import db
 from timely.models import Class, Task, TaskIteration
@@ -80,7 +81,8 @@ def fetch_task_details(task_id: int, username: str):
             & (TaskIteration.task_id == Task.task_id)).all()
 
     for (task, task_iteration) in details:
-        task_details_obj = {"title": task.title, "class": get_class_title(task.class_id), "id": task.task_id,
+        task_details_obj = {"title": task.title, "class": get_class_title(task.class_id),
+                    "id": task.task_id,
                     "repeating": task.repeat, "iteration": task_iteration.iteration,
                     "priority": task_iteration.priority, "link": task_iteration.link,
                     "due_date": task_iteration.due_date.strftime("%m/%d/%Y"), 
@@ -145,25 +147,19 @@ def mark_task_complete(task_id: int, username: str):
 
 
 def get_class_id(class_title: str) -> int:
-    """
-    Returns class_id for a given class_title, where class_id is autoincrementing
-    """
+    """Return class_id for a given class_title, where class_id is autoincrementing."""
     class_info = db.session.query(Class).filter(Class.title == class_title).first()
     return class_info.class_id
 
 
 def get_class_title(class_id: int) -> str:
-    """
-    Return class_title for a given class_id
-    """
+    """Return class_title for a given class_id."""
     class_info = db.session.query(Class).filter(Class.class_id == class_id).first()
     return class_info.title
 
 
 def get_task_id(task_title: str, class_id: int) -> int:
-    """
-    Return task_id for a given task_title and class_id, where task_id is autoincrementing
-    """
+    """Return task_id for a given task_title and class_id, where task_id is autoincrementing."""
     task_info = db.session.query(Task).filter((Task.class_id == class_id) &
                 (Task.title == task_title)).first()
     return task_info.task_id
@@ -171,7 +167,7 @@ def get_task_id(task_title: str, class_id: int) -> int:
 
 def get_next_task_iteration(task_id: int) -> int:
     """
-    Returns the next sequential iteration for a given task if it is repeating.
+    Return the next sequential iteration for a given task if it is repeating.
     This is because iterations update sequentially within each repeating assignment.
     This function should be used when adding new tasks into the database.
     """
@@ -183,14 +179,16 @@ def get_next_task_iteration(task_id: int) -> int:
         return 1
 
     return iteration.iteration+1
-      
+
+
 def delete_class(class_id: int):
     """Delete a class and all associated tasks."""
     db.session.query(Class).filter(Class.class_id == class_id).delete()
     db.session.query(Task).filter(Task.class_id == class_id).delete()
     db.session.query(TaskIteration).filter(TaskIteration.class_id == class_id).delete()
     db.session.commit()
-    
+
+
 def delete_task(task_id: int):
     """Delete a task and all associated instances."""
     db.session.query(Task).filter(Task.task_id == task_id).delete()

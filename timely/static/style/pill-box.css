@@ -1,0 +1,28 @@
+/* General container for displaying multiple classes/tasks containers*/
+.pill-box {
+    background: var(--dark-3);
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* Container for displaying information for individual classes/tasks */
+.pill {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding: 3px 10px;
+    border-width: 0px;
+    border-style: solid;
+    border-left-width: 10px;
+    box-shadow: 0 3px 0 var(--dark-4);
+    margin-bottom: 3px;
+}
+
+ /* Ensures that the last entry of class/task displayed does not show a bottom line */
+.pill:last-child {
+    border-bottom-width: 0px ;
+    box-shadow: 0 0;
+    margin-bottom: 0px;
+}

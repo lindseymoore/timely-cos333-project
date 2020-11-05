@@ -1,7 +1,7 @@
 """Functions to process user input and insert as new entries in the database."""
 
 from timely import db
-from timely.db_queries import (get_class_id, get_next_task_iteration, get_task_id)
+from timely.db_queries import (get_next_task_iteration, get_task_id)
 from timely.models import Class, Task, TaskIteration
 
 
@@ -11,13 +11,14 @@ def class_handler(class_iteration: dict):
     Takes class_iteration dictionary (user inputted fields in new class form) as input.
     Configures this dictionary into Class classes and inputs them as new entires in the class table.
     """
-    
+
     new_class = Class(username = class_iteration["username"], title = class_iteration["title"],
                 dept = class_iteration["dept"], num = class_iteration["num"],
                 active_status = True, color = class_iteration["color"])
 
     db.session.add(new_class)
     db.session.commit()
+
 
 # Handles the creation of tasks for input into "Task" table
 def task_handler(details: dict):
