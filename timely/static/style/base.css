@@ -111,3 +111,8 @@ h1, h2, h3, h4, h5 {
 .title-link:hover {
     color: var(--dark-2)
 }
+
+.time-prediction {
+    margin-bottom: 0;
+    width: 2.5em;
+}
