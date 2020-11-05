@@ -41,57 +41,18 @@ html, body, #content {
     border-style: solid;
 }
 
-.dark-4 {
-    background: var(--dark-4)
+i {
+    color: var(--dark-1);
 }
 
-/* General container for displaying multiple classes/tasks containers*/
-.pill-box {
-    background: var(--dark-3);
-    border-radius: 10px;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-}
-
-/* Container for displaying information for individual classes/tasks */
-.pill {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    padding: 3px 10px;
-    border-width: 0px;
-    border-style: solid;
-    border-left-width: 10px;
-    box-shadow: 0 3px 0 var(--dark-4);
-    margin-bottom: 3px;
-}
-
- /* Ensures that the last entry of class/task displayed does not show a bottom line */
-.pill:last-child {
-    border-bottom-width: 0px ;
-    box-shadow: 0 0;
-    margin-bottom: 0px;
+i:hover {
+    color: var(--dark-2)
 }
 
 /* Adds style to the add icon for creating a new class/task */
 .add {
     font-size: 1.5em;
-    color: var(--dark-1);
     padding: 0px;
-}
-
-.add:hover {
-    color: var(--dark-2)
-}
-
-/* Adds style to the trash icon for deleting a class/task */
-.trash {
-    color: var(--dark-1);
-}
-
-.trash:hover {
-    color: var(--dark-2)
 }
 
 /* Provides consistent theme to the bootstrap modal */
@@ -141,4 +102,17 @@ h1, h2, h3, h4, h5 {
     background: var(--hl-purple);
     padding: .5em;
     border-radius: 50%;
+}
+
+.title-link {
+    color: var(--dark-1)
+}
+
+.title-link:hover {
+    color: var(--dark-2)
+}
+
+.time-prediction {
+    margin-bottom: 0;
+    width: 2.5em;
 }

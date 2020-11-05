@@ -3,15 +3,16 @@
 from flask import redirect, render_template, request
 
 from timely import app
+
 from timely.canvas_handler import fetch_canvas_courses, fetch_canvas_tasks
-from timely.CASClient import CASClient
+from timely.cas_client import CASClient
 from timely.db_queries import (delete_class, delete_task, fetch_class_list,
                                fetch_task_details, fetch_task_list,
                                mark_task_complete)
 from timely.form_handler import class_handler, task_handler
 
 # To run the application locally with CAS authentication, check out:
-# "https://stackoverflow.com/questions/50236117/scraping-ssl-certificate-verify-failed-error-for-http-en-wikipedia-org
+# "https://stackoverflow.com/questions/50236117/"
 # It may be necessary to install certificates
 
 
@@ -50,9 +51,10 @@ def task_form():
 
 @app.route("/class_form")
 def class_form():
-    """Retrieve information from the class form and insert new table entries into the database.
-       Entries being inserted into tables: class."""
-
+    """
+    Retrieve information from the class form and insert new table entries into the database.
+    Entries being inserted into tables: class.
+    """
     username = CASClient().authenticate()
 
     class_details = {'title': None, 'dept': None, 'num': None, 'color': None, 'username': username}
@@ -68,8 +70,8 @@ def class_form():
 @app.route("/completion_form")
 def completion_form():
     """
-    Retrieves the status of tasks that are marked complete
-    and updates the database completed column.
+    Retrieve the status of tasks that are marked complete
+    and update the database completed column.
     """
     username = CASClient().authenticate()
 
@@ -81,18 +83,14 @@ def completion_form():
 @app.route("/delete_class")
 def delete_class_endpoint():
     """
-    Deletes the class given by the request argument class_id and
-    all of the tasks related to it.
-    """
+    Delete the class given by the request argument class_id and all of the tasks related to it."""
     delete_class(request.args["class_id"])
     return redirect("/")
 
 
 @app.route("/delete_task")
 def delete_task_endpoint():
-    """
-    Deletes the task given by the request argument task_id.
-    """
+    """Delete the task given by the request argument task_id."""
     delete_task(request.args["task_id"])
     return redirect("/")
 
@@ -127,9 +125,7 @@ def canvas_task():
 
 @app.route("/task_details")
 def task_details_modal():
-    """
-    Show the task details modal.
-    """
+    """Show the task details modal."""
     username = CASClient().authenticate()
     task_details = fetch_task_details(request.args["task_id"], username)
     classes = fetch_class_list(username)
