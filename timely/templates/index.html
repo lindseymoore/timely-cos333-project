@@ -36,8 +36,7 @@
         <div class="pill-box">
           {% for task in task_list: %}
             {% if task["completed"] == false %}
-            <!-- onclick="location.href='/task_details?task_id={{task['task_id']}}'"  -->
-              <div class="pill" id="clickablepill" style="border-left-color: var(--hl-{{task['color']}})">
+              <div class="pill" onclick="location.href='/task_details?task_id={{task['task_id']}}'" id="clickablepill" style="border-left-color: var(--hl-{{task['color']}})">
                 <div class="d-flex justify-content-between">
                   <div>
                     {{task["title"]}} 
@@ -59,14 +58,14 @@
                 </div>
               </div>
               <script type=text/javascript>
-                // Stop the icons from propagating the click event for displaying class details
-                $("#clickablepill").click(function(e) {
-                  // Check if sender is the <div> element e.g.
-                  if($(e.target).is("div")) {
-                    window.location.href = "/task_details?task_id={{ task['task_id']}}";
-                    return true;
-                  }
-                });
+                // // Stop the icons from propagating the click event for displaying class details
+                // $("#clickablepill").click(function(e) {
+                //   // Check if sender is the <div> element e.g.
+                //   if($(e.target).is("div")) {
+                //     window.location.href = "/task_details?task_id={{ task['task_id']}}";
+                //     return true;
+                //   }
+                // });
               </script>
             {% endif %}
           {% endfor %}
