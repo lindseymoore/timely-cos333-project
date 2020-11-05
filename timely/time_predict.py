@@ -13,8 +13,6 @@ def fetch_task_times(task_id: str, username: str) -> List[dict]:
 
     iteration_times_list = []
 
-    # How do I query the time data specificall rather than just every field in the row with the all?
-    # What sql lanugauge is this/ what can I look up to find documentation for the syntax?
     times = db.session.query(Task, TaskIteration).filter((Task.username == username) &
             (Task.task_id == task_id)).join(TaskIteration, (TaskIteration.username == Task.username)
             & (TaskIteration.task_id == Task.task_id)).all()
@@ -27,7 +25,7 @@ def fetch_task_times(task_id: str, username: str) -> List[dict]:
 
     iteration_times_list.append(iteration_times_obj)
 
-    return iteration_times_obj
+    return iteration_times_list
 
 def find_avg_prediction(iteration_times: List[dict]):
     """
@@ -45,3 +43,29 @@ def find_avg_prediction(iteration_times: List[dict]):
     curr_iteration_time_predict = iteration_times[index]["timely_pred"] = sum/index
 
     return curr_iteration_time_predict
+
+def update_completion_time(task_id: int, iteration: int, username: str, actual_time: float):
+    """ Takes in a task_id, iteration, username, and updates the actual_time it takes to complete 
+    a task upon completion fo the task."""
+
+    task_iteration = db.session.query(TaskIteration).filter((TaskIteration.username == username) &
+                (TaskIteration.task_id == task_id)) & (TaskIteration.iteration == iteration)).first()
+    task_iteration.actual_time = actual_time
+    db.session.commit()
+
+
+def update_timely_pred(task_id: int, iteration: int, username: str):
+    """ Update the timely prediction for a given by task_id as complete in the db."""
+    task_iteration = db.session.query(TaskIteration).filter((TaskIteration.username == username) &
+                (TaskIteration.task_id == task_id)) & 
+                (TaskIteration.iteration == iteration)).first()
+    iteration_times = fetch_task_times(task_id, username)
+    task_iteration.timely_pred = find_avg_prediction(iteration_times)
+    db.session.commit()
+
+
+
+
+       
+
+    

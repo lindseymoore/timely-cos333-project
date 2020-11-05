@@ -50,7 +50,8 @@
                   <div>
                     {{task["title"]}}
                     <i class="fa fa-check-square ml-1 open-CompleteTask" data-toggle="modal"
-                    data-target="#taskCompletionModal" data-id="{{task['task_id']}}">
+                    data-target="#taskCompletionModal" data-id="{{task['task_id']}}" 
+                    data-iteration="{{task['iteration']}}">
                     </i>
                     <i class="fa fa-trash ml-1 open-DeleteTask" data-toggle="modal"
                     data-target="#deleteTaskModal" data-id="{{task['task_id']}}">
