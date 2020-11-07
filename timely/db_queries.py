@@ -11,9 +11,12 @@ from timely.models import Class, Task, TaskIteration
 
 def fetch_class_list(username: str) -> List[dict]:
     """
-    Given a user with username, query the database to search for all classes the user is enrolled
-    in. Return a list of dictionaries, with each dictionary representing one class
-    Fetches title, dept, num, and color
+    Take a username.
+    Return a list of dictionaries, with each dictionary representing one class with keys:
+        title
+        dept
+        num
+        color
     """
     classes = []
 
@@ -30,17 +33,20 @@ def fetch_class_list(username: str) -> List[dict]:
 
 def fetch_task_list(username: str) -> List[dict]:
     """
-    Given a user with username, query the database to search for all tasks the user has
-    inputted. Return a list of dictionaries, with each dictionary representing one task.
-    Fetches title, priority, est_time, link, notes, due_date, repeat_freq,
-    and repeat_end.
+    Take a user with username, query the database to search for all tasks the user has inputted.
+    Return a list of task dictionaries with keys:
+        task_id, iteration
+        title, class
+        due_date, repeat, repeat_freq, repeat_end
+        est_time, timely_pred, actual_time
+        priority, link, notes, completed, color
     """
     task_list = []
 
     # JOIN query to get information from task, Class, and TaskIteration tables
     task_info = db.session.query(Task, Class, TaskIteration
                 ).filter(Task.username == username
-                ).join(TaskIteration, (TaskIteration.task_id == Task.task_id) 
+                ).join(TaskIteration, (TaskIteration.task_id == Task.task_id)
                 & (TaskIteration.username == Task.username)
                 ).join(Class, Class.class_id == Task.class_id).all()
     for (task, course, task_iteration) in task_info:
@@ -58,9 +64,9 @@ def fetch_task_list(username: str) -> List[dict]:
                     'est_time': task_iteration.est_time, 'timely_pred': task_iteration.timely_pred,
                     'link': task_iteration.link, 'notes': task_iteration.notes,
                     'due_date': task_iteration.due_date.strftime("%m/%d/%Y"),
-                    'repeat_freq': repeat_freq, 'repeat_end': repeat_end, 
-                    'completed': task_iteration.completed, 'iteration': task_iteration.iteration, 
-                    'color': course.color}
+                    'repeat_freq': repeat_freq, 'repeat_end': repeat_end,
+                    'completed': task_iteration.completed, 'iteration': task_iteration.iteration,
+                    'color': course.color, 'actual_time': task_iteration.actual_time}
 
         task_list.append(task_obj)
 
@@ -84,7 +90,7 @@ def fetch_task_details(task_id: int, username: str):
                     "id": task.task_id,
                     "repeating": task.repeat, "iteration": task_iteration.iteration,
                     "priority": task_iteration.priority, "link": task_iteration.link,
-                    "due_date": task_iteration.due_date.strftime("%m/%d/%Y"), 
+                    "due_date": task_iteration.due_date.strftime("%m/%d/%Y"),
                     "notes": task_iteration.notes, "est_time": task_iteration.est_time}
 
     return task_details_obj
@@ -93,9 +99,12 @@ def fetch_task_details(task_id: int, username: str):
 def mark_task_complete(task_id: int, username: str):
     """Update the task given by task_id as complete in the db."""
     # Grab first iteration that is not complete
-    task, task_iteration = db.session.query(Task, TaskIteration).filter((Task.username == username) &
-            (Task.task_id == task_id)).join(TaskIteration, (TaskIteration.username == Task.username)
-            & (TaskIteration.task_id == Task.task_id) & (TaskIteration.completed == False)).first()
+    task, task_iteration = db.session.query(Task, TaskIteration).filter( \
+                (Task.username == username) &
+                (Task.task_id == task_id)).join(TaskIteration, \
+                (TaskIteration.username == Task.username) & \
+                (TaskIteration.task_id == Task.task_id) & \
+                (TaskIteration.completed is False)).first()
 
     task_iteration.completed = True
     db.session.commit()
@@ -118,11 +127,11 @@ def mark_task_complete(task_id: int, username: str):
 
         new_date = old_date + increment
 
-        # Creates the next iteration of a task upon completion if the repeat end is not specified 
+        # Creates the next iteration of a task upon completion if the repeat end is not specified
         # or next due date is before the repeat end date
         if task.repeat_end is None or new_date <= task.repeat_end:
             new_task_iteration = TaskIteration()
-        
+
             # Insert into TaskIteration table
             new_task_iteration.username  = task_iteration.username
             new_task_iteration.task_id  = task_iteration.task_id
