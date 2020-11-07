@@ -28,8 +28,13 @@ aria-labelledby="taskCompletionModal" aria-hidden="true">
         let iteration = $(this).data('iteration');
         let time = $("input#time-taken").val();
         $(".modal-footer #btn-completeTask").attr("onclick",
-        "location.href='/completion_form?task_id=" + taskId + "&iteration=" + iteration +
-         "&time=" + time + "';");
+        "/completion_form?task_id=" + taskId + "&iteration=" + iteration);
+      });
+      $(document).on("click", "#btn-completeTask", function () {
+        let time = $("input#time-taken").val();
+        $(".modal-footer #btn-completeTask").attr("onclick",
+         $(this).attr("onclick") + "&time=" + time);
+         window.location.href=$(this).attr("onclick");
       });
     });
   </script>

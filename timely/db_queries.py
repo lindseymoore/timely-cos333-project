@@ -95,7 +95,7 @@ def mark_task_complete(task_id: int, username: str):
     # Grab first iteration that is not complete
     task, task_iteration = db.session.query(Task, TaskIteration).filter((Task.username == username) &
             (Task.task_id == task_id)).join(TaskIteration, (TaskIteration.username == Task.username)
-            & (TaskIteration.task_id == Task.task_id) & (TaskIteration.completed is False)).first()
+            & (TaskIteration.task_id == Task.task_id) & (TaskIteration.completed == False)).first()
 
     task_iteration.completed = True
     db.session.commit()
