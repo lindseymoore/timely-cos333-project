@@ -49,7 +49,6 @@
             <i class="fa fa-plus add ml-2" data-toggle="modal" data-target="#taskModal"></i>
           </div>
         </div>
-
         <!-- Retrieves the task list and displays the task details -->
         <form action="/completion_form" name="task_list">
           <div class="pill-box">
@@ -62,37 +61,33 @@
                         <a href="/task_details?task_id={{task['task_id']}}" class="title-link">
                           {{task["title"]}}
                         </a>
-                        <label class="checkbox mb-0 ml-1">
-                          <input type="checkbox" name="task_ids" value="{{task['task_id']}}"/>
-                        </label>
-                        <i class="fa fa-trash ml-1 open-DeleteTask" data-toggle="modal"
-                        data-target="#deleteTaskModal" data-id="{{task['task_id']}}">
-                        </i>
                       </div>
                       <div>
+                        {% if task["repeat"] %}
+                          <span class="fa fa-repeat mr-1"></span>
+                        {% endif %}
                         {{task["due_date"]}}
                       </div>
                     </div>
                     <div class="d-flex justify-content-between">
                       <div class="subtle">{{task["class"]}}</div>
-                      {% if task["repeat"] %}
-                        <span class="fa fa-repeat"></span>
-                      {% endif %}
+                      <div>
+                        <i class="fa fa-check-square open-CompleteTask" data-toggle="modal"
+                        data-target="#taskCompletionModal" data-id="{{task['task_id']}}" 
+                        data-iteration="{{task['iteration']}}">
+                        </i>
+                        <i class="fa fa-trash ml-1 open-DeleteTask" data-toggle="modal"
+                        data-target="#deleteTaskModal" data-id="{{task['task_id']}}">
+                        </i>
+                      </div>
                     </div>
                   </div>
                   <div class="text-right">
-                    <h2 class="time-prediction">{{task["est_time"]}} h</h2>
+                    <h2 class="time-prediction">{{task["timely_pred"]}} h</h2>
                   </div>
                 </div>
               {% endif %}
             {% endfor %}
-          </div>
-          <div class="field is-grouped d-flex flex-row-reverse">
-            <div class="control">
-              <button type="submit" class="btn btn-secondary btn-custom mt-3 btn-sm">
-                Mark as Completed
-              </button>
-            </div>
           </div>
         </form>
         <br>
@@ -103,12 +98,17 @@
               <div class="pill-row">
                 <div class="pill" style="border-left-color: var(--hl-{{task['color']}})">
                   <div class="d-flex justify-content-between">
-                    <div><del>{{task["title"]}}</del></div>
+                    <div>
+                      <del>{{task["title"]}}</del>
+                      <i class="fa fa-trash ml-1 open-DeleteTask" data-toggle="modal"
+                          data-target="#deleteTaskModal" data-id="{{task['task_id']}}">
+                      </i>
+                    </div>
                     <div>{{task["due_date"]}}</div>
                   </div>
                   <div class="d-flex justify-content-between">
                     <div class="subtle">{{task["class"]}}</div>
-                    <div class="subtle">{{task["est_time"]}} h</div>
+                    <div class="subtle">{{task["actual_time"]}} h</div>
                   </div>
                 </div>
               </div>
@@ -128,4 +128,6 @@
 
   {% include "components/delete-class.html" %}
   {% include "components/delete-task.html" %}
+
+  {% include "components/task-completion.html" %}
 {% endblock %}

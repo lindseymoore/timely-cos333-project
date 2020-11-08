@@ -1,0 +1,41 @@
+<!-- Task Completion Modal -->
+<div class="modal fade" id="taskCompletionModal" tabindex="-1" role="dialog"
+aria-labelledby="taskCompletionModal" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title" id="classModal">Mark as Complete</h3>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="title">Time Taken</label>
+          <input type="text" class="form-control" name="time" id="time-taken">
+        </div>
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button type="button" id="btn-completeTask" class="btn btn-primary">Mark as Complete</button>
+        <button type="button" class="btn btn-secondary ml-3" data-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+  </div>
+  <script>
+    $(document).ready(function() {
+      $(document).on("click", ".open-CompleteTask", function () {
+        let taskId = $(this).data('id');
+        let iteration = $(this).data('iteration');
+        let time = $("input#time-taken").val();
+        $(".modal-footer #btn-completeTask").attr("onclick",
+        "/completion_form?task_id=" + taskId + "&iteration=" + iteration);
+      });
+      $(document).on("click", "#btn-completeTask", function () {
+        let time = $("input#time-taken").val();
+        $(".modal-footer #btn-completeTask").attr("onclick",
+         $(this).attr("onclick") + "&time=" + time);
+         window.location.href=$(this).attr("onclick");
+      });
+    });
+  </script>
+</div>

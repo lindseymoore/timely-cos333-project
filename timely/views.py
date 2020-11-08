@@ -3,13 +3,13 @@
 from flask import redirect, render_template, request
 
 from timely import app
-
 from timely.canvas_handler import fetch_canvas_courses, fetch_canvas_tasks
 from timely.cas_client import CASClient
 from timely.db_queries import (delete_class, delete_task, fetch_class_list,
                                fetch_task_details, fetch_task_list,
                                mark_task_complete)
 from timely.form_handler import class_handler, task_handler
+from timely.time_predict import update_completion_time, update_timely_pred
 
 # To run the application locally with CAS authentication, check out:
 # "https://stackoverflow.com/questions/50236117/"
@@ -36,7 +36,6 @@ def task_form():
     Entries being inserted into tables: task, task_details, task_time, repeating_task.
     """
     username = CASClient().authenticate()
-
     details = {'task_title': None, 'class_id': None, 'dept' : None, 'num': None,
     'priority': None, 'est_time': None, 'link': None, 'notes': None, 'due_date': None,
     'due_time': None, 'repeat_freq': None, 'repeat_end': None, 'username': username}
@@ -74,9 +73,15 @@ def completion_form():
     and update the database completed column.
     """
     username = CASClient().authenticate()
+    task_id = request.args["task_id"]
+    iteration = request.args["iteration"]
+    time = request.args["time"]
 
-    for task_id in request.args.values():
-        mark_task_complete(int(task_id), username)
+    mark_task_complete(int(task_id), username)
+
+    update_completion_time(task_id, iteration, username, time)
+    update_timely_pred(task_id, iteration, username)
+
     return redirect("/")
 
 
@@ -128,6 +133,7 @@ def task_details_modal():
     """Show the task details modal."""
     username = CASClient().authenticate()
     task_details = fetch_task_details(request.args["task_id"], username)
+    print(task_details)
     classes = fetch_class_list(username)
     tasks = fetch_task_list(username)
     return render_template("index.html",
