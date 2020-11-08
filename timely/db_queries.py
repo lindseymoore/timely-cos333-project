@@ -98,13 +98,14 @@ def fetch_task_details(task_id: int, username: str):
 
 def mark_task_complete(task_id: int, username: str):
     """Update the task given by task_id as complete in the db."""
-    # Grab first iteration that is not complete
+    # pylint: disable=singleton-comparison
     task, task_iteration = db.session.query(Task, TaskIteration).filter( \
                 (Task.username == username) &
                 (Task.task_id == task_id)).join(TaskIteration, \
                 (TaskIteration.username == Task.username) & \
                 (TaskIteration.task_id == Task.task_id) & \
-                (TaskIteration.completed is False)).first()
+                (TaskIteration.completed == False)).first()
+    # pylint: enable=singleton-comparison
 
     task_iteration.completed = True
     db.session.commit()
