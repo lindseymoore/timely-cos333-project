@@ -17,7 +17,7 @@
           <h3 class="mb-0">Classes</h3>
           <div class="d-flex">
             <img src="{{ url_for('static', filename='image/canvas-logo.png') }}"
-            height="24px" onclick="location.href='/canvas_task?'">
+            height="24px" onclick="location.href='/canvas_class?'">
             <i class="fa fa-plus add ml-2" data-toggle="modal" data-target="#classModal"></i>
           </div>
         </div>
@@ -57,7 +57,7 @@
                 <div class="pill-row">
                   <div class="pill" style="border-left-color: var(--hl-{{task['color']}})">
                     <div class="d-flex justify-content-between">
-                      <div>
+                      <div class="pill-left">
                         <a href="/task_details?task_id={{task['task_id']}}" class="title-link">
                           {{task["title"]}}
                         </a>

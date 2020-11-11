@@ -20,6 +20,12 @@
     flex-grow: 1;
 }
 
+.pill-left {
+    max-width: 80%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 .pill-row:first-child .pill {
     border-radius: 10px 10px 0px 0px;
 }

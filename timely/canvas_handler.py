@@ -99,13 +99,3 @@ def fetch_canvas_tasks(curr_semester: str, username: str):
 
                 db.session.add(task_iteration)
                 db.session.commit()
-
-
-# def main():
-#     username = CASClient().authenticate()
-
-#     fetch_canvas_courses('F2020', username)
-#     fetch_canvas_tasks('F2020', username)
-
-# if __name__ == "__main__":
-#     main()

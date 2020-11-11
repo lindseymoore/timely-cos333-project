@@ -68,6 +68,9 @@ def fetch_task_list(username: str) -> List[dict]:
                     'completed': task_iteration.completed, 'iteration': task_iteration.iteration,
                     'color': course.color, 'actual_time': task_iteration.actual_time}
 
+        if task_obj['timely_pred'] is None:
+            task_obj['timely_pred'] = 0
+
         task_list.append(task_obj)
 
     return task_list
@@ -92,6 +95,8 @@ def fetch_task_details(task_id: int, username: str):
                     "priority": task_iteration.priority, "link": task_iteration.link,
                     "due_date": task_iteration.due_date.strftime("%m/%d/%Y"),
                     "notes": task_iteration.notes, "est_time": task_iteration.est_time}
+        if task_details_obj['est_time'] is None:
+            task_details_obj['est_time'] = 0
 
     return task_details_obj
 
