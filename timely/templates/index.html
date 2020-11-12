@@ -61,6 +61,7 @@
                         <a href="/task_details?task_id={{task['task_id']}}" class="title-link">
                           {{task["title"]}}
                         </a>
+                        <i class="fa fa-edit ml-2" data-toggle="modal" data-target="#editModal"></i>
                       </div>
                       <div>
                         {% if task["repeat"] %}
@@ -130,4 +131,5 @@
   {% include "components/delete-task.html" %}
 
   {% include "components/task-completion.html" %}
+  {% include "components/edit-details.html" %}
 {% endblock %}
