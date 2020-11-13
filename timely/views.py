@@ -145,8 +145,8 @@ def task_details_modal():
 @app.route("/edit_task_details")
 def edit_task_details():
     username = CASClient().authenticate()
-    task_details = {"title": None, "task_id": None, "class": None, "repeating": None, 
-                "iteration": None, "priority": None, "link": None, "due_date": None, "notes": None, 
+    task_details = {"title": None, "task_id": None, "class": None, "repeat": None,
+                "priority": None, "link": None, "due_date": None, "notes": None, 
                 "est_time": None, "repeat_freq": None, "repeat_end": None, "due_time": None, 
                 "username": username}
 
