@@ -73,3 +73,34 @@ def task_handler(details: dict):
 
     db.session.add(task_iteration)
     db.session.commit()
+
+
+def update_task_details(task_details: dict):
+    """Updates a task's details based on form input."""
+    username = task_details['username']
+    task_id = task_details['task_id']
+
+    task, task_iteration = db.session.query(Task, TaskIteration).filter( \
+                (Task.username == username) &
+                (Task.task_id == task_id)).join(TaskIteration, \
+                (TaskIteration.username == Task.username) & \
+                (TaskIteration.task_id == Task.task_id)).first()
+
+    task.title = task_details['title']
+
+    # TODO If going from repeating to non-repeating, need to remove future iterations?
+    task.repeat = task_details['repeat']
+    if task_details['repeat']:
+        task.repeat_freq = task_details['repeat_freq']
+        task.repeat_end = task_details['repeat_end']
+
+    task_iteration.iteration = task_details['iteration']
+    task_iteration.priority = task_details['priority']
+    task_iteration.link = task_details['link']
+    task_iteration.due_date = task_details['due_date']
+    task_iteration.due_time = task_details['due_time']
+    task_iteration.notes = task_details['notes']
+    task_iteration.est_time = task_details['est_time']
+
+    db.session.commit()
+    
