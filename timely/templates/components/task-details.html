@@ -27,10 +27,10 @@ aria-labelledby="taskDetailsModal" aria-hidden="true">
   $(document).ready(function() {
     $('#taskDetailsModal').modal('toggle');
     $("#form_edit_details").hide();
-  });
-
-  $('#edit').click( function() {
-    $( '#display-details' ).toggle();
-    $( '#form_edit_details' ).toggle();
+    
+    $('#edit').click( function() {
+      $( '#display-details' ).toggle();
+      $( '#form_edit_details' ).toggle();
+    });
   });
 </script>
