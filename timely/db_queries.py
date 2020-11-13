@@ -1,6 +1,6 @@
 """Functions to fetch class and task information."""
 
-from datetime import timedelta
+from datetime import timedelta, date
 from typing import List
 
 from sqlalchemy import desc
@@ -100,7 +100,22 @@ def fetch_task_details(task_id: int, username: str):
 
     return task_details_obj
 
+def fetch_week_dates():
+    curr_date = date.today()
+    offset = curr_date.weekday() # where 0 is monday
 
+    #determine what sunday
+    increment = timedelta(days=offset+1)
+    day = curr_date - increment #initially sunday
+
+    #iterate from sun -> sat by inc sun by 1
+    week = {}
+    for ii in range(0, 7):
+        week[ii] = day.strftime("%m/%d/%Y")
+        day += timedelta(days=1)
+
+    return week
+    
 def mark_task_complete(task_id: int, username: str):
     """Update the task given by task_id as complete in the db."""
     # pylint: disable=singleton-comparison
