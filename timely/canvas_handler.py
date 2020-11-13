@@ -1,19 +1,19 @@
 """Functions to parse information from Canvas, fetch classes and tasks, and insert as new entries
 in the database."""
 
-from datetime import datetime
 import random
+from datetime import datetime
 
 from canvasapi import Canvas
 
 from timely import db
-from timely.db_queries import (get_class_id, get_next_task_iteration,
-                               get_task_id)
+from timely.db_queries import (get_api_key, get_class_id,
+                               get_next_task_iteration, get_task_id)
 from timely.models import Class, Task, TaskIteration
 
 API_URL = "https://princeton.instructure.com"
-API_KEY = "12465~RpGmbRqf0075STEfJkuwt72NzzYs5Zv1dglYd5vIPKqEtkrF2EztidbzCRLg8cFy"
-canvas = Canvas(API_URL, API_KEY)
+#API_KEY = "12465~RpGmbRqf0075STEfJkuwt72NzzYs5Zv1dglYd5vIPKqEtkrF2EztidbzCRLg8cFy"
+#canvas = Canvas(API_URL, API_KEY)
 
 
 def fetch_canvas_courses(curr_semester: str, username: str):
@@ -22,7 +22,8 @@ def fetch_canvas_courses(curr_semester: str, username: str):
     to the database. Fetches classes a user is currently enrolled in given by string curr_semester,
     which is denoted F2020 for fall 2020, S2021 for spring 2021, etc.
     """
-    #username = CASClient().authenticate()
+    api_key = get_api_key(username)
+    canvas = Canvas(API_URL, api_key)
     classes = []
 
     for course in canvas.get_courses():
@@ -56,6 +57,8 @@ def fetch_canvas_tasks(curr_semester: str, username: str):
     which is denoted F2020 for fall 2020, S2021 for spring 2021, etc. Fetches all active tasks 
     (tasks due after the current date) for each class.
     """
+    api_key = get_api_key(username)
+    canvas = Canvas(API_URL, api_key)
 
     for course in canvas.get_courses():
         term = course.course_code[-5:]
