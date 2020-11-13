@@ -1,0 +1,96 @@
+<!-- Task Modal -->
+<div class="modal fade" id="taskModal" tabindex="-1" role="dialog" aria-labelledby="taskModal" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title" id="taskModal">New Task</h3>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="/task_form">
+            <div class="form-group">
+              <label for="task_title">Name</label>
+              <input type="text" class="form-control" name="task_title" id="task_title">
+            </div>
+            <div class="form-group">
+              <label for="class_id">Class</label>
+              <select class="form-control" name="class_id" id="class_id">
+                {% for class in class_list %}
+                  <option value="{{class['class_id']}}">
+                    {{ class["title"] }}
+                  </option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="priority">Priority</label>
+              <select class="form-control" name="priority" id="priority">
+                <option value=0>
+                  Low
+                </option>
+                <option value=1>
+                  Medium
+                </option>
+                <option value=2>
+                  High
+                </option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="est_time">Estimated Completion Time</label>
+              <input type="text" class="form-control" name="est_time" id="est_time">
+            </div>
+            <div class="form-group">
+              <label for="link">Link</label>
+              <input type="text" class="form-control" name="link" id="link">
+            </div>
+            <div class="form-group">
+              <label for="due_date">Due Date</label>
+              <input type="text" class="form-control" name="due_date" id="due_date">
+            </div>
+            <div class="form-group">
+              <label for="repeat_freq">Repeat</label>
+              <select class="form-control" name="repeat_freq" id="repeat_freq">
+                <option value="">
+                  Does Not Repeat
+                </option>
+                <option value="daily">
+                  Daily
+                </option>
+                <option value="weekly">
+                  Weekly
+                </option>
+                <option value="biweekly">
+                  Bi-Weekly
+                </option>
+                <option value="monthly">
+                  Monthly
+                </option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="repeat_end">Recurrence End Date</label>
+              <input type="text" class="form-control" name="repeat_end" id="repeat_end">
+            </div>
+            <div class="form-group">
+              <label for="notes">Notes</label>
+              <input type="text" class="form-control" name="notes" id="notes">
+            </div>
+            <div class="form-group d-flex flex-row-reverse">
+              <button type="button" class="btn btn-secondary ml-3" data-dismiss="modal">Cancel</button>
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  $(document).ready(function() {
+    $("#due_date").flatpickr();
+    $("#repeat_end").flatpickr();
+  });
+</script>
