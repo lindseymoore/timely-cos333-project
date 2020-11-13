@@ -17,14 +17,14 @@
           <h3 class="mb-0">Classes</h3>
           <div class="d-flex">
             <img src="{{ url_for('static', filename='image/canvas-logo.png') }}"
-            height="24px" onclick="location.href='/canvas_class?'">
+            height="24px" onclick="location.href='/canvas_task?'">
             <i class="fa fa-plus add ml-2" data-toggle="modal" data-target="#classModal"></i>
           </div>
         </div>
 
         <!-- Retrieves the class list and displays the class details -->
         <div class="pill-box">
-          {% for class in class_list: %} 
+          {% for class in class_list: %}
             <div class="pill-row">
               <div class="pill" style="border-left-color: var(--hl-{{class['color']}})">
                 {{class["title"]}}<br>
@@ -57,7 +57,7 @@
                 <div class="pill-row">
                   <div class="pill" style="border-left-color: var(--hl-{{task['color']}})">
                     <div class="d-flex justify-content-between">
-                      <div class="pill-left">
+                      <div>
                         <a href="/task_details?task_id={{task['task_id']}}" class="title-link">
                           {{task["title"]}}
                         </a>
@@ -130,4 +130,5 @@
   {% include "components/delete-task.html" %}
 
   {% include "components/task-completion.html" %}
+ 
 {% endblock %}

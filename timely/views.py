@@ -8,7 +8,7 @@ from timely.cas_client import CASClient
 from timely.db_queries import (delete_class, delete_task, fetch_class_list,
                                fetch_task_details, fetch_task_list,
                                mark_task_complete)
-from timely.form_handler import class_handler, task_handler
+from timely.form_handler import class_handler, task_handler, update_task_details
 from timely.time_predict import update_completion_time, update_timely_pred
 
 # To run the application locally with CAS authentication, check out:
@@ -140,3 +140,19 @@ def task_details_modal():
                 class_list=classes,
                 task_list=tasks,
                 task_details=task_details)
+
+
+@app.route("/edit_task_details")
+def edit_task_details():
+    username = CASClient().authenticate()
+    task_details = {"title": None, "task_id": None, "class": None, "repeat": None,
+                "priority": None, "link": None, "due_date": None, "notes": None, 
+                "est_time": None, "repeat_freq": None, "repeat_end": None, "due_time": None, 
+                "username": username}
+
+    for key, item in request.args.items():
+        task_details[key] = item
+
+    update_task_details(task_details)
+   
+    return redirect("/")

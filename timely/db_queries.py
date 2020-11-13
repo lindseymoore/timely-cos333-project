@@ -90,7 +90,7 @@ def fetch_task_details(task_id: int, username: str):
 
     for (task, task_iteration) in details:
         task_details_obj = {"title": task.title, "class": get_class_title(task.class_id),
-                    "id": task.task_id,
+                    "id": task.task_id, "repeat_freq": task.repeat_freq, "repeat_end": task.repeat_end,
                     "repeating": task.repeat, "iteration": task_iteration.iteration,
                     "priority": task_iteration.priority, "link": task_iteration.link,
                     "due_date": task_iteration.due_date.strftime("%m/%d/%Y"),
