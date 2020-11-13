@@ -55,6 +55,10 @@ i:hover {
     padding: 0px;
 }
 
+.info-icon {
+    font-size: 1.5em;
+}
+
 /* Provides consistent theme to the bootstrap modal */
 .modal-content {
     background-color: var(--dark-4);

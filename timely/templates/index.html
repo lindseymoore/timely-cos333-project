@@ -43,7 +43,10 @@
       <div class="col-8 overflow-auto py-3" id="task-col">
         <div class="d-flex justify-content-between align-items-center pb-3">
           <h3 class="mb-0">Tasks</h3>
-          <div class="d-flex">
+          <div class="d-flex align-items-center">
+            <button data-toggle="modal" data-target="#canvasKeyModal" class="btn btn-secondary mr-2">
+              Canvas Key
+            </button>
             <img src="{{ url_for('static', filename='image/canvas-logo.png') }}"
             height="24px" onclick="location.href='/canvas_task?'">
             <i class="fa fa-plus add ml-2" data-toggle="modal" data-target="#taskModal"></i>
@@ -130,4 +133,6 @@
   {% include "components/delete-task.html" %}
 
   {% include "components/task-completion.html" %}
+
+  {% include "components/canvas-key.html" %}
 {% endblock %}
