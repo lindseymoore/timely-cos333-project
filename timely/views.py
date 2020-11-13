@@ -2,7 +2,8 @@
 
 from flask import redirect, render_template, request
 
-from timely import app
+from timely import app, db
+from timely.models import User
 from timely.canvas_handler import fetch_canvas_courses, fetch_canvas_tasks
 from timely.cas_client import CASClient
 from timely.db_queries import (delete_class, delete_task, fetch_class_list,
@@ -106,6 +107,19 @@ def logout():
     cas_client = CASClient()
     cas_client.authenticate()
     cas_client.logout()
+
+
+@app.route("/canvas_key")
+def canvas_key():
+    """
+    Inserts the Canvas API Key for a particular user
+    """
+    username = CASClient().authenticate()
+    api_key = request.args["api_key"]
+    new_user = User(username = username, api_key = api_key)
+    db.session.add(new_user)
+    db.session.commit()
+    return redirect("/")
 
 
 @app.route("/canvas_class")
