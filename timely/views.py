@@ -6,7 +6,7 @@ from timely import app, db
 from timely.canvas_handler import fetch_canvas_courses, fetch_canvas_tasks
 from timely.cas_client import CASClient
 from timely.db_queries import (delete_class, delete_task, fetch_class_list,
-                               fetch_task_details, fetch_task_list,
+                               fetch_task_details, fetch_task_list, fetch_user,
                                mark_task_complete)
 from timely.form_handler import class_handler, task_handler
 from timely.models import User
@@ -25,9 +25,11 @@ def index():
 
     classes = fetch_class_list(username)
     tasks = fetch_task_list(username)
+    user = fetch_user(username)
     return render_template("index.html",
                 class_list=classes,
-                task_list=tasks)
+                task_list=tasks,
+                user_info = user)
 
 
 @app.route("/task_form")

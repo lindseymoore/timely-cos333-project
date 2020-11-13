@@ -214,4 +214,12 @@ def get_api_key(username: str):
     """Fetch a user's Canvas API Key given their username."""
     user = db.session.query(User).filter(User.username == username).first()
     return user.api_key
+
+
+def fetch_user(username: str):
+    """Returns True if a user is in the User table and False otherwise."""
+    user = db.session.query(User).filter(User.username == username).first()
+    if user is None:
+        return False
+    return True
     
