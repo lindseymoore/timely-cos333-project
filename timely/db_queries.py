@@ -6,7 +6,7 @@ from typing import List
 from sqlalchemy import desc
 
 from timely import db
-from timely.models import Class, Task, TaskIteration
+from timely.models import Class, Task, TaskIteration, User
 
 
 def fetch_class_list(username: str) -> List[dict]:
@@ -208,3 +208,18 @@ def delete_task(task_id: int):
     db.session.query(Task).filter(Task.task_id == task_id).delete()
     db.session.query(TaskIteration).filter(TaskIteration.task_id == task_id).delete()
     db.session.commit()
+
+
+def get_api_key(username: str):
+    """Fetch a user's Canvas API Key given their username."""
+    user = db.session.query(User).filter(User.username == username).first()
+    return user.api_key
+
+
+def fetch_user(username: str):
+    """Returns True if a user is in the User table and False otherwise."""
+    user = db.session.query(User).filter(User.username == username).first()
+    if user is None:
+        return False
+    return True
+    

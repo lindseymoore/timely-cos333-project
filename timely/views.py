@@ -2,12 +2,13 @@
 
 from flask import redirect, render_template, request
 
-from timely import app
+from timely import app, db
 from timely.canvas_handler import fetch_canvas_courses, fetch_canvas_tasks
 from timely.cas_client import CASClient
 from timely.db_queries import (delete_class, delete_task, fetch_class_list,
-                               fetch_task_details, fetch_task_list,
+                               fetch_task_details, fetch_task_list, fetch_user,
                                mark_task_complete)
+from timely.models import User
 from timely.form_handler import class_handler, task_handler, update_task_details
 from timely.time_predict import update_completion_time, update_timely_pred
 
@@ -24,9 +25,11 @@ def index():
 
     classes = fetch_class_list(username)
     tasks = fetch_task_list(username)
+    user = fetch_user(username)
     return render_template("index.html",
                 class_list=classes,
-                task_list=tasks)
+                task_list=tasks,
+                user_info = user)
 
 
 @app.route("/task_form")
@@ -106,6 +109,19 @@ def logout():
     cas_client = CASClient()
     cas_client.authenticate()
     cas_client.logout()
+
+
+@app.route("/canvas_key")
+def canvas_key():
+    """
+    Inserts the Canvas API Key for a particular user
+    """
+    username = CASClient().authenticate()
+    api_key = request.args["api_key"]
+    new_user = User(username = username, api_key = api_key)
+    db.session.add(new_user)
+    db.session.commit()
+    return redirect("/")
 
 
 @app.route("/canvas_class")

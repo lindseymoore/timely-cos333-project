@@ -112,13 +112,16 @@ class User(db.Model):
     school: str
         School/University the user attends (in our case Princeton)
     email: str
-        The user"s email address
+        The user's email address
+    api_key: str
+        The user's personal Canvas API key
      """
     __tablename__ = "user"
     username = Column(String, primary_key=True)
     password = Column(String)
     school = Column(String)
     email = Column(String)
+    api_key = Column(String)
 
 
 class Class(db.Model):
