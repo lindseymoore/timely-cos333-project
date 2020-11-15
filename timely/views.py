@@ -28,6 +28,17 @@ def index():
                 class_list=classes,
                 task_list=tasks)
 
+@app.route("/calendar")
+def calendar():
+    """Return the index page."""
+    username = CASClient().authenticate()
+
+    classes = fetch_class_list(username)
+    tasks = fetch_task_list(username)
+    return render_template("calendar.html",
+                class_list=classes,
+                task_list=tasks)
+
 
 @app.route("/task_form")
 def task_form():

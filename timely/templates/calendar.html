@@ -7,17 +7,45 @@
 {% endblock %}
 
 {% block content %}
-  <div class="container full-height pb-5" style="max-width: 900px">
+  <div class="container full-height" style="max-width: 100%">
     {% include "components/navbar.html" %}
 
-      <div class="col-8 overflow-auto py-3" id="task-col">
+      <!-- <div class="col-8 overflow-auto py-3" id="task-col">
         <div class="d-flex justify-content-between align-items-center pb-3">
-          <h3 class="mb-0">Tasks</h3>
+          <h3 class="mb-0">Weekly Overview</h3>
           <div class="d-flex">
             <img src="{{ url_for('static', filename='image/canvas-logo.png') }}"
             height="24px" onclick="location.href='/canvas_task?'">
             <i class="fa fa-plus add ml-2" data-toggle="modal" data-target="#taskModal"></i>
           </div>
+        </div> -->
+        <!-- Header Row  -->
+        <div class="container pb-5">
+          <div class="text-dark" style="font-weight:bold">
+            <div class="row" style= "background-color: white; height: 100px;">
+              <div class="col-sm">
+                Sun
+              </div>
+              <div class="col-sm">
+                Mon
+              </div>
+              <div class="col-sm">
+                Tue
+              </div>
+              <div class="col-sm">
+                Wed
+              </div>
+              <div class="col-sm">
+                Thu
+              </div>
+              <div class="col-sm">
+                Fri
+              </div>
+              <div class="col-sm">
+                Sat
+              </div>
+          </div>
+        </div>
         </div>
         <!-- Retrieves the task list and displays the task details -->
         <form action="/completion_form" name="task_list">
@@ -43,6 +71,7 @@
                 <td>@mdo</td>
                 <td>@mdo</td>
               </tr>
+            
           <div class="pill-box">
             {% for task in task_list: %}
               {% if task["completed"] == false %}
