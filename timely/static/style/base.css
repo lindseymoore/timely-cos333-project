@@ -7,6 +7,7 @@
     --dark-3: #515151;
     --dark-2: #b6b6b6;
     --dark-1: #e5e5e5;
+    --dark-6: #828282;
 
     --hl-red: #ff4545;
     --hl-purple: #8e58ff;
@@ -32,6 +33,10 @@ html, body, #content {
     background-color: var(--dark-3);
     color: white;
     border-radius: 7px;
+}
+
+.weekly-header{
+    margin-bottom: 3px;
 }
 
 #task-col {

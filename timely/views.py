@@ -7,7 +7,7 @@ from timely.canvas_handler import fetch_canvas_courses, fetch_canvas_tasks
 from timely.cas_client import CASClient
 from timely.db_queries import (delete_class, delete_task, fetch_class_list,
                                fetch_task_details, fetch_task_list,
-                               mark_task_complete)
+                               mark_task_complete, fetch_week_dates)
 from timely.form_handler import class_handler, task_handler
 from timely.time_predict import update_completion_time, update_timely_pred
 
@@ -30,14 +30,16 @@ def index():
 
 @app.route("/calendar")
 def calendar():
-    """Return the index page."""
+    """Return the calendar page."""
     username = CASClient().authenticate()
-
     classes = fetch_class_list(username)
     tasks = fetch_task_list(username)
+    week_dates = fetch_week_dates()
+    print(week_dates)
     return render_template("calendar.html",
                 class_list=classes,
-                task_list=tasks)
+                task_list=tasks,
+                week_dates=week_dates)
 
 
 @app.route("/task_form")
@@ -147,6 +149,7 @@ def task_details_modal():
     print(task_details)
     classes = fetch_class_list(username)
     tasks = fetch_task_list(username)
+    print(request.path)
     return render_template("index.html",
                 class_list=classes,
                 task_list=tasks,

@@ -63,7 +63,7 @@ def fetch_task_list(username: str) -> List[dict]:
                     'priority:': task_iteration.priority, 'repeat': task.repeat,
                     'est_time': task_iteration.est_time, 'timely_pred': task_iteration.timely_pred,
                     'link': task_iteration.link, 'notes': task_iteration.notes,
-                    'due_date': task_iteration.due_date.strftime("%m/%d/%Y"),
+                    'due_date': task_iteration.due_date.strftime("%m/%d/%y"),
                     'repeat_freq': repeat_freq, 'repeat_end': repeat_end,
                     'completed': task_iteration.completed, 'iteration': task_iteration.iteration,
                     'color': course.color, 'actual_time': task_iteration.actual_time}
@@ -93,7 +93,7 @@ def fetch_task_details(task_id: int, username: str):
                     "id": task.task_id,
                     "repeating": task.repeat, "iteration": task_iteration.iteration,
                     "priority": task_iteration.priority, "link": task_iteration.link,
-                    "due_date": task_iteration.due_date.strftime("%m/%d/%Y"),
+                    "due_date": task_iteration.due_date.strftime("%m/%d/%y"),
                     "notes": task_iteration.notes, "est_time": task_iteration.est_time}
         if task_details_obj['est_time'] is None:
             task_details_obj['est_time'] = 0
@@ -108,14 +108,17 @@ def fetch_week_dates():
     increment = timedelta(days=offset+1)
     day = curr_date - increment #initially sunday
 
+    if offset == 6:  # If current date is Sunday
+        day = curr_date
+    
     #iterate from sun -> sat by inc sun by 1
     week = {}
     for ii in range(0, 7):
-        week[ii] = day.strftime("%m/%d/%Y")
+        week[ii] = day.strftime("%m/%d/%y")
         day += timedelta(days=1)
 
     return week
-    
+
 def mark_task_complete(task_id: int, username: str):
     """Update the task given by task_id as complete in the db."""
     # pylint: disable=singleton-comparison

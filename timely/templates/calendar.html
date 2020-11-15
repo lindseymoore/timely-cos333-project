@@ -20,96 +20,106 @@
           </div>
         </div> -->
         <!-- Header Row  -->
-        <div class="container pb-5">
-          <div class="text-dark" style="font-weight:bold">
-            <div class="row" style= "background-color: white; height: 100px;">
-              <div class="col-sm">
-                Sun
-              </div>
-              <div class="col-sm">
-                Mon
-              </div>
-              <div class="col-sm">
-                Tue
-              </div>
-              <div class="col-sm">
-                Wed
-              </div>
-              <div class="col-sm">
-                Thu
-              </div>
-              <div class="col-sm">
-                Fri
-              </div>
-              <div class="col-sm">
-                Sat
-              </div>
-          </div>
-        </div>
-        </div>
         <!-- Retrieves the task list and displays the task details -->
         <form action="/completion_form" name="task_list">
-          <table class="table">
-            <thead>
-              <tr>
-                <th scope="col">Sun</th>
-                <th scope="col">Mon</th>
-                <th scope="col">Tue</th>
-                <th scope="col">Wed</th>
-                <th scope="col">Thu</th>
-                <th scope="col">Fri</th>
-                <th scope="col">Sat</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <th scope="row"></th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>@mdo</td>
-                <td>@mdo</td>
-                <td>@mdo</td>
-                <td>@mdo</td>
-              </tr>
-            
-          <div class="pill-box">
-            {% for task in task_list: %}
-              {% if task["completed"] == false %}
-                <div class="pill-row">
-                  <div class="pill" style="border-left-color: var(--hl-{{task['color']}})">
-                    <div class="d-flex justify-content-between">
-                      <div class="pill-left">
-                        <a href="/task_details?task_id={{task['task_id']}}" class="title-link">
-                          {{task["title"]}}
-                        </a>
-                      </div>
-                      <div>
-                        {% if task["repeat"] %}
-                          <span class="fa fa-repeat mr-1"></span>
-                        {% endif %}
-                        {{task["due_date"]}}
-                      </div>
-                    </div>
-                    <div class="d-flex justify-content-between">
-                      <div class="subtle">{{task["class"]}}</div>
-                      <div>
-                        <i class="fa fa-check-square open-CompleteTask" data-toggle="modal"
-                        data-target="#taskCompletionModal" data-id="{{task['task_id']}}" 
-                        data-iteration="{{task['iteration']}}">
-                        </i>
-                        <i class="fa fa-trash ml-1 open-DeleteTask" data-toggle="modal"
-                        data-target="#deleteTaskModal" data-id="{{task['task_id']}}">
-                        </i>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="text-right">
-                    <h2 class="time-prediction">{{task["timely_pred"]}} h</h2>
-                  </div>
-                </div>
-              {% endif %}
-            {% endfor %}
-          </div>
+        <div class="container full-height pb-5" style="max-width: 1500px;">
+          <div class="text-light" style="font-weight:bold; border-radius: 15px;">
+            <div class="row text-center pb-5 weekly-header" style="background: var(--dark-3); margin-bottom: 3px;">
+              <div class="col-sm pt-3">
+                <h3><b>Sun</b></h3>
+                {{week_dates[0]}}
+              </div>
+              <div class="col-sm pt-3">
+                <h3><b>Mon</b></h3>
+                {{week_dates[1]}}
+              </div>
+              <div class="col-sm pt-3">
+                <h3><b>Tue</b></h3>
+                {{week_dates[2]}}
+              </div>
+              <div class="col-sm pt-3">
+                <h3><b>Wed</b></h3>
+                {{week_dates[3]}}
+              </div>
+              <div class="col-sm pt-3">
+                <h3><b>Thu</b></h3>
+                {{week_dates[4]}}
+              </div>
+              <div class="col-sm pt-3">
+                <h3><b>Fri</b></h3>
+                {{week_dates[5]}}
+              </div>
+              <div class="col-sm pt-3">
+                <h3><b>Sat</b></h3>
+                {{week_dates[6]}}
+              </div>
+           </div>
+           <div class="row pt-2" style="background: var(--dark-4);">
+            <div class="col-sm">
+              <div class="pill-box">
+                {% for task in task_list: %}
+                  {% if task["completed"] == false and task["due_date"] == week_dates[0]%}
+                    {% include "tasks.html" %}
+                  {% endif %}
+                {% endfor %}
+              </div>
+            </div>
+            <div class="col-sm">
+              <div class="pill-box">
+                {% for task in task_list: %}
+                  {% if task["completed"] == false and task["due_date"] == week_dates[1]%}
+                    {% include "tasks.html" %}
+                  {% endif %}
+                {% endfor %}
+              </div>
+            </div>
+            <div class="col-sm">
+              <div class="pill-box">
+                {% for task in task_list: %}
+                  {% if task["completed"] == false and task["due_date"] == week_dates[2]%}
+                    {% include "tasks.html" %}
+                  {% endif %}
+                {% endfor %}
+              </div>
+            </div>
+            <div class="col-sm">
+              <div class="pill-box">
+                {% for task in task_list: %}
+                  {% if task["completed"] == false and task["due_date"] == week_dates[3]%}
+                    {% include "tasks.html" %}
+                  {% endif %}
+                {% endfor %}
+              </div>
+            </div>
+            <div class="col-sm">
+              <div class="pill-box">
+                {% for task in task_list: %}
+                  {% if task["completed"] == false and task["due_date"] == week_dates[4]%}
+                    {% include "tasks.html" %}
+                  {% endif %}
+                {% endfor %}
+              </div>
+            </div>
+            <div class="col-sm">
+              <div class="pill-box">
+                {% for task in task_list: %}
+                  {% if task["completed"] == false and task["due_date"] == week_dates[5]%}
+                    {% include "tasks.html" %}
+                  {% endif %}
+                {% endfor %}
+              </div>
+            </div>
+            <div class="col-sm">
+              <div class="pill-box">
+                {% for task in task_list: %}
+                  {% if task["completed"] == false and task["due_date"] == week_dates[6]%}
+                    {% include "tasks.html" %}
+                  {% endif %}
+                {% endfor %}
+              </div>
+            </div>
+         </div>
+        </div>
         </form>
         <br>
         <h5>Completed Tasks</h5>
