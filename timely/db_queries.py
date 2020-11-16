@@ -223,3 +223,18 @@ def fetch_user(username: str):
         return False
     return True
     
+
+def get_class_id_canvas(canvas_id: int):
+    """Returns the class_id of a class with a given canvas_id set by Canvas."""
+    class_id = db.session.query(Class).filter(Class.canvas_id == canvas_id).first()
+    return class_id.class_id
+
+
+def canvas_task_in_db(canvas_id: int):
+    """Returns True if a task with canvas_id is already in the database, and False otherwise.
+       When working with this function, if it returns False call db.add to add a new entry. 
+       Otherwise just call db.commit to update the current database entry."""
+    if db.session.query(TaskIteration).filter(TaskIteration.canvas_id == canvas_id).first() is None:
+        return False
+    return True
+    

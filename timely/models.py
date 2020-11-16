@@ -149,6 +149,8 @@ class Class(db.Model):
         True if class_id is currently being taken, False otherwise
     color: str
         The color of the given course in the UI
+    canvas_id: int
+        The unique id given to the class by Canvas
      """
     __tablename__ = "class"
     class_id = Column(Integer, primary_key=True, autoincrement=True)
@@ -158,3 +160,4 @@ class Class(db.Model):
     num = Column(Integer)
     active_status = Column(Boolean)
     color = Column(String)
+    canvas_id = Column(Integer)
