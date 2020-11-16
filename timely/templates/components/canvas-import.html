@@ -11,12 +11,21 @@ aria-labelledby="canvasImportModal" aria-hidden="true">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <form action="/canvas_import">
+      <form action="/canvas_import" method="post">
         <div class="modal-body">
           <div class="form-group">
-            <label for="title">Tasks to be imported</label>
-            <!-- TODO: Fill this out. -->
-            <p> Imported tasks go here </p>
+            <div class="form-check">
+              <input name="test1" class="form-check-input" type="checkbox" value="task val 1" id="defaultCheck1">
+              <label class="form-check-label" for="defaultCheck1">
+                Task 1
+              </label>
+            </div>
+            <div class="form-check">
+              <input name="test2" class="form-check-input" type="checkbox" value="task val 2" id="defaultCheck2">
+              <label class="form-check-label" for="defaultCheck2">
+                Task 2
+              </label>
+            </div>
           </div>
         </div>
         <div class="modal-footer justify-content-center">
