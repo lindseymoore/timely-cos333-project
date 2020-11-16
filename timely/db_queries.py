@@ -237,4 +237,9 @@ def canvas_task_in_db(canvas_id: int):
     if db.session.query(TaskIteration).filter(TaskIteration.canvas_id == canvas_id).first() is None:
         return False
     return True
-    
+
+
+def get_class_color(class_id: int):
+    """Returns the color of a class with a given class_id"""
+    color = db.session.query(Class).filter(Class.class_id == class_id).first()
+    return color.color

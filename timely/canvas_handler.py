@@ -7,7 +7,8 @@ from datetime import datetime
 from canvasapi import Canvas
 
 from timely import db
-from timely.db_queries import (get_api_key, get_class_id_canvas,
+from timely.db_queries import (get_api_key, get_class_color,
+                               get_class_id_canvas, get_class_title,
                                get_next_task_iteration, get_task_id)
 from timely.models import Class, Task, TaskIteration
 
@@ -86,9 +87,12 @@ def fetch_canvas_tasks(curr_semester: str, username: str):
                 if due_date < datetime.today():
                     completed = True
 
+                class_color = get_class_color(class_id)
+                class_title = get_class_title(class_id)
+
                 task_info = {"title": assignment.name, "class_id": class_id, "due_date": due_date, 
                     "link": assignment.html_url, "canvas_task_id": canvas_task_id,
-                    "completed": completed}
+                    "completed": completed, "class_title": class_title, "color": class_color}
 
                 all_tasks.append(task_info)
 
