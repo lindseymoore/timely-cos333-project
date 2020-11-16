@@ -72,15 +72,21 @@ def fetch_canvas_tasks(curr_semester: str, username: str):
                 if assignment.due_at is None:
                     continue
 
+                canvas_id = assignment.id
+
                 task = Task(username = username, class_id = class_id, title = assignment.name,
                     repeat = False)
 
-                db.session.add(task)
+                # Check if task is already in the database, if not add it. Regardless, always update
+                # the database entry for the given task
+                if db.session.query(TaskIteration).filter(
+                    TaskIteration.canvas_id == canvas_id).first() is None:
+                    db.session.add(task)
                 db.session.commit()
 
                 task_iteration = TaskIteration(username = username, class_id = class_id,
-                    task_id = get_task_id(task.title, class_id))
-               
+                    task_id = get_task_id(task.title, class_id), canvas_id = canvas_id)
+              
                 task_iteration.iteration = get_next_task_iteration(task_iteration.task_id)
                 task_iteration.link = assignment.html_url
 
@@ -95,10 +101,8 @@ def fetch_canvas_tasks(curr_semester: str, username: str):
                     task_iteration.completed = True
                 else:
                     task_iteration.completed = False
-                # else:
-                #     task_iteration.due_date = None
-                #     task_iteration.due_time = None
-                #     task_iteration.completed = False
 
-                db.session.add(task_iteration)
+                if db.session.query(TaskIteration).filter(
+                    TaskIteration.canvas_id == canvas_id).first() is None:
+                    db.session.add(task_iteration)
                 db.session.commit()

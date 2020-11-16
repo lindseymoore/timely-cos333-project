@@ -79,6 +79,8 @@ class TaskIteration(db.Model):
         Timely"s predicted amount of time that the task will take
     actual_time: float
         The amount of time it actually took to complete task with task_id and class_id
+    canvas_id: int
+        The unique id stored on Canvas associated with a given task
      """
     __tablename__ = "task_iteration"
     username = Column(String, primary_key = True)
@@ -94,6 +96,7 @@ class TaskIteration(db.Model):
     est_time = Column(Float)
     timely_pred = Column(Float)
     actual_time = Column(Float)
+    canvas_id = Column(Integer)
 
 
 class User(db.Model):
