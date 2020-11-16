@@ -90,7 +90,8 @@ def fetch_canvas_tasks(curr_semester: str, username: str):
                 class_color = get_class_color(class_id)
                 class_title = get_class_title(class_id)
 
-                task_info = {"title": assignment.name, "class_id": class_id, "due_date": due_date, 
+                task_info = {"title": assignment.name, "class_id": class_id, 
+                    "due_date": datetime.strftime(due_date, '%Y-%m-%d'),
                     "link": assignment.html_url, "canvas_task_id": canvas_task_id,
                     "completed": completed, "class_title": class_title, "color": class_color}
 
