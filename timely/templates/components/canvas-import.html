@@ -1,0 +1,29 @@
+<!-- Canvas Import Modal -->
+<div class="modal fade" id="canvasImportModal" tabindex="-1" role="dialog"
+aria-labelledby="canvasImportModal" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="d-flex align-items-center">
+          <h3 class="modal-title" id="classModal">Canvas Import</h3>
+        </div>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form action="/canvas_import">
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="title">Tasks to be imported</label>
+            <!-- TODO: Fill this out. -->
+            <p> Imported tasks go here </p>
+          </div>
+        </div>
+        <div class="modal-footer justify-content-center">
+          <button type="submit" id="btn-canvasImport" class="btn btn-primary">Import</button>
+          <button type="button" class="btn btn-secondary ml-3" data-dismiss="modal">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
