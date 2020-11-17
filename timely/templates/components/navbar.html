@@ -7,10 +7,10 @@
   <div class="collapse navbar-collapse">
     <ul class="navbar-nav mr-auto align-items-center">
       <li class="nav-item">
-        <a class="nav-link" href="#"><i class="fa fa-list circle-icon"></i><span class="sr-only">(current)</span></a>
+        <a class="nav-link" href="/"><i class="fa fa-list" id="list"></i><span class="sr-only">(current)</span></a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="/calendar"><i class="fa fa-calendar"></i></a>
+        <a class="nav-link" href="/calendar" id="calendar"><i class="fa fa-calendar"></i></a>
       </li>
     </ul>
     <ul class="navbar-nav ml-auto">
@@ -32,3 +32,20 @@
     </ul>
   </div>
 </nav>
+
+<script>		
+
+  $(function() {
+    let loc = window.location.href; // returns the full URL
+    if(/calendar/.test(loc)) {
+      $('#calendar').addClass('circle-icon');
+    }else{
+      $('#list').addClass('circle-icon');
+    }
+  });
+    // $(document).on("click", "#calendar", function () {	
+      	
+    //   $("#list").addClass("circle-icon");
+    //   $("#calendar").toggleClass("circle-icon");
+    // });
+</script>	
