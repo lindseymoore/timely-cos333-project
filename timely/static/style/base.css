@@ -120,3 +120,8 @@ h1, h2, h3, h4, h5 {
     margin-bottom: 0;
     width: 2.5em;
 }
+
+.pill-check {
+    margin-right: 1em;
+    margin-left: -1em;
+}

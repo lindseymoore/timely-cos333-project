@@ -11,6 +11,42 @@ aria-labelledby="canvasImportModal" aria-hidden="true">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
+      <script>
+        $(document).ready(function() {
+          $.getJSON({url: "/get_canvas_tasks", success: function(data) {
+            $.each(data, function(count, task) {
+              $("#import-list").append(
+                `<div class="pill-row">
+                  <div class="form-check d-flex align-items-center">
+                    <input name="task${count}" class="pill-check" type="checkbox"
+                    id="task${count}">
+                  </div>
+                  <label for="task${count}" class="pill mr-3" style="border-left-color: var(--hl-${task["color"]})">
+                    <div class="d-flex justify-content-between">
+                      <div class="pill-left">
+                        ${task["title"]}
+                      </div>
+                      <div>
+                        ${task["due_date"]}
+                      </div>
+                    </div>
+                    <div class="subtle pill-left">${task["class_title"]}</div>
+                  </label>
+                </div>`
+              );
+              $(`#task${count}`).attr("value", JSON.stringify(task)); 
+            })
+          }});
+        });
+      </script>
+      <form action="/canvas_import" method="post">
+        <div class="pill-box p-3" id="import-list"></div>
+        <div class="modal-footer justify-content-center">
+          <button type="submit" id="btn-canvasImport" class="btn btn-primary">Import</button>
+          <button type="button" class="btn btn-secondary ml-3" data-dismiss="modal">Cancel</button>
+        </div>
+      </form>
+      <!--
       <form action="/canvas_import" method="post">
         <div class="modal-body">
           <div class="form-group">
@@ -33,6 +69,7 @@ aria-labelledby="canvasImportModal" aria-hidden="true">
           <button type="button" class="btn btn-secondary ml-3" data-dismiss="modal">Cancel</button>
         </div>
       </form>
+      -->
     </div>
   </div>
 </div>

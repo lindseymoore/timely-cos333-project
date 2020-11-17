@@ -182,4 +182,10 @@ def canvas_import():
     task_list = []
     for value in request.form.values():
         task_list.append(json.loads(value))
+    print(task_list)
     return redirect("/")
+
+@app.route("/get_canvas_tasks")
+def get_canvas_tasks():
+    tasks = fetch_canvas_tasks("F2020", CASClient().authenticate())
+    return json.dumps(tasks, default=str)
