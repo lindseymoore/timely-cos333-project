@@ -140,17 +140,30 @@ def canvas_task():
     fetch_canvas_tasks("F2020", username)
     return redirect("/")
 
-
-@app.route("/task_details")
-def task_details_modal():
+@app.route("/task_details_list_view")
+def task_details_modal_list():
     """Show the task details modal."""
     username = CASClient().authenticate()
     task_details = fetch_task_details(request.args["task_id"], username)
     print(task_details)
     classes = fetch_class_list(username)
     tasks = fetch_task_list(username)
-    print(request.path)
     return render_template("index.html",
                 class_list=classes,
                 task_list=tasks,
                 task_details=task_details)
+
+@app.route("/task_details_calendar_view")
+def task_details_modal_calendar():
+    """Show the task details modal."""
+    username = CASClient().authenticate()
+    task_details = fetch_task_details(request.args["task_id"], username)
+    print(task_details)
+    classes = fetch_class_list(username)
+    tasks = fetch_task_list(username)
+    week_dates = fetch_week_dates()
+    return render_template("calendar.html",
+                class_list=classes,
+                task_list=tasks,
+                task_details=task_details,
+                week_dates=week_dates)

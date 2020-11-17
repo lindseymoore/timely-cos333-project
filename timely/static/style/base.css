@@ -37,6 +37,7 @@ html, body, #content {
 
 .weekly-header{
     margin-bottom: 3px;
+    border-radius: 25px;
 }
 
 #task-col {
