@@ -11,59 +11,6 @@ aria-labelledby="canvasImportModal" aria-hidden="true">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <script>
-        $(document).ready(function() {
-          $.getJSON({url: "/get_canvas_tasks", success: function(data) {
-            $("#loading-message").hide();
-            $("#new-count").text(data["new"].length);
-            $("#updated-count").text(data["updated"].length);
-            $.each(data["new"], function(count, task) {
-              $("#new-list").append(
-                `<div class="pill-row">
-                  <div class="form-check d-flex align-items-center">
-                    <input name="task${count}" class="pill-check" type="checkbox"
-                    id="task${count}">
-                  </div>
-                  <label for="task${count}" class="pill mr-3" style="border-left-color: var(--hl-${task["color"]})">
-                    <div class="d-flex justify-content-between">
-                      <div class="pill-left">
-                        ${task["title"]}
-                      </div>
-                      <div>
-                        ${task["due_date"]}
-                      </div>
-                    </div>
-                    <div class="subtle pill-left">${task["class_title"]}</div>
-                  </label>
-                </div>`
-              );
-              $(`#task${count}`).attr("value", JSON.stringify(task)); 
-            });
-            $.each(data["updated"], function(count, task) {
-              $("#updated-list").append(
-                `<div class="pill-row">
-                  <div class="form-check d-flex align-items-center">
-                    <input name="task${count}" class="pill-check" type="checkbox"
-                    id="task${count}">
-                  </div>
-                  <label for="task${count}" class="pill mr-3" style="border-left-color: var(--hl-${task["color"]})">
-                    <div class="d-flex justify-content-between">
-                      <div class="pill-left">
-                        ${task["title"]}
-                      </div>
-                      <div>
-                        ${task["due_date"]}
-                      </div>
-                    </div>
-                    <div class="subtle pill-left">${task["class_title"]}</div>
-                  </label>
-                </div>`
-              );
-              $(`#task${count}`).attr("value", JSON.stringify(task)); 
-            });
-          }});
-        });
-      </script>
       <div class="modal-body px-3">
         <form action="/canvas_import" method="post">
           <ul class="nav nav-tabs dark-nav" role="tablist">
@@ -82,10 +29,12 @@ aria-labelledby="canvasImportModal" aria-hidden="true">
             <div class="tab-pane fade show active" id="new" role="tabpanel" aria-labelledby="home-tab">
               <br>
               <div class="pill-box" id="new-list"></div>
+              <div class="d-flex justify-content-center show-more-div"></div>
             </div>
             <div class="tab-pane fade" id="updated" role="tabpanel" aria-labelledby="profile-tab">
               <br>
               <div class="pill-box" id="updated-list"></div>
+              <div class="d-flex justify-content-center show-more-div"></div>
             </div>
           </div>
           <div id="loading-message">Loading tasks...</div>
@@ -97,4 +46,94 @@ aria-labelledby="canvasImportModal" aria-hidden="true">
       </form>
     </div>
   </div>
+  <script>
+    $(document).ready(function() {
+      $.getJSON({url: "/get_canvas_tasks", success: function(data) {
+        // Hide Loading Message
+        $("#loading-message").hide();
+
+        // Update Badges
+        $("#new-count").text(data["new"].length);
+        $("#updated-count").text(data["updated"].length);
+
+        // Add New Tasks to DOM
+        $.each(data["new"], function(count, task) {
+          $("#new-list").append(
+            `<div class="pill-row">
+              <div class="form-check d-flex align-items-center">
+                <input name="task${count}" class="pill-check" type="checkbox"
+                id="task${count}">
+              </div>
+              <label for="task${count}" class="pill mr-3" style="border-left-color: var(--hl-${task["color"]})">
+                <div class="d-flex justify-content-between">
+                  <div class="pill-left">
+                    ${task["title"]}
+                  </div>
+                  <div>
+                    ${task["due_date"]}
+                  </div>
+                </div>
+                <div class="subtle pill-left">${task["class_title"]}</div>
+              </label>
+            </div>`
+          );
+          $(`#task${count}`).attr("value", JSON.stringify({status: "new", task: task})); 
+        });
+
+        // Add Updated Tasks to DOM
+        $.each(data["updated"], function(count, task) {
+          $("#updated-list").append(
+            `<div class="pill-row">
+              <div class="form-check d-flex align-items-center">
+                <input name="task${count}" class="pill-check" type="checkbox"
+                id="task${count}">
+              </div>
+              <label for="task${count}" class="pill mr-3" style="border-left-color: var(--hl-${task["color"]})">
+                <div class="d-flex justify-content-between">
+                  <div class="pill-left">
+                    ${task["title"]}
+                  </div>
+                  <div>
+                    ${task["due_date"]}
+                  </div>
+                </div>
+                <div class="subtle pill-left">${task["class_title"]}</div>
+              </label>
+            </div>`
+          );
+          $(`#task${count}`).attr("value", JSON.stringify({status: "updated", task: task})); 
+        });
+
+        // Hide all tasks except the first 10
+        if ($("#new-list").children().length > 10) {
+          $("#new-list").children().slice(10).hide();
+          $("#new .show-more-div").append(
+            '<button class="btn btn-custom" type="button" id="new-show-more" data-count="10">Show More</button>'
+          );
+          $("#new-show-more").on("click", function() {
+            let currentCount = $("#new-show-more").data("count");
+            $("#new-show-more").data("count", currentCount + 10);
+            $("#new-list").children().slice(currentCount, Math.min(currentCount + 10, data["new"].length)).show();
+            if (currentCount + 10 >= data["new"].length) {
+              $("#new-show-more").hide();
+            }
+          });
+        }
+        if ($("#updated-list").children().length > 10) {
+          $("#updated-list").children().slice(10).hide();
+          $("#updated .show-more-div").append(
+            '<button class="btn btn-custom" type="button" id="updated-show-more" data-count="10">Show More</button>'
+          );
+          $("#updated-show-more").on("click", function() {
+            let currentCount = $("#updated-show-more").data("count");
+            $("#updated-show-more").data("count", currentCount + 10);
+            $("#updated-list").children().slice(currentCount, Math.min(currentCount + 10, data["updated"].length)).show();
+            if (currentCount + 10 >= data["updated"].length) {
+              $("#updated-show-more").hide();
+            }
+          });
+        }
+      }});
+    });
+  </script>
 </div>
