@@ -42,24 +42,50 @@ def find_avg_prediction(iteration_times: List[dict]) -> float:
         timely_pred
     Return a predicted time for the task.
     """
-    total_time = 0
+    older_time = 0
+    recent_time = 0
+    recent_task_weight = 0.60
+    older_task_weight = 0.40
     num_completed = 0
+    weighted = 3.0 # number of most recent iterations that are given greater weight
+
+    num_iterations = len(iteration_times)
+    weighted_start = num_iterations - weighted
+
+
 
     for iteration in iteration_times:
-        if iteration["completed"]:
-            total_time += iteration["actual_time"]
-            num_completed += 1
+        if num_iterations > weighted:
+            if iteration["completed"] & (iteration["iteration"] <= weighted_start):
+                older_time += iteration["actual_time"]
+                num_completed += 1
+            if iteration["completed"] & (iteration["iteration"] > weighted_start):
+                recent_time += iteration["actual_time"]
+                num_completed += 1
+
+        # if there is not enough iterations for weighting to start
+        else:
+            if iteration["completed"]:
+                recent_time += iteration["actual_time"]
+                num_completed += 1
+
 
     if num_completed == 0:
         return iteration_times[0]["est_time"]
     else:
-        return total_time / num_completed
+        if num_iterations > weighted:
+            older_avg_time = older_time / weighted_start
+            recent_avg_time = recent_time / weighted
+            weighted_time = older_avg_time * older_task_weight + recent_avg_time * recent_task_weight
+        else:
+            weighted_time = recent_time/num_completed
+        return weighted_time
 
 
 def update_completion_time(task_id: int, iteration: int, username: str, actual_time: float):
     """
     Take task_id, iteration, and username.
-    Update the actual_time it takes to complete a task upon completion fo the task.
+    Update the actual_time it takes to complete a task upon completion for the task.
     """
     task_iteration = db.session.query(TaskIteration).filter( \
                 (TaskIteration.username == username) & (TaskIteration.task_id == task_id) & \
