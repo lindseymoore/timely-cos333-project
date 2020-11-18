@@ -61,10 +61,10 @@ aria-labelledby="canvasImportModal" aria-hidden="true">
           $("#new-list").append(
             `<div class="pill-row">
               <div class="form-check d-flex align-items-center">
-                <input name="task${count}" class="pill-check" type="checkbox"
-                id="task${count}">
+                <input name="new-task${count}" class="pill-check" type="checkbox"
+                id="new-task${count}">
               </div>
-              <label for="task${count}" class="pill mr-3" style="border-left-color: var(--hl-${task["color"]})">
+              <label for="new-task${count}" class="pill mr-3" style="border-left-color: var(--hl-${task["color"]})">
                 <div class="d-flex justify-content-between">
                   <div class="pill-left">
                     ${task["title"]}
@@ -77,7 +77,7 @@ aria-labelledby="canvasImportModal" aria-hidden="true">
               </label>
             </div>`
           );
-          $(`#task${count}`).attr("value", JSON.stringify({status: "new", task: task})); 
+          $(`#new-task${count}`).attr("value", JSON.stringify({status: "new", task: task})); 
         });
 
         // Add Updated Tasks to DOM
@@ -85,10 +85,10 @@ aria-labelledby="canvasImportModal" aria-hidden="true">
           $("#updated-list").append(
             `<div class="pill-row">
               <div class="form-check d-flex align-items-center">
-                <input name="task${count}" class="pill-check" type="checkbox"
-                id="task${count}">
+                <input name="updated-task${count}" class="pill-check" type="checkbox"
+                id="updated-task${count}">
               </div>
-              <label for="task${count}" class="pill mr-3" style="border-left-color: var(--hl-${task["color"]})">
+              <label for="updated-task${count}" class="pill mr-3" style="border-left-color: var(--hl-${task["color"]})">
                 <div class="d-flex justify-content-between">
                   <div class="pill-left">
                     ${task["title"]}
@@ -101,7 +101,7 @@ aria-labelledby="canvasImportModal" aria-hidden="true">
               </label>
             </div>`
           );
-          $(`#task${count}`).attr("value", JSON.stringify({status: "updated", task: task})); 
+          $(`#updated-task${count}`).attr("value", JSON.stringify({status: "updated", task: task})); 
         });
 
         // Hide all tasks except the first 10

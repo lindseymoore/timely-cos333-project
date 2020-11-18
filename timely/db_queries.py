@@ -234,14 +234,17 @@ def canvas_task_in_db(canvas_id: int, username: str):
     """Returns a tuple (True, task_info) if a task with canvas_id is already in the database, and 
        False otherwise. When working with this function, if it returns False call db.add to add a 
        new entry. Otherwise just call db.commit to update the current database entry."""
-    details = db.session.query(TaskIteration, Task).filter(TaskIteration.username == username).filter(
+    details = db.session.query(Task, TaskIteration).filter(TaskIteration.username == username).filter(
         TaskIteration.canvas_id == canvas_id).filter(TaskIteration.task_id == Task.task_id).first()
     if details is None:
+        #print("No details")
         return (False, None)
     
-    for task, task_iteration in details:
-        task_info = {"due_date": task_iteration.due_date, "link": task_iteration.link, 
-            "title": task.title}
+    task_info = {"due_date": None, "link": None, "title": None}
+    task, task_iteration = details
+    task_info["due_date"] = task_iteration.due_date
+    task_info["link"] = task_iteration.link
+    task_info["title"] = task.title
     
     return (True, task_info)
 

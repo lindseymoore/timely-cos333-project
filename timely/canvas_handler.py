@@ -8,9 +8,8 @@ from canvasapi import Canvas
 
 from timely import db
 from timely.db_queries import (canvas_task_in_db, get_api_key, get_class_color,
-                               get_class_id_canvas, get_class_title,
-                               get_next_task_iteration, get_task_id)
-from timely.models import Class, Task, TaskIteration
+                               get_class_id_canvas, get_class_title)
+from timely.models import Class
 
 API_URL = "https://princeton.instructure.com"
 #API_KEY = "12465~RpGmbRqf0075STEfJkuwt72NzzYs5Zv1dglYd5vIPKqEtkrF2EztidbzCRLg8cFy"
@@ -96,17 +95,23 @@ def fetch_canvas_tasks(curr_semester: str, username: str):
                     "link": assignment.html_url, "canvas_task_id": canvas_task_id,
                     "completed": completed, "class_title": class_title, "color": class_color}
 
-                # Check if exact task is in the DB already, whether it's been updated, or whether 
+                # Check if exact task is in the DB already, whether it's been updated, or whether
                 # it's new
                 task_in_db = canvas_task_in_db(canvas_task_id, username)
                 if task_in_db[0] is False:
                     new_tasks.append(task_info)
+                    #print('New task added.')
                 else:
                     current_task = task_in_db[1]
-                    if current_task["due_date"] != task_info["due_date"] \
+                    # print(current_task["due_date"], due_date.date())
+                    # print(current_task["link"], task_info["link"])
+                    # print(current_task["title"], task_info["title"])
+                    if current_task["due_date"] != due_date.date() \
                        or current_task["link"] != task_info["link"] \
                        or current_task["title"] != task_info["title"]:
-                       updated_tasks.append(task_info)
+                        updated_tasks.append(task_info)
 
+    new_tasks = sorted(new_tasks, key = lambda task: task["due_date"], reverse=True)
+    updated_tasks = sorted(updated_tasks, key = lambda task: task["due_date"], reverse=True)
     all_tasks = {"new": new_tasks, "updated": updated_tasks}
     return all_tasks
