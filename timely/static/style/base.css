@@ -106,11 +106,6 @@ h1, h2, h3, h4, h5 {
 /* Circular highlight around an icon */
 .circle-icon {
     background: var(--hl-purple);
-    padding: .5em;
-    border-radius: 50%;
-    width: 32px;
-    height: 32px;
-    vertical-align: middle;
 }
 
 .title-link {
@@ -128,4 +123,19 @@ h1, h2, h3, h4, h5 {
 
 .week-day {
     width: calc(100%/7);
+}
+
+.nav-icon{
+    width: 48px;
+    height: 48px;
+    margin-right: -4px;
+    margin-left: -4px;
+}
+
+.icon-spacer {
+    padding: .5em;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    vertical-align: middle;
 }
