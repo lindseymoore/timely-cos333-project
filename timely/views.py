@@ -32,6 +32,12 @@ def index():
                 user_info = user)
 
 
+@app.route("/about")
+def about():
+    """Display about page."""
+    return render_template("about.html")
+
+
 @app.route("/task_form")
 def task_form():
     """
