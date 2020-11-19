@@ -132,6 +132,21 @@ h1, h2, h3, h4, h5 {
     margin-left: -4px;
 }
 
+.arrow-left-icon{
+    position: absolute;
+    top: 18px;
+    left: -10px;
+}
+
+.arrow-right-icon{
+    position: absolute;
+    top: 18px;
+    right: -10px;
+}
+.arrow-container{
+    position: relative;
+}
+
 .icon-spacer {
     padding: .5em;
     border-radius: 50%;

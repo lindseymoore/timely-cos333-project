@@ -7,7 +7,7 @@ from timely.canvas_handler import fetch_canvas_courses, fetch_canvas_tasks
 from timely.cas_client import CASClient
 from timely.db_queries import (delete_class, delete_task, fetch_class_list,
                                fetch_task_details, fetch_task_list,
-                               mark_task_complete, fetch_week_dates)
+                               mark_task_complete, fetch_curr_week, fetch_week)
 from timely.form_handler import class_handler, task_handler
 from timely.time_predict import update_completion_time, update_timely_pred
 
@@ -34,13 +34,41 @@ def calendar():
     username = CASClient().authenticate()
     classes = fetch_class_list(username)
     tasks = fetch_task_list(username)
-    week_dates = fetch_week_dates()
+    week_dates = fetch_curr_week()
     print(week_dates)
     return render_template("calendar.html",
                 class_list=classes,
                 task_list=tasks,
                 week_dates=week_dates)
 
+@app.route("/next_week")
+def next_week():
+    """Return the calendar page."""
+    username = CASClient().authenticate()
+    classes = fetch_class_list(username)
+    tasks = fetch_task_list(username)
+    week_dates = request.args["week-dates"]
+    # week_dates = eval(week_dates)
+    print("DATES", week_dates)
+    next_week_dates = fetch_week(week_dates, False)
+    return render_template("calendar.html",
+                class_list=classes,
+                task_list=tasks,
+                week_dates=next_week_dates)
+
+@app.route("/prev_week")
+def prev_week():
+    """Return the calendar page."""
+    username = CASClient().authenticate()
+    classes = fetch_class_list(username)
+    tasks = fetch_task_list(username)
+    week_dates = request.args["week-dates"]
+    # week_dates = eval(week_dates)
+    prev_week_dates = fetch_week(week_dates, True)
+    return render_template("calendar.html",
+                class_list=classes,
+                task_list=tasks,
+                week_dates=prev_week_dates)
 
 @app.route("/task_form")
 def task_form():
@@ -161,7 +189,7 @@ def task_details_modal_calendar():
     print(task_details)
     classes = fetch_class_list(username)
     tasks = fetch_task_list(username)
-    week_dates = fetch_week_dates()
+    week_dates = fetch_curr_week()
     return render_template("calendar.html",
                 class_list=classes,
                 task_list=tasks,
