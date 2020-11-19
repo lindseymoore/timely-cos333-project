@@ -234,8 +234,9 @@ def canvas_task_in_db(canvas_id: int, username: str):
     """Returns a tuple (True, task_info) if a task with canvas_id is already in the database, and 
        False otherwise. When working with this function, if it returns False call db.add to add a 
        new entry. Otherwise just call db.commit to update the current database entry."""
-    details = db.session.query(Task, TaskIteration).filter(TaskIteration.username == username).filter(
-        TaskIteration.canvas_id == canvas_id).filter(TaskIteration.task_id == Task.task_id).first()
+    details = db.session.query(Task, TaskIteration).filter(TaskIteration.username == username
+    ).filter(TaskIteration.canvas_id == canvas_id).filter(TaskIteration.task_id == Task.task_id
+    ).first()
     if details is None:
         #print("No details")
         return (False, None)
@@ -253,3 +254,16 @@ def get_class_color(class_id: int):
     """Returns the color of a class with a given class_id"""
     color = db.session.query(Class).filter(Class.class_id == class_id).first()
     return color.color
+
+
+def get_task_groups(username: str, class_id: int):
+    """Returns the task groups (repeating tasks) for a user within a class with a given class_id"""
+    task_group = db.session.query(Task).filter((Task.username == username) & (
+        Task.class_id == class_id) & (Task.repeat)).all()
+
+    groups = []
+    for task in task_group:
+        task_info = {"task_id": task.task_id, "title": task.title}
+        groups.append(task_info)
+
+    return groups
