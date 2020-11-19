@@ -7,6 +7,7 @@
 {% endblock %}
 
 {% block content %}
+
   <div class="container full-height" style="max-width: 100%">
     {% include "components/navbar.html" %}
 
@@ -55,68 +56,17 @@
               </div>
            </div>
            <div class="row pt-2" style="background: var(--dark-4);">
-            <div class="col-sm">
-              <div class="pill-box">
-                {% for task in task_list: %}
-                  {% if task["completed"] == false and task["due_date"] == week_dates[0]%}
-                    {% include "tasks.html" %}
-                  {% endif %}
-                {% endfor %}
-              </div>
-            </div>
-            <div class="col-sm">
-              <div class="pill-box">
-                {% for task in task_list: %}
-                  {% if task["completed"] == false and task["due_date"] == week_dates[1]%}
-                    {% include "tasks.html" %}
-                  {% endif %}
-                {% endfor %}
-              </div>
-            </div>
-            <div class="col-sm">
-              <div class="pill-box">
-                {% for task in task_list: %}
-                  {% if task["completed"] == false and task["due_date"] == week_dates[2]%}
-                    {% include "tasks.html" %}
-                  {% endif %}
-                {% endfor %}
-              </div>
-            </div>
-            <div class="col-sm">
-              <div class="pill-box">
-                {% for task in task_list: %}
-                  {% if task["completed"] == false and task["due_date"] == week_dates[3]%}
-                    {% include "tasks.html" %}
-                  {% endif %}
-                {% endfor %}
-              </div>
-            </div>
-            <div class="col-sm">
-              <div class="pill-box">
-                {% for task in task_list: %}
-                  {% if task["completed"] == false and task["due_date"] == week_dates[4]%}
-                    {% include "tasks.html" %}
-                  {% endif %}
-                {% endfor %}
-              </div>
-            </div>
-            <div class="col-sm">
-              <div class="pill-box">
-                {% for task in task_list: %}
-                  {% if task["completed"] == false and task["due_date"] == week_dates[5]%}
-                    {% include "tasks.html" %}
-                  {% endif %}
-                {% endfor %}
-              </div>
-            </div>
-            <div class="col-sm">
-              <div class="pill-box">
-                {% for task in task_list: %}
-                  {% if task["completed"] == false and task["due_date"] == week_dates[6]%}
-                    {% include "tasks.html" %}
-                  {% endif %}
-                {% endfor %}
-              </div>
+              {% for count in range (0,7) %}
+                <div class="col week-day">
+                  <div class="pill-box">
+                    {% for task in task_list: %}
+                      {% if task["completed"] == false and task["due_date"] == week_dates[count]%}
+                        {% include "tasks.html" %}
+                      {% endif %}
+                    {% endfor %}
+                  </div>
+                </div>
+              {% endfor %}
             </div>
          </div>
         </div>

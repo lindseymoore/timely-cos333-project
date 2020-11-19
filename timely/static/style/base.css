@@ -108,6 +108,9 @@ h1, h2, h3, h4, h5 {
     background: var(--hl-purple);
     padding: .5em;
     border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    vertical-align: middle;
 }
 
 .title-link {
@@ -121,4 +124,8 @@ h1, h2, h3, h4, h5 {
 .time-prediction {
     margin-bottom: 0;
     width: 2.5em;
+}
+
+.week-day {
+    width: calc(100%/7);
 }
