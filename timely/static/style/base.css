@@ -120,3 +120,19 @@ h1, h2, h3, h4, h5 {
     margin-bottom: 0;
     width: 2.5em;
 }
+
+.card {
+    background: var(--dark-4)
+}
+
+hr {
+  border: 1;
+  width: 96%;               
+  background-color: var(--dark-1);
+}
+
+.card img {
+    width: 12rem;
+    height: 12rem;
+    object-fit: cover;
+}
