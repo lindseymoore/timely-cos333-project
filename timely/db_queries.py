@@ -257,7 +257,7 @@ def get_class_color(class_id: int):
 
 
 def get_task_groups(username: str, class_id: int):
-    """Returns the task groups (repeating tasks) for a user within a class with a given class_id"""
+    """Returns the task groups (repeating tasks) for a user within a class with a given class_id."""
     task_group = db.session.query(Task).filter((Task.username == username) & (
         Task.class_id == class_id) & (Task.repeat)).all()
 
@@ -267,3 +267,34 @@ def get_task_groups(username: str, class_id: int):
         groups.append(task_info)
 
     return groups
+
+
+def fetch_tasks_from_class(class_id: int, username: str):
+    """Returns all tasks for a given user in a given class with class_id."""
+    # task_id, task_title, repeating
+    # If only one iteration, show due date
+    task_groups = []
+    task_ids = []
+
+    tasks = db.session.query(Task).filter((Task.username == username) &
+        (Task.class_id == class_id)).all()
+
+    for task in tasks:
+        info = {"task_id": task.task_id, "title": task.title, "repeat": task.repeat, 
+            "due_date": None}
+        task_ids.append(task.task_id)
+        task_groups.append(info)
+
+    for task_id in task_ids:
+        num_iterations = db.session.query(TaskIteration).filter(
+            (TaskIteration.username == username) & (TaskIteration.task_id == task_id)).count()
+                  
+        if num_iterations == 1:
+            iteration = db.session.query(TaskIteration).filter(
+                (TaskIteration.username == username) & (TaskIteration.task_id == task_id)).first()
+            due_date = iteration.due_date
+
+            # Find dict where task_id is correct, set due_date
+            list(filter(lambda task: task["task_id"] == task_id, task_groups))[0]["due_date"] = due_date
+
+    return task_groups

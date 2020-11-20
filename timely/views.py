@@ -8,7 +8,8 @@ from timely import app, db
 from timely.canvas_handler import fetch_canvas_courses, fetch_canvas_tasks
 from timely.cas_client import CASClient
 from timely.db_queries import (delete_class, delete_task, fetch_class_list,
-                               fetch_task_details, fetch_task_list, fetch_user,
+                               fetch_task_details, fetch_task_list,
+                               fetch_tasks_from_class, fetch_user,
                                mark_task_complete)
 from timely.form_handler import (class_handler, create_new_group,
                                  insert_canvas_tasks, task_handler,
@@ -208,4 +209,15 @@ def group_tasks():
 
     create_new_group(task_list, username)
     return redirect("/")
-    
+   
+
+@app.route("/get_tasks")
+def get_tasks():
+    """
+    Fetches all tasks associated with a given task and returns information in JSON format.
+    If class is left as none, return all tasks for all classes.
+    """
+    username = CASClient().authenticate()
+    class_id = request.args["class_id"]
+    tasks = fetch_tasks_from_class(class_id, username)
+    return json.dumps(tasks, default=str)
