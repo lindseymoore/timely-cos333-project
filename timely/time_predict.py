@@ -53,17 +53,17 @@ def find_avg_prediction(iteration_times: List[dict]) -> float:
 
     weighted = 3.0 # number of most recent iterations that are given greater weight
 
-    num_iterations = len(iteration_times)
-    weighted_start = num_iterations - weighted
-    print(num_iterations)
+    num_iterations_compl = len(iteration_times) - 1
+    weighted_start = num_iterations_compl - weighted + 1
+    print(num_iterations_compl)
 
     for iteration in iteration_times:
-        if num_iterations > weighted:
-            if iteration["completed"] & (iteration["iteration"] <= weighted_start):
+        if num_iterations_compl > weighted:
+            if iteration["completed"] & (iteration["iteration"] < weighted_start):
                 print("not weighted:", iteration["actual_time"])
                 older_time += iteration["actual_time"]
                 older_num_completed += 1
-            if iteration["completed"] & (iteration["iteration"] > weighted_start):
+            if iteration["completed"] & (iteration["iteration"] >= weighted_start):
                 print("weighted:", iteration["actual_time"])
                 recent_time += iteration["actual_time"]
                 recent_num_completed += 1
@@ -74,20 +74,24 @@ def find_avg_prediction(iteration_times: List[dict]) -> float:
                 recent_time += iteration["actual_time"]
                 num_completed += 1
 
+    print("numcompleted", num_completed)
 
-    if num_completed == 0:
-        return iteration_times[0]["est_time"]
-    else:
-        if num_iterations > weighted:
-            older_avg_time = older_time / older_num_completed
-            print("older avg", older_avg_time)
-            recent_avg_time = recent_time / recent_num_completed
-            print("recent avg", recent_avg_time)
-            weighted_time = older_avg_time * older_task_weight + recent_avg_time * recent_task_weight
-        else:
-            weighted_time = recent_time/num_completed
-            print("regular", weighted_time)
+    if num_iterations_compl > weighted:
+        print(num_iterations_compl)
+        older_avg_time = older_time / older_num_completed
+        print("older avg", older_avg_time)
+        recent_avg_time = recent_time / recent_num_completed
+        print("recent avg", recent_avg_time)
+        weighted_time = older_avg_time * older_task_weight + recent_avg_time * recent_task_weight
         return weighted_time
+
+    if num_iterations_compl <= weighted:
+        weighted_time = recent_time/num_completed
+        print("regular", weighted_time)
+        return weighted_time
+
+    return iteration_times[0]["est_time"]
+
 
 
 def update_completion_time(task_id: int, iteration: int, username: str, actual_time: float):
