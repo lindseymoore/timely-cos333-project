@@ -51,9 +51,12 @@
                 Canvas Key
               </button>
             {% endif %}
+            <!-- TODO: Remove -->
             {% if user_info %}
-              <img src="{{ url_for('static', filename='image/canvas-logo.png') }}"
-              height="24px" onclick="location.href='/canvas_task?'">
+              <a data-toggle="modal" data-target="#canvasImportModal">
+                <img src="{{ url_for('static', filename='image/canvas-logo.png') }}"
+                height="24px">
+              </a>
             {% endif %}
             <i class="fa fa-plus add ml-2" data-toggle="modal" data-target="#taskModal"></i>
           </div>
@@ -66,7 +69,7 @@
                 <div class="pill-row">
                   <div class="pill" style="border-left-color: var(--hl-{{task['color']}})">
                     <div class="d-flex justify-content-between">
-                      <div>
+                      <div class="pill-left">
                         <a href="/task_details?task_id={{task['task_id']}}" class="title-link">
                           {{task["title"]}}
                         </a>
@@ -79,7 +82,7 @@
                       </div>
                     </div>
                     <div class="d-flex justify-content-between">
-                      <div class="subtle">{{task["class"]}}</div>
+                      <div class="subtle pill-left">{{task["class"]}}</div>
                       <div>
                         <i class="fa fa-check-square open-CompleteTask" data-toggle="modal"
                         data-target="#taskCompletionModal" data-id="{{task['task_id']}}" 
@@ -141,4 +144,5 @@
   {% include "components/task-completion.html" %}
 
   {% include "components/canvas-key.html" %}
+  {% include "components/canvas-import.html" %}
 {% endblock %}

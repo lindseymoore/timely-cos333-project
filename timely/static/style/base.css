@@ -120,3 +120,27 @@ h1, h2, h3, h4, h5 {
     margin-bottom: 0;
     width: 2.5em;
 }
+
+.pill-check {
+    margin-right: 1em;
+    margin-left: -1em;
+}
+
+.dark-nav .nav-link.active {
+    background-color: var(--dark-3);
+    color: var(--dark-1);
+    border-color: var(--dark-2);
+}
+
+.dark-nav a {
+    color: var(--dark-1);
+}
+
+.dark-nav {
+    border-color: var(--dark-2);
+}
+
+#display-details {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
