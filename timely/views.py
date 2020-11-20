@@ -27,9 +27,10 @@ from timely.time_predict import update_completion_time, update_timely_pred
 def index():
     """Return the index page."""
     username = CASClient().authenticate()
+    sort = request.args['sort']
 
     classes = fetch_class_list(username)
-    tasks = fetch_task_list(username)
+    tasks = fetch_task_list(username, sort)
     user = fetch_user(username)
     return render_template("index.html",
                 class_list=classes,
