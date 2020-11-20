@@ -31,7 +31,7 @@ def fetch_class_list(username: str) -> List[dict]:
     return classes
 
 
-def fetch_task_list(username: str, sort: str) -> List[dict]:
+def fetch_task_list(username: str, sort: str = "due_date") -> List[dict]:
     """
     Take a user with username, query the database to search for all tasks the user has inputted.
     Return a list of task dictionaries with keys:
@@ -60,7 +60,7 @@ def fetch_task_list(username: str, sort: str) -> List[dict]:
 
         # Create task_obj dictionary with all columns that will be displayed to the user
         task_obj = {'title': task.title, 'class': course.title, 'task_id': task.task_id,
-                    'priority:': task_iteration.priority, 'repeat': task.repeat,
+                    'priority': task_iteration.priority, 'repeat': task.repeat,
                     'est_time': task_iteration.est_time, 'timely_pred': task_iteration.timely_pred,
                     'link': task_iteration.link, 'notes': task_iteration.notes,
                     'due_date': task_iteration.due_date.strftime("%m/%d/%Y"),

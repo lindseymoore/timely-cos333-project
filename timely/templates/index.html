@@ -46,9 +46,9 @@
         <div class="d-flex justify-content-between align-items-center pb-3">
           <div class="d-flex align-items-center">
             <h3 class="mb-0 mr-3">Tasks</h3>
-            <button class="btn btn-small btn-custom mr-1">Date</button>
-            <button class="btn btn-small btn-custom mr-1">Class</button>
-            <button class="btn btn-small btn-custom">Priority</button>
+            <a href="/?sort=due_date"><button class="btn btn-small btn-custom mr-1">Date</button></a>
+            <a href="/?sort=class"><button class="btn btn-small btn-custom mr-1">Class</button></a>
+            <a href="/?sort=priority"><button class="btn btn-small btn-custom">Priority</button></a>
           </div>
           <div class="d-flex align-items-center">
             {% if user_info == false %}
