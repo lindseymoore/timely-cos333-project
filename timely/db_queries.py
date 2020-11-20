@@ -289,7 +289,8 @@ def fetch_tasks_from_class(class_id: int, username: str):
 
     for task in tasks:
         info = {"task_id": task.task_id, "title": task.title, "repeat": task.repeat, 
-            "due_date": None, "color": get_class_color(class_id), "class_id": class_id}
+            "due_date": None, "color": get_class_color(class_id),
+             "class_title": get_class_title(class_id)}
         task_ids.append(task.task_id)
         task_groups.append(info)
 
