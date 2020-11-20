@@ -210,11 +210,12 @@ def get_classes():
 def group_tasks():
     """Groups tasks into repeating tasks based on users selection in task grouping modal."""
     username = CASClient().authenticate()
-    task_list = []
-    for task in request.form.values():
-        task_list.append(task)
+    task_ids = []
+    for task_id in request.form.values():
+        task_ids.append(task_id)
 
-    create_new_group(task_list, username)
+    #print("TASK_IDS", task_ids)
+    create_new_group(task_ids, username)
     return redirect("/")
    
 

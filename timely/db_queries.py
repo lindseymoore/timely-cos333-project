@@ -31,7 +31,7 @@ def fetch_class_list(username: str) -> List[dict]:
     return classes
 
 
-def fetch_task_list(username: str) -> List[dict]:
+def fetch_task_list(username: str, sort: str) -> List[dict]:
     """
     Take a user with username, query the database to search for all tasks the user has inputted.
     Return a list of task dictionaries with keys:
@@ -72,6 +72,13 @@ def fetch_task_list(username: str) -> List[dict]:
             task_obj['timely_pred'] = 0
 
         task_list.append(task_obj)
+
+    if sort == "due_date":
+        task_list = sorted(task_list, key = lambda task: task["due_date"], reverse=True)
+    if sort == "priority":
+        task_list = sorted(task_list, key = lambda task: task["priority"], reverse=True)
+    if sort == "class":
+        task_list = sorted(task_list, key = lambda task: task["class"], reverse=True)
 
     return task_list
 
@@ -301,3 +308,11 @@ def fetch_tasks_from_class(class_id: int, username: str):
     #print(task_groups)
 
     return task_groups
+
+
+def fetch_task_due_date(task_id: int, username: str):
+    """Fetches due date for task with given task_id."""
+    task_iteration = db.session.query(TaskIteration).filter((TaskIteration.username == username)
+        & (TaskIteration.task_id == task_id)).first()
+
+    return task_iteration.due_date
