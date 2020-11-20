@@ -46,22 +46,27 @@ def find_avg_prediction(iteration_times: List[dict]) -> float:
     recent_time = 0
     recent_task_weight = 0.60
     older_task_weight = 0.40
+    
+    older_num_completed = 0
+    recent_num_completed = 0
     num_completed = 0
+
     weighted = 3.0 # number of most recent iterations that are given greater weight
 
     num_iterations = len(iteration_times)
     weighted_start = num_iterations - weighted
-
-
+    print(num_iterations)
 
     for iteration in iteration_times:
         if num_iterations > weighted:
             if iteration["completed"] & (iteration["iteration"] <= weighted_start):
+                print("not weighted:", iteration["actual_time"])
                 older_time += iteration["actual_time"]
-                num_completed += 1
+                older_num_completed += 1
             if iteration["completed"] & (iteration["iteration"] > weighted_start):
+                print("weighted:", iteration["actual_time"])
                 recent_time += iteration["actual_time"]
-                num_completed += 1
+                recent_num_completed += 1
 
         # if there is not enough iterations for weighting to start
         else:
@@ -74,11 +79,14 @@ def find_avg_prediction(iteration_times: List[dict]) -> float:
         return iteration_times[0]["est_time"]
     else:
         if num_iterations > weighted:
-            older_avg_time = older_time / weighted_start
-            recent_avg_time = recent_time / weighted
+            older_avg_time = older_time / older_num_completed
+            print("older avg", older_avg_time)
+            recent_avg_time = recent_time / recent_num_completed
+            print("recent avg", recent_avg_time)
             weighted_time = older_avg_time * older_task_weight + recent_avg_time * recent_task_weight
         else:
             weighted_time = recent_time/num_completed
+            print("regular", weighted_time)
         return weighted_time
 
 
