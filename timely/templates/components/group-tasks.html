@@ -17,15 +17,14 @@ aria-labelledby="groupTasksModal" aria-hidden="true">
           <div class="pill-box"></div>
           <div id="class-loading-message">Loading Classes...</div>
         </div>
-        <!-- $('.progress').removeClass("d-none"); -->
-        <div id="#task-selection" class="d-none">
+        <div id="task-selection" class="d-none">
           <form action="/group_task" method="post">
             <div id="group">
                 <br>
                 <div class="pill-box" id="group-list"></div>
                 <div class="d-flex justify-content-center show-more-div"></div>
             </div>
-            <div id="loading-message">Loading tasks...</div>
+            <div id="task-loading-message">Loading tasks...</div>
             <div class="modal-footer justify-content-center">
               <button type="submit" id="btn-groupTasks" class="btn btn-primary">Import</button>
               <button type="button" class="btn btn-secondary ml-3" data-dismiss="modal">Cancel</button>
@@ -57,9 +56,13 @@ aria-labelledby="groupTasksModal" aria-hidden="true">
       }});
       
       function showTasks(id) {
-        $.getJSON({url: `/get_task?${id}`, success: function(data) {
+        $("#class-selection").hide();
+        $("#task-selection").removeClass("d-none");
+        
+        $.getJSON({url: `/get_tasks?class_id=${id}`, success: function(data) {
           // Hide Loading Message
-          $("#loading-message").hide();
+          $("#task-loading-message").hide();
+          console.log(data)
 
           // Add Tasks to DOM
           $.each(data, function(count, task) {
