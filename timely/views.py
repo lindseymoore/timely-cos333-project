@@ -195,3 +195,10 @@ def get_canvas_tasks():
     """Fetches new and updated tasks from Canvas to be displayed in Canvas import modal."""
     tasks = fetch_canvas_tasks("F2020", CASClient().authenticate())
     return json.dumps(tasks, default=str)
+
+
+@app.route("/get_classes")
+def get_classes():
+    """Return all classes."""
+    classes = fetch_class_list(CASClient().authenticate())
+    return json.dumps(classes)

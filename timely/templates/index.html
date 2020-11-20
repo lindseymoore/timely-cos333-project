@@ -51,6 +51,9 @@
                 Canvas Key
               </button>
             {% endif %}
+            <button data-toggle="modal" data-target="#groupTasksModal" class="btn btn-secondary mr-2">
+              Group Tasks
+            </button>
             <!-- TODO: Remove -->
             {% if user_info %}
               <a data-toggle="modal" data-target="#canvasImportModal">
@@ -145,4 +148,6 @@
 
   {% include "components/canvas-key.html" %}
   {% include "components/canvas-import.html" %}
+
+  {% include "components/group-tasks.html" %}
 {% endblock %}
