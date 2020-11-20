@@ -6,14 +6,13 @@ Currently adds sample data for user dlipman to postgres database.
 import os
 import sys
 
-from timely.db_queries import get_class_id, get_task_id
 from psycopg2 import connect
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 from timely import db
-from timely.db_queries import get_class_id
-from timely.models import (Class, Task, TaskIteration, User)
+from timely.db_queries import get_class_id, get_task_id
+from timely.models import Class, Task, TaskIteration, User
 
 
 def main(argv):

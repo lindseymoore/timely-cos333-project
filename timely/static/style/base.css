@@ -61,6 +61,10 @@ i:hover {
     padding: 0px;
 }
 
+.info-icon {
+    font-size: 1.5em;
+}
+
 /* Provides consistent theme to the bootstrap modal */
 .modal-content {
     background-color: var(--dark-4);
@@ -153,4 +157,42 @@ h1, h2, h3, h4, h5 {
     width: 32px;
     height: 32px;
     vertical-align: middle;
+
+.card {
+    background: var(--dark-4)
+}
+
+hr {
+  border: 1;
+  width: 96%;               
+  background-color: var(--dark-1);
+}
+
+.card img {
+    width: 12rem;
+    height: 12rem;
+    object-fit: cover;
+
+.pill-check {
+    margin-right: 1em;
+    margin-left: -1em;
+}
+
+.dark-nav .nav-link.active {
+    background-color: var(--dark-3);
+    color: var(--dark-1);
+    border-color: var(--dark-2);
+}
+
+.dark-nav a {
+    color: var(--dark-1);
+}
+
+.dark-nav {
+    border-color: var(--dark-2);
+}
+
+#display-details {
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
