@@ -10,8 +10,9 @@ from timely.cas_client import CASClient
 from timely.db_queries import (delete_class, delete_task, fetch_class_list,
                                fetch_task_details, fetch_task_list, fetch_user,
                                mark_task_complete)
-from timely.form_handler import (class_handler, insert_canvas_tasks,
-                                 task_handler, update_task_details)
+from timely.form_handler import (class_handler, create_new_group,
+                                 insert_canvas_tasks, task_handler,
+                                 update_task_details)
 from timely.models import User
 from timely.time_predict import update_completion_time, update_timely_pred
 
@@ -195,3 +196,16 @@ def get_canvas_tasks():
     """Fetches new and updated tasks from Canvas to be displayed in Canvas import modal."""
     tasks = fetch_canvas_tasks("F2020", CASClient().authenticate())
     return json.dumps(tasks, default=str)
+
+
+@app.route("/group_task", methods=["POST"])
+def group_tasks():
+    """Groups tasks into repeating tasks based on users selection in task grouping modal."""
+    username = CASClient().authenticate()
+    task_list = []
+    for task in request.form.values():
+        task_list.append(task)
+
+    create_new_group(task_list, username)
+    return redirect("/")
+    
