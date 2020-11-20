@@ -1,6 +1,6 @@
 """Functions to fetch class and task information."""
 
-from datetime import timedelta, date
+from datetime import timedelta, date, datetime
 from typing import List
 
 from sqlalchemy import desc
@@ -102,16 +102,16 @@ def fetch_task_details(task_id: int, username: str):
 
 def fetch_curr_week():
     curr_date = date.today()
-    offset = curr_date.weekday() # where 0 is monday
+    offset = curr_date.weekday() #where 0 is monday
 
-    #determine what sunday
+    #Determine what date corresponds to Sunday
     increment = timedelta(days=offset+1)
     day = curr_date - increment #initially sunday
 
     if offset == 6:  # If current date is Sunday
         day = curr_date
     
-    #iterate from sun -> sat by inc sun by 1
+    #Create a dict of dates based on the sunday
     week = {}
     for ii in range(0, 7):
         week[ii] = day.strftime("%m/%d/%y")
@@ -121,19 +121,15 @@ def fetch_curr_week():
 
 def fetch_week(week_dates: str, prev: bool):
     curr_sunday = week_dates
-    date_list = curr_sunday.split('/')
-    month = int(date_list[0])
-    day =  int(date_list[1])
-    year = int('20' + date_list[2])
-    sunday = date(year, month, day)
+    sunday = datetime.strptime(curr_sunday, '%m/%d/%y')
 
-    #determine what sunday
+    #Determine what date corresponds to prev or next Sunday
     if prev: 
         day = sunday - timedelta(days=7) 
     else:
         day = sunday + timedelta(days=7)
 
-    #iterate from sun -> sat by inc sun by 1
+    #Create a dict of dates based on the sunday
     week = {}
     for ii in range(0, 7):
         week[ii] = day.strftime("%m/%d/%y")

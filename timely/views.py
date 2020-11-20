@@ -21,7 +21,6 @@ from timely.time_predict import update_completion_time, update_timely_pred
 def index():
     """Return the index page."""
     username = CASClient().authenticate()
-
     classes = fetch_class_list(username)
     tasks = fetch_task_list(username)
     return render_template("index.html",
@@ -35,28 +34,25 @@ def calendar():
     classes = fetch_class_list(username)
     tasks = fetch_task_list(username)
     week_dates = fetch_curr_week()
-    print(week_dates)
     return render_template("calendar.html",
                 class_list=classes,
                 task_list=tasks,
                 week_dates=week_dates)
 
-@app.route("/next_week")
+@app.route("/calendar/next_week")
 def next_week():
     """Return the calendar page."""
     username = CASClient().authenticate()
     classes = fetch_class_list(username)
     tasks = fetch_task_list(username)
     week_dates = request.args["week-dates"]
-    # week_dates = eval(week_dates)
-    print("DATES", week_dates)
     next_week_dates = fetch_week(week_dates, False)
     return render_template("calendar.html",
                 class_list=classes,
                 task_list=tasks,
                 week_dates=next_week_dates)
 
-@app.route("/prev_week")
+@app.route("/calendar/prev_week")
 def prev_week():
     """Return the calendar page."""
     username = CASClient().authenticate()
@@ -106,7 +102,7 @@ def class_form():
 
     return redirect("/")
 
-
+@app.route("/calendar/completion_form")
 @app.route("/completion_form")
 def completion_form():
     """
@@ -117,13 +113,15 @@ def completion_form():
     task_id = request.args["task_id"]
     iteration = request.args["iteration"]
     time = request.args["time"]
-
     mark_task_complete(int(task_id), username)
 
     update_completion_time(task_id, iteration, username, time)
     update_timely_pred(task_id, iteration, username)
-
-    return redirect("/")
+    
+    if request.path == "/calendar/completion_form":
+        return redirect("/calendar")
+    else:
+        return redirect("/")
 
 
 @app.route("/delete_class")
@@ -133,12 +131,16 @@ def delete_class_endpoint():
     delete_class(request.args["class_id"])
     return redirect("/")
 
-
+@app.route("/calendar/delete_task")
 @app.route("/delete_task")
 def delete_task_endpoint():
     """Delete the task given by the request argument task_id."""
     delete_task(request.args["task_id"])
-    return redirect("/")
+
+    if request.path == "/calendar/delete_task":
+        return redirect("/calendar")
+    else:
+        return redirect("/")
 
 
 @app.route('/logout', methods=['GET'])
@@ -173,7 +175,6 @@ def task_details_modal_list():
     """Show the task details modal."""
     username = CASClient().authenticate()
     task_details = fetch_task_details(request.args["task_id"], username)
-    print(task_details)
     classes = fetch_class_list(username)
     tasks = fetch_task_list(username)
     return render_template("index.html",
@@ -186,7 +187,6 @@ def task_details_modal_calendar():
     """Show the task details modal."""
     username = CASClient().authenticate()
     task_details = fetch_task_details(request.args["task_id"], username)
-    print(task_details)
     classes = fetch_class_list(username)
     tasks = fetch_task_list(username)
     week_dates = fetch_curr_week()
