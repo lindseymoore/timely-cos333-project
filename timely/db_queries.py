@@ -281,14 +281,14 @@ def fetch_tasks_from_class(class_id: int, username: str):
 
     for task in tasks:
         info = {"task_id": task.task_id, "title": task.title, "repeat": task.repeat, 
-            "due_date": None}
+            "due_date": None, "color": get_class_color(class_id)}
         task_ids.append(task.task_id)
         task_groups.append(info)
 
     for task_id in task_ids:
         num_iterations = db.session.query(TaskIteration).filter(
             (TaskIteration.username == username) & (TaskIteration.task_id == task_id)).count()
-                  
+
         if num_iterations == 1:
             iteration = db.session.query(TaskIteration).filter(
                 (TaskIteration.username == username) & (TaskIteration.task_id == task_id)).first()
@@ -296,5 +296,7 @@ def fetch_tasks_from_class(class_id: int, username: str):
 
             # Find dict where task_id is correct, set due_date
             list(filter(lambda task: task["task_id"] == task_id, task_groups))[0]["due_date"] = due_date
+
+    #print(task_groups)
 
     return task_groups
