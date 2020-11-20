@@ -171,3 +171,31 @@ def insert_canvas_tasks(task_list: list, username: str):
             #print(task["completed"])
 
             db.session.commit()
+
+
+def create_new_group(task_group: list, username: str):
+    """Function to create new repeating task group based on task grouping modal."""
+    task_group = sorted(task_group, key = lambda task: task["due_date"])
+    task_id = task_group[0]["task_id"]
+    task = db.session.query(Task).filter((Task.username == username) & (Task.task_id == task_id))
+
+    # Make first iteration of task repeating
+    task.repeating = True
+    db.session.commit()
+
+    # Update next iterations of task to be repeating tasks of first iteration. Delete their entries
+    # in the Task table.
+    for iteration, task_info in enumerate(task_group[1:]):
+        # Update task_id and iteration of next task_iteration in the group
+        task_iteration = db.session.query(TaskIteration).filter((TaskIteration.username == username)
+            & (TaskIteration.task_id == task_info["task_id"])).first()
+        
+        task_iteration.task_id = task_id
+        task_iteration.iteration = iteration + 2
+
+        db.session.commit()
+
+        # Delete entry in Task table from database - unnecessary because it's now repeating
+        db.session.query(Task).filter(Task.task_id == task_info["task_id"]).delete()
+        db.session.commit()
+        
