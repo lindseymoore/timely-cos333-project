@@ -10,20 +10,9 @@
 
 <div class="container full-height pb-5" style="max-width: 1500px; max-height: 800px;">
     {% include "components/navbar.html" %}
-
-      <!-- <div class="col-8 overflow-auto py-3" id="task-col">
-        <div class="d-flex justify-content-between align-items-center pb-3">
-          <h3 class="mb-0">Weekly Overview</h3>
-          <div class="d-flex">
-            <img src="{{ url_for('static', filename='image/canvas-logo.png') }}"
-            height="24px" onclick="location.href='/canvas_task?'">
-            <i class="fa fa-plus add ml-2" data-toggle="modal" data-target="#taskModal"></i>
-          </div>
-        </div> -->
         <!-- Header Row  -->
-        <!-- Retrieves the task list and displays the task details -->
+        <!-- Retrieves the task list and displays the task details in a weekly calendar view -->
         <form action="/completion_form" name="task_list">
-        
           <div classs= "weekly-header">
           <div class="text-light" style="font-weight:bold;">
             <div class="row text-center pt-4 pb-4" style="background: var(--dark-3); margin-bottom: 3px;">
