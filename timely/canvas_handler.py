@@ -70,7 +70,7 @@ def fetch_canvas_tasks(curr_semester: str, username: str):
         term = course.course_code[-5:]
         if term == curr_semester:
             canvas_class_id = course.id
-            class_id = get_class_id_canvas(canvas_class_id)
+            class_id = get_class_id_canvas(canvas_class_id, username)
 
             # TODO figure out if a task from Canvas is repeating or not, defaulting to false
             for assignment in course.get_assignments():

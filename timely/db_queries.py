@@ -224,9 +224,10 @@ def fetch_user(username: str):
     return True
     
 
-def get_class_id_canvas(canvas_id: int):
+def get_class_id_canvas(canvas_id: int, username: str):
     """Returns the class_id of a class with a given canvas_id set by Canvas."""
-    class_id = db.session.query(Class).filter(Class.canvas_id == canvas_id).first()
+    class_id = db.session.query(Class).filter((Class.canvas_id == canvas_id) & 
+        (Class.username == username)).first()
     return class_id.class_id
 
 
