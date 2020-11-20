@@ -1,0 +1,173 @@
+<!-- Canvas Import Modal -->
+<div class="modal fade" id="canvasImportModal" tabindex="-1" role="dialog"
+aria-labelledby="canvasImportModal" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="d-flex align-items-center">
+          <h3 class="modal-title" id="classModal">Canvas Import</h3>
+        </div>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body px-3">
+        <form action="/canvas_import" method="post">
+          <ul class="nav nav-tabs dark-nav" role="tablist">
+            <li class="nav-item">
+              <a class="nav-link active" id="new-tab" data-toggle="tab" href="#new" role="tab" aria-controls="home" aria-selected="true">
+                New <span id="new-count" class="badge badge-light"></span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="updated-tab" data-toggle="tab" href="#updated" role="tab" aria-controls="profile" aria-selected="false">
+                Updated <span id="updated-count" class="badge badge-light"></span>
+              </a>
+            </li>
+          </ul>
+          <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="new" role="tabpanel" aria-labelledby="home-tab">
+              <br>
+              <div id="new-buttons"></div>
+              <div class="pill-box" id="new-list"></div>
+              <div class="d-flex justify-content-center show-more-div"></div>
+            </div>
+            <div class="tab-pane fade" id="updated" role="tabpanel" aria-labelledby="profile-tab">
+              <br>
+              <div id="updated-buttons"></div>
+              <div class="pill-box" id="updated-list"></div>
+              <div class="d-flex justify-content-center show-more-div"></div>
+            </div>
+            <div id="loading-message">Loading tasks...</div>
+          </div>
+          <div class="modal-footer justify-content-center">
+            <button type="submit" id="btn-canvasImport" class="btn btn-primary">Import</button>
+            <button type="button" class="btn btn-secondary ml-3" data-dismiss="modal">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <script>
+    $(document).ready(function() {
+      $.getJSON({url: "/get_canvas_tasks", success: function(data) {
+        // Hide Loading Message
+        $("#loading-message").hide();
+
+        // Update Badges
+        $("#new-count").text(data["new"].length);
+        $("#updated-count").text(data["updated"].length);
+
+        // Add New Tasks to DOM
+        $.each(data["new"], function(count, task) {
+          $("#new-list").append(
+            `<div class="pill-row">
+              <div class="form-check d-flex align-items-center">
+                <input name="new-task${count}" class="pill-check" type="checkbox"
+                id="new-task${count}">
+              </div>
+              <label for="new-task${count}" class="pill mr-3" style="border-left-color: var(--hl-${task["color"]})">
+                <div class="d-flex justify-content-between">
+                  <div class="pill-left">
+                    ${task["title"]}
+                  </div>
+                  <div>
+                    ${task["due_date"]}
+                  </div>
+                </div>
+                <div class="subtle pill-left">${task["class_title"]}</div>
+              </label>
+            </div>`
+          );
+          $(`#new-task${count}`).attr("value", JSON.stringify({status: "new", task: task})); 
+        });
+
+        // Add Updated Tasks to DOM
+        $.each(data["updated"], function(count, task) {
+          $("#updated-list").append(
+            `<div class="pill-row">
+              <div class="form-check d-flex align-items-center">
+                <input name="updated-task${count}" class="pill-check" type="checkbox"
+                id="updated-task${count}">
+              </div>
+              <label for="updated-task${count}" class="pill mr-3" style="border-left-color: var(--hl-${task["color"]})">
+                <div class="d-flex justify-content-between">
+                  <div class="pill-left">
+                    ${task["title"]}
+                  </div>
+                  <div>
+                    ${task["due_date"]}
+                  </div>
+                </div>
+                <div class="subtle pill-left">${task["class_title"]}</div>
+              </label>
+            </div>`
+          );
+          $(`#updated-task${count}`).attr("value", JSON.stringify({status: "updated", task: task})); 
+        });
+
+        // Add select all and select none buttons
+        if ($("#new-list").children().length > 0) {
+          $("#new-buttons").append(`
+            <div class="d-flex justify-content-center mb-1">
+              <button type="button" class="btn btn-custom select-all mr-2" data-list="new">Select All</button>
+              <button type="button" class="btn btn-custom select-none" data-list="new">Select None</button>
+            </div>
+            <br>`
+          );
+        }
+        if ($("#updated-list").children().length > 0) {
+          $("#updated-buttons").append(`
+            <div class="d-flex justify-content-center mb-1">
+              <button type="button" class="btn btn-custom select-all mr-2" data-list="updated">Select All</button>
+              <button type="button" class="btn btn-custom select-none" data-list="updated">Select None</button>
+            </div>
+            <br>`
+          );
+        }
+        $(".select-all").on("click", function() {
+          let list = $(".select-all").data("list");
+          $(`#${list} input`).each(function() {
+            this.checked = true;
+          });
+        });
+        $(".select-none").on("click", function() {
+          let list = $(".select-none").data("list");
+          $(`#${list} input`).each(function() {
+            this.checked = false;
+          });
+        });
+
+        // Hide all tasks except the first 10
+        if ($("#new-list").children().length > 10) {
+          $("#new-list").children().slice(10).hide();
+          $("#new .show-more-div").append(
+            '<button class="btn btn-custom" type="button" id="new-show-more" data-count="10">Show More</button>'
+          );
+          $("#new-show-more").on("click", function() {
+            let currentCount = $("#new-show-more").data("count");
+            $("#new-show-more").data("count", currentCount + 10);
+            $("#new-list").children().slice(currentCount, Math.min(currentCount + 10, data["new"].length)).show();
+            if (currentCount + 10 >= data["new"].length) {
+              $("#new-show-more").hide();
+            }
+          });
+        }
+        if ($("#updated-list").children().length > 10) {
+          $("#updated-list").children().slice(10).hide();
+          $("#updated .show-more-div").append(
+            '<button class="btn btn-custom" type="button" id="updated-show-more" data-count="10">Show More</button>'
+          );
+          $("#updated-show-more").on("click", function() {
+            let currentCount = $("#updated-show-more").data("count");
+            $("#updated-show-more").data("count", currentCount + 10);
+            $("#updated-list").children().slice(currentCount, Math.min(currentCount + 10, data["updated"].length)).show();
+            if (currentCount + 10 >= data["updated"].length) {
+              $("#updated-show-more").hide();
+            }
+          });
+        }
+      }});
+    });
+  </script>
+</div>

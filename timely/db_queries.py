@@ -6,7 +6,7 @@ from typing import List
 from sqlalchemy import desc
 
 from timely import db
-from timely.models import Class, Task, TaskIteration
+from timely.models import Class, Task, TaskIteration, User
 
 
 def fetch_class_list(username: str) -> List[dict]:
@@ -90,7 +90,7 @@ def fetch_task_details(task_id: int, username: str):
 
     for (task, task_iteration) in details:
         task_details_obj = {"title": task.title, "class": get_class_title(task.class_id),
-                    "id": task.task_id,
+                    "id": task.task_id, "repeat_freq": task.repeat_freq, "repeat_end": task.repeat_end,
                     "repeating": task.repeat, "iteration": task_iteration.iteration,
                     "priority": task_iteration.priority, "link": task_iteration.link,
                     "due_date": task_iteration.due_date.strftime("%m/%d/%y"),
@@ -245,3 +245,62 @@ def delete_task(task_id: int):
     db.session.query(Task).filter(Task.task_id == task_id).delete()
     db.session.query(TaskIteration).filter(TaskIteration.task_id == task_id).delete()
     db.session.commit()
+
+
+def get_api_key(username: str):
+    """Fetch a user's Canvas API Key given their username."""
+    user = db.session.query(User).filter(User.username == username).first()
+    return user.api_key
+
+
+def fetch_user(username: str):
+    """Returns True if a user is in the User table and False otherwise."""
+    user = db.session.query(User).filter(User.username == username).first()
+    if user is None:
+        return False
+    return True
+    
+
+def get_class_id_canvas(canvas_id: int):
+    """Returns the class_id of a class with a given canvas_id set by Canvas."""
+    class_id = db.session.query(Class).filter(Class.canvas_id == canvas_id).first()
+    return class_id.class_id
+
+
+def canvas_task_in_db(canvas_id: int, username: str):
+    """Returns a tuple (True, task_info) if a task with canvas_id is already in the database, and 
+       False otherwise. When working with this function, if it returns False call db.add to add a 
+       new entry. Otherwise just call db.commit to update the current database entry."""
+    details = db.session.query(Task, TaskIteration).filter(TaskIteration.username == username
+    ).filter(TaskIteration.canvas_id == canvas_id).filter(TaskIteration.task_id == Task.task_id
+    ).first()
+    if details is None:
+        #print("No details")
+        return (False, None)
+    
+    task_info = {"due_date": None, "link": None, "title": None}
+    task, task_iteration = details
+    task_info["due_date"] = task_iteration.due_date
+    task_info["link"] = task_iteration.link
+    task_info["title"] = task.title
+    
+    return (True, task_info)
+
+
+def get_class_color(class_id: int):
+    """Returns the color of a class with a given class_id"""
+    color = db.session.query(Class).filter(Class.class_id == class_id).first()
+    return color.color
+
+
+def get_task_groups(username: str, class_id: int):
+    """Returns the task groups (repeating tasks) for a user within a class with a given class_id"""
+    task_group = db.session.query(Task).filter((Task.username == username) & (
+        Task.class_id == class_id) & (Task.repeat)).all()
+
+    groups = []
+    for task in task_group:
+        task_info = {"task_id": task.task_id, "title": task.title}
+        groups.append(task_info)
+
+    return groups

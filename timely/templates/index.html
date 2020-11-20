@@ -16,15 +16,17 @@
         <div class="d-flex justify-content-between align-items-center pb-3">
           <h3 class="mb-0">Classes</h3>
           <div class="d-flex">
-            <img src="{{ url_for('static', filename='image/canvas-logo.png') }}"
-            height="24px" onclick="location.href='/canvas_class?'">
+            {% if user_info %}
+              <img src="{{ url_for('static', filename='image/canvas-logo.png') }}"
+              height="24px" onclick="location.href='/canvas_class?'">
+            {% endif %}
             <i class="fa fa-plus add ml-2" data-toggle="modal" data-target="#classModal"></i>
           </div>
         </div>
 
         <!-- Retrieves the class list and displays the class details -->
         <div class="pill-box">
-          {% for class in class_list: %} 
+          {% for class in class_list: %}
             <div class="pill-row">
               <div class="pill" style="border-left-color: var(--hl-{{class['color']}})">
                 {{class["title"]}}<br>
@@ -43,9 +45,19 @@
       <div class="col-8 overflow-auto py-3" id="task-col">
         <div class="d-flex justify-content-between align-items-center pb-3">
           <h3 class="mb-0">Tasks</h3>
-          <div class="d-flex">
-            <img src="{{ url_for('static', filename='image/canvas-logo.png') }}"
-            height="24px" onclick="location.href='/canvas_task?'">
+          <div class="d-flex align-items-center">
+            {% if user_info == false %}
+              <button data-toggle="modal" data-target="#canvasKeyModal" class="btn btn-secondary mr-2">
+                Canvas Key
+              </button>
+            {% endif %}
+            <!-- TODO: Remove -->
+            {% if user_info %}
+              <a data-toggle="modal" data-target="#canvasImportModal">
+                <img src="{{ url_for('static', filename='image/canvas-logo.png') }}"
+                height="24px">
+              </a>
+            {% endif %}
             <i class="fa fa-plus add ml-2" data-toggle="modal" data-target="#taskModal"></i>
           </div>
         </div>
@@ -70,7 +82,7 @@
                       </div>
                     </div>
                     <div class="d-flex justify-content-between">
-                      <div class="subtle">{{task["class"]}}</div>
+                      <div class="subtle pill-left">{{task["class"]}}</div>
                       <div>
                         <i class="fa fa-check-square open-CompleteTask" data-toggle="modal"
                         data-target="#taskCompletionModal" data-id="{{task['task_id']}}" 
@@ -131,4 +143,7 @@
   {% include "components/delete-task.html" %}
 
   {% include "components/task-completion.html" %}
+
+  {% include "components/canvas-key.html" %}
+  {% include "components/canvas-import.html" %}
 {% endblock %}
