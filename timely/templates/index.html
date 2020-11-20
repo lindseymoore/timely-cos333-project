@@ -78,7 +78,7 @@
                   <div class="pill" style="border-left-color: var(--hl-{{task['color']}})">
                     <div class="d-flex justify-content-between">
                       <div class="pill-left">
-                        <a href="/task_details?task_id={{task['task_id']}}" class="title-link">
+                        <a href="/task_details_list_view?task_id={{task['task_id']}}" class="title-link">
                           {{task["title"]}}
                         </a>
                       </div>
@@ -138,6 +138,7 @@
       </div>
     </div>
   </div>
+	
 
   {% include "components/create-task.html" %}
   {% include "components/create-class.html" %}

@@ -7,6 +7,7 @@
     --dark-3: #515151;
     --dark-2: #b6b6b6;
     --dark-1: #e5e5e5;
+    --dark-6: #828282;
 
     --hl-red: #ff4545;
     --hl-purple: #8e58ff;
@@ -32,6 +33,11 @@ html, body, #content {
     background-color: var(--dark-3);
     color: white;
     border-radius: 7px;
+}
+
+.weekly-header{
+    margin-bottom: 3px;
+    border-radius: 25px;
 }
 
 #task-col {
@@ -104,8 +110,6 @@ h1, h2, h3, h4, h5 {
 /* Circular highlight around an icon */
 .circle-icon {
     background: var(--hl-purple);
-    padding: .5em;
-    border-radius: 50%;
 }
 
 .title-link {
@@ -120,6 +124,54 @@ h1, h2, h3, h4, h5 {
     margin-bottom: 0;
     width: 2.5em;
 }
+
+.week-day {
+    width: calc(100%/7);
+}
+
+.nav-icon{
+    width: 48px;
+    height: 48px;
+    margin-right: -4px;
+    margin-left: -4px;
+}
+
+.arrow-left-icon{
+    position: absolute;
+    top: 18px;
+    left: -10px;
+}
+
+.arrow-right-icon{
+    position: absolute;
+    top: 18px;
+    right: -10px;
+}
+.arrow-container{
+    position: relative;
+}
+
+.icon-spacer {
+    padding: .5em;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    vertical-align: middle;
+
+.card {
+    background: var(--dark-4)
+}
+
+hr {
+  border: 1;
+  width: 96%;               
+  background-color: var(--dark-1);
+}
+
+.card img {
+    width: 12rem;
+    height: 12rem;
+    object-fit: cover;
 
 .pill-check {
     margin-right: 1em;
