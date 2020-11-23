@@ -44,13 +44,21 @@
 
       <div class="col-8 overflow-auto py-3" id="task-col">
         <div class="d-flex justify-content-between align-items-center pb-3">
-          <h3 class="mb-0">Tasks</h3>
+          <div class="d-flex align-items-center">
+            <h3 class="mb-0 mr-3">Tasks</h3>
+            <a href="/?sort=due_date"><button class="btn btn-small btn-custom mr-1">Date</button></a>
+            <a href="/?sort=class"><button class="btn btn-small btn-custom mr-1">Class</button></a>
+            <a href="/?sort=priority"><button class="btn btn-small btn-custom">Priority</button></a>
+          </div>
           <div class="d-flex align-items-center">
             {% if user_info == false %}
               <button data-toggle="modal" data-target="#canvasKeyModal" class="btn btn-secondary mr-2">
                 Canvas Key
               </button>
             {% endif %}
+            <button data-toggle="modal" data-target="#groupTasksModal" class="btn btn-secondary mr-2">
+              Group Tasks
+            </button>
             <!-- TODO: Remove -->
             {% if user_info %}
               <a data-toggle="modal" data-target="#canvasImportModal">
@@ -70,7 +78,7 @@
                   <div class="pill" style="border-left-color: var(--hl-{{task['color']}})">
                     <div class="d-flex justify-content-between">
                       <div class="pill-left">
-                        <a href="/task_details?task_id={{task['task_id']}}" class="title-link">
+                        <a href="/task_details_list_view?task_id={{task['task_id']}}" class="title-link">
                           {{task["title"]}}
                         </a>
                       </div>
@@ -110,7 +118,7 @@
               <div class="pill-row">
                 <div class="pill" style="border-left-color: var(--hl-{{task['color']}})">
                   <div class="d-flex justify-content-between">
-                    <div>
+                    <div class="pill-left">
                       <del>{{task["title"]}}</del>
                       <i class="fa fa-trash ml-1 open-DeleteTask" data-toggle="modal"
                           data-target="#deleteTaskModal" data-id="{{task['task_id']}}">
@@ -119,7 +127,7 @@
                     <div>{{task["due_date"]}}</div>
                   </div>
                   <div class="d-flex justify-content-between">
-                    <div class="subtle">{{task["class"]}}</div>
+                    <div class="subtle pill-left">{{task["class"]}}</div>
                     <div class="subtle">{{task["actual_time"]}} h</div>
                   </div>
                 </div>
@@ -130,6 +138,7 @@
       </div>
     </div>
   </div>
+	
 
   {% include "components/create-task.html" %}
   {% include "components/create-class.html" %}
@@ -145,4 +154,6 @@
 
   {% include "components/canvas-key.html" %}
   {% include "components/canvas-import.html" %}
+
+  {% include "components/group-tasks.html" %}
 {% endblock %}
