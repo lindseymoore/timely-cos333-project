@@ -7,10 +7,14 @@
   <div class="collapse navbar-collapse" id="navbar">
     <ul class="navbar-nav mr-auto align-items-center flex-row justify-content-center">
       <li class="nav-item">
-        <a class="nav-link" href="#"><i class="fa fa-list circle-icon"></i></a>
+        <a class="nav-link nav-icon" href="/">
+          <i class="fa fa-list icon-spacer" id="list"></i>
+        </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="#"><i class="fa fa-calendar"></i></a>
+        <a class="nav-link nav-icon" href="/calendar">
+          <i class="fa fa-calendar icon-spacer" id="calendar"></i>
+        </a>
       </li>
     </ul>
     <ul class="navbar-nav ml-auto align-items-center text-center">
@@ -33,4 +37,20 @@
   </div>
 </nav>
 
+<script>		
+
+  $(function() {
+    let loc = window.location.href; // returns the full URL
+    if(/calendar/.test(loc)) {
+      $('#calendar').addClass('circle-icon');
+    }else{
+      $('#list').addClass('circle-icon');
+    }
+  });
+    // $(document).on("click", "#calendar", function () {	
+      	
+    //   $("#list").addClass("circle-icon");
+    //   $("#calendar").toggleClass("circle-icon");
+    // });
+</script>	
 {% include "components/canvas-key.html" %}

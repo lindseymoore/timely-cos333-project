@@ -22,8 +22,14 @@ aria-labelledby="deleteTaskModal" aria-hidden="true">
     $(document).ready(function() {
       $(document).on("click", ".open-DeleteTask", function () {
         let taskId = $(this).data('id');
+        let loc = window.location.href; // returns the full URL
+        if(/calendar/.test(loc)) {
+          href = "/calendar/delete_task"
+        }else{
+          href = "/delete_task"
+        }
         $(".modal-footer #btn-deleteTask").attr("onclick",
-        "location.href='/delete_task?task_id=" + taskId + "';");
+        "location.href='" + href + "?task_id=" + taskId + "';");
       });
     });
   </script>

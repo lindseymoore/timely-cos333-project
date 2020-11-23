@@ -3,7 +3,8 @@
 from datetime import datetime
 
 from timely import db
-from timely.db_queries import get_next_task_iteration, get_task_id
+from timely.db_queries import (fetch_task_due_date, get_next_task_iteration,
+                               get_task_id)
 from timely.models import Class, Task, TaskIteration
 
 
@@ -171,3 +172,34 @@ def insert_canvas_tasks(task_list: list, username: str):
             #print(task["completed"])
 
             db.session.commit()
+
+
+def create_new_group(task_ids: list, username: str):
+    """Function to create new repeating task group based on task grouping modal."""
+    task_group = {}
+    for task_id in task_ids:
+        task_group[task_id] = fetch_task_due_date(task_id, username)
+    task_group = sorted(task_group, key = task_group.get)
+    group_task_id = task_group[0]
+    task = db.session.query(Task).filter((Task.username == username) & 
+        (Task.task_id == group_task_id))
+
+    # Make first iteration of task repeating
+    task.repeating = True
+    db.session.commit()
+
+    # Update next iterations of task to be repeating tasks of first iteration. Delete their entries
+    # in the Task table.
+    for iteration, old_task_id in enumerate(task_group[1:]):
+        # Update task_id and iteration of next task_iteration in the group
+        task_iteration = db.session.query(TaskIteration).filter((TaskIteration.username == username)
+            & (TaskIteration.task_id == old_task_id)).first()
+      
+        task_iteration.task_id = group_task_id
+        task_iteration.iteration = iteration + 2
+
+        db.session.commit()
+
+        # Delete entry in Task table from database - unnecessary because it's now repeating
+        db.session.query(Task).filter(Task.task_id == old_task_id).delete()
+        db.session.commit()
