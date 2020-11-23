@@ -152,49 +152,6 @@ def mark_task_complete(task_id: int, username: str):
     task_iteration.completed = True
     db.session.commit()
 
-    # Create new task iteration if it is a repeating task
-    if task.repeat:
-        old_date = task_iteration.due_date
-        freq = task.repeat_freq
-
-        # Increment date object according to the repeat frequency
-        increment = timedelta(days=0)
-        if freq == "daily":
-            increment = timedelta(days=1)
-        elif freq == "weekly":
-            increment = timedelta(days=7)
-        elif freq == "biweekly":
-            increment = timedelta(days=14)
-        elif freq == "monthly":
-            increment = timedelta(weeks=4)
-
-        new_date = old_date + increment
-
-        # Creates the next iteration of a task upon completion if the repeat end is not specified
-        # or next due date is before the repeat end date
-        if task.repeat_end is None or new_date <= task.repeat_end:
-            new_task_iteration = TaskIteration()
-
-            # Insert into TaskIteration table
-            new_task_iteration.username  = task_iteration.username
-            new_task_iteration.task_id  = task_iteration.task_id
-            new_task_iteration.class_id = task_iteration.class_id
-            new_task_iteration.iteration  = task_iteration.iteration + 1
-            new_task_iteration.priority = task_iteration.priority
-            new_task_iteration.link = task_iteration.link
-            new_task_iteration.due_date = new_date
-            new_task_iteration.due_time = task_iteration.due_time
-
-            new_task_iteration.notes = task_iteration.notes
-            new_task_iteration.completed = False
-
-            # Insert times into TaskIteration table
-            new_task_iteration.est_time = task_iteration.est_time
-            new_task_iteration.actual_time = None
-            new_task_iteration.timely_pred = None
-
-            db.session.add(new_task_iteration)
-            db.session.commit()
 
 
 def get_class_id(class_title: str) -> int:
