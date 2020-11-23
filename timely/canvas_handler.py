@@ -40,7 +40,8 @@ def fetch_canvas_courses(curr_semester: str, username: str):
             new_class.num = int(course.course_code[3:6])
 
             #TODO implement edit class button to change the color afterwards
-            new_class.color = random.choice(['red', 'green', 'purple', 'orange'])
+            new_class.color = random.choice(['red', 'green', 'purple', 'orange',
+                                            'pink', 'blue', 'yellow', 'white'])
 
             new_class.canvas_id = course.id
 

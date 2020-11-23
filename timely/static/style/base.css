@@ -8,10 +8,15 @@
     --dark-2: #b6b6b6;
     --dark-1: #e5e5e5;
 
-    --hl-red: #ff4545;
+    /* hl = highlighter */
+    --hl-red: #ff4545; 
     --hl-purple: #8e58ff;
     --hl-orange: #ffad4e;
     --hl-green: #a2ff93;
+    --hl-pink: #ff5ebc;
+    --hl-blue: #6eb4ff;
+    --hl-yellow: #fff27a;
+    --hl-white: #ffffff;
 }
 
 html, body, #content {
@@ -135,6 +140,7 @@ hr {
     width: 12rem;
     height: 12rem;
     object-fit: cover;
+}
 
 .pill-check {
     margin-right: 1em;
