@@ -169,6 +169,7 @@ h1, h2, h3, h4, h5 {
     width: 32px;
     height: 32px;
     vertical-align: middle;
+}
 
 .card {
     background: var(--dark-4)
