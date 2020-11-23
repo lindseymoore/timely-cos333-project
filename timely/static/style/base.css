@@ -41,9 +41,16 @@ html, body, #content {
 
 #task-col {
     border-width: 0px;
-    border-left-width: 10px;
-    border-left-color: var(--dark-5);
+    border-top-width: 10px;
+    border-color: var(--dark-5);
     border-style: solid;
+}
+
+@media (min-width: 768px) { 
+    #task-col {
+        border-left-width: 10px;
+        border-top-width: 0px;
+    }
 }
 
 i {
