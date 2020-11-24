@@ -1,0 +1,32 @@
+<!-- Class Details Modal -->
+<div class="modal fade" id="classDetailsModal" tabindex="-1" role="dialog"
+aria-labelledby="classDetailsModal" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title" id="classDetailsModal">{{class_details["title"]}}</h3>
+        <i class="fa fa-edit ml-2" id="edit_class"></i>
+      </div>
+      <div class="modal-body">
+        <div id="display-class">
+          <h4>Class: </h4> <p>{{class_details["title"]}}</p>
+          <h4>Class Code: </h4> <p>{{class_details["dept"]}}</p>
+          <h4>Color: </h4> <p>{{class_details["color"]}}</p>
+        </div>
+        {% include "components/edit-class.html" %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  $(document).ready(function() {
+    $('#classDetailsModal').modal('toggle');
+    $("#form_edit_class").hide();
+    
+    $('#edit_class').click( function() {
+      $( '#display-class' ).toggle();
+      $( '#form_edit_class' ).toggle();
+    });
+  });
+</script>

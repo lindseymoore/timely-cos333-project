@@ -110,4 +110,19 @@ def update_task_details(task_details: dict):
     task_iteration.est_time = task_details['est_time']
 
     db.session.commit()
-    
+
+def update_class_details(class_details: dict):
+    """Updates a class's details based on form input."""
+    username = class_details['username']
+    class_id = class_details['class_id']
+    class_info = db.session.query(Class).filter( \
+                (Class.username == username) &
+                (Class.class_id == class_id)).first()
+
+    class_info.title = class_details['title']
+
+    class_info.dept = class_details['dept']
+    class_info.num = class_details['num']
+    class_info.color = class_details['color']
+
+    db.session.commit()

@@ -100,6 +100,22 @@ def fetch_task_details(task_id: int, username: str):
 
     return task_details_obj
 
+def fetch_class_details(class_id: int, username: str):
+    """
+    Given a user with username and task with task_id, query the database to search for the details
+    of the class the user has clicked on. Return a dictionary representing the details of one class.
+    Fetches title, dept, num, color.
+    """
+    class_details_obj = {}
+
+    class_details = db.session.query(Class).filter((Class.username == username) &
+            (Class.class_id == class_id)).first()
+
+    class_details_obj = {"title": class_details.title, "dept": class_details.dept,
+                "num": class_details.num, "color": class_details.color}
+
+    return class_details_obj
+
 
 def mark_task_complete(task_id: int, username: str):
     """Update the task given by task_id as complete in the db."""

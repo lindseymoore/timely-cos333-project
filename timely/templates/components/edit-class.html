@@ -1,0 +1,37 @@
+<form action="/edit_class_details" id="form_edit_class">
+    <div class="form-group">
+      <label for="title">Name</label>
+      <input type="text" class="form-control" name="title" id="edit_class_title" value="{{class_details['title']}}">
+      <input type="hidden" id="edit_class_id" name="class_id" value="{{class_details['id']}}">
+    </div>
+    <div class="form-group">
+      <label for="est_time">Department</label>
+      <input type="text" class="form-control" name="dept" id="edit_dept" value="{{class_details['dept']}}">
+    </div>
+    <div class="form-group">
+      <label for="link">Course Number</label>
+      <input type="text" class="form-control" name="num" id="edit_num" value="{{class_details['num']}}">
+    </div>
+    <div class="form-group">
+        <label for="priority">Color</label>
+        <select class="form-control" name="color" id="edit_color">
+          <option value="{{class_details['color']}}">
+            Current: {{class_details['color']}}
+          </option>
+          <option value=0>
+            Low
+          </option>
+          <option value=1>
+            Medium
+          </option>
+          <option value=2>
+            High
+          </option>
+        </select>
+      </div>
+    <div class="form-group d-flex flex-row-reverse">
+      <button type="button" class="btn btn-secondary ml-3" data-dismiss="modal">Cancel</button>
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+</form>
+   
