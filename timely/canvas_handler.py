@@ -7,7 +7,8 @@ from datetime import datetime
 from canvasapi import Canvas
 
 from timely import db
-from timely.db_queries import (canvas_task_in_db, get_api_key, get_class_color,
+from timely.db_queries import (canvas_task_in_db, fetch_available_colors,
+                               get_api_key, get_class_color,
                                get_class_id_canvas, get_class_title)
 from timely.models import Class
 
@@ -25,6 +26,7 @@ def fetch_canvas_courses(curr_semester: str, username: str):
     api_key = get_api_key(username)
     canvas = Canvas(API_URL, api_key)
     classes = []
+    colors = fetch_available_colors(username)
 
     for course in canvas.get_courses():
         term = course.course_code[-5:]
@@ -40,8 +42,12 @@ def fetch_canvas_courses(curr_semester: str, username: str):
             new_class.num = int(course.course_code[3:6])
 
             #TODO implement edit class button to change the color afterwards
-            new_class.color = random.choice(['red', 'green', 'purple', 'orange',
-                                            'pink', 'blue', 'yellow', 'white'])
+            if len(colors) > 0:
+                new_class.color = random.choice(colors)
+                colors.pop(colors.index(new_class.color))
+            else:
+                #TODO MAKE CONDITION MORE ELABORATE
+                new_class.color = 'red'
 
             new_class.canvas_id = course.id
 

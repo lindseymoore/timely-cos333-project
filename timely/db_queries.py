@@ -354,3 +354,15 @@ def fetch_task_due_date(task_id: int, username: str):
         & (TaskIteration.task_id == task_id)).first()
 
     return task_iteration.due_date
+
+
+def fetch_available_colors(username: str):
+    """Fetches all un-used class colors for a given user."""
+    classes = db.session.query(Class).filter(Class.username == username).all()
+
+    # UPDATE TO INCLUDE COMPREHENSIVE LIST OF COLORS
+    all_colors = ['red', 'green', 'purple', 'orange', 'pink', 'blue', 'yellow', 'white']
+    for course in classes:
+        all_colors.pop(all_colors.index(course.color))
+
+    return all_colors
