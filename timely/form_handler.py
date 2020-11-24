@@ -37,7 +37,7 @@ def task_handler(details: dict):
     # Insert into task table
     task.username = details["username"]
     task.class_id = details["class_id"]
-    task.title = details["task_title"]
+    task.title = details["group_title"]
     if details["repeat_freq"] != "":
         task.repeat = True
         task.repeat_freq = details["repeat_freq"]
@@ -53,11 +53,12 @@ def task_handler(details: dict):
 
     # Get task_id for inserted task, as task_id is autoincrementing.
     # Get iteration of task with task_id.
-    task_id = get_task_id(details['task_title'], details['class_id'])
+    task_id = get_task_id(details['group_title'], details['class_id'])
     iteration = get_next_task_iteration(task_id)
 
     # Insert into TaskIteration table
     task_iteration.username = details["username"]
+    task_iteration.iteration_title = details["task_title"]
     task_iteration.task_id = task_id
     task_iteration.class_id = details['class_id']
     task_iteration.iteration = iteration
@@ -141,6 +142,7 @@ def insert_canvas_tasks(task_list: list, username: str):
 
             task_id = get_task_id(task["title"], task["class_id"])
             iteration = get_next_task_iteration(task_id)
+            task_iteration.iteration_title = task["title"]
             task_iteration.username = username
             task_iteration.task_id = task_id
             task_iteration.class_id = task["class_id"]

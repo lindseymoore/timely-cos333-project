@@ -59,14 +59,15 @@ def fetch_task_list(username: str, sort: str = "due_date") -> List[dict]:
             repeat_end = task.repeat_end
 
         # Create task_obj dictionary with all columns that will be displayed to the user
-        task_obj = {'title': task.title, 'class': course.title, 'task_id': task.task_id,
+        task_obj = {'group_title': task.title, 'class': course.title, 'task_id': task.task_id,
                     'priority': task_iteration.priority, 'repeat': task.repeat,
                     'est_time': task_iteration.est_time, 'timely_pred': task_iteration.timely_pred,
                     'link': task_iteration.link, 'notes': task_iteration.notes,
                     'due_date': task_iteration.due_date.strftime("%m/%d/%y"),
                     'repeat_freq': repeat_freq, 'repeat_end': repeat_end,
                     'completed': task_iteration.completed, 'iteration': task_iteration.iteration,
-                    'color': course.color, 'actual_time': task_iteration.actual_time}
+                    'color': course.color, 'actual_time': task_iteration.actual_time,
+                    'iteration_title': task_iteration.iteration_title}
 
         if task_obj['timely_pred'] is None:
             task_obj['timely_pred'] = 0
@@ -96,12 +97,13 @@ def fetch_task_details(task_id: int, username: str):
             & (TaskIteration.task_id == Task.task_id)).all()
 
     for (task, task_iteration) in details:
-        task_details_obj = {"title": task.title, "class": get_class_title(task.class_id),
+        task_details_obj = {"group_title": task.title, "class": get_class_title(task.class_id),
                     "id": task.task_id, "repeat_freq": task.repeat_freq, "repeat_end": task.repeat_end,
                     "repeating": task.repeat, "iteration": task_iteration.iteration,
                     "priority": task_iteration.priority, "link": task_iteration.link,
                     "due_date": task_iteration.due_date.strftime("%m/%d/%y"),
-                    "notes": task_iteration.notes, "est_time": task_iteration.est_time}
+                    "notes": task_iteration.notes, "est_time": task_iteration.est_time,
+                    "iteration_title": task_iteration.iteration_title}
         if task_details_obj['est_time'] is None:
             task_details_obj['est_time'] = 0
 

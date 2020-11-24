@@ -1,7 +1,7 @@
 <form action="/edit_task_details" id="form_edit_details">
     <div class="form-group">
       <label for="title">Name</label>
-      <input type="text" class="form-control" name="title" id="edit_task_title" value="{{task_details['title']}}">
+      <input type="text" class="form-control" name="title" id="edit_task_title" value="{{task_details['iteration_title']}}">
       <input type="hidden" id="edit_task_id" name="task_id" value="{{task_details['id']}}">
     </div>
     <div class="form-group">
@@ -24,6 +24,10 @@
           High
         </option>
       </select>
+    </div>
+    <div class="form-group">
+      <label for="group_title">Group Title</label>
+      <input type="text" class="form-control" name="group_title" id="edit_group_title" value="{{task_details['group_title']}}">
     </div>
     <div class="form-group">
       <label for="est_time">Estimated Completion Time</label>
