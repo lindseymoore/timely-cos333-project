@@ -31,7 +31,7 @@ def fetch_class_list(username: str) -> List[dict]:
     return classes
 
 
-def fetch_task_list(username: str) -> List[dict]:
+def fetch_task_list(username: str, sort: str = "due_date") -> List[dict]:
     """
     Take a user with username, query the database to search for all tasks the user has inputted.
     Return a list of task dictionaries with keys:
@@ -60,7 +60,7 @@ def fetch_task_list(username: str) -> List[dict]:
 
         # Create task_obj dictionary with all columns that will be displayed to the user
         task_obj = {'title': task.title, 'class': course.title, 'task_id': task.task_id,
-                    'priority:': task_iteration.priority, 'repeat': task.repeat,
+                    'priority': task_iteration.priority, 'repeat': task.repeat,
                     'est_time': task_iteration.est_time, 'timely_pred': task_iteration.timely_pred,
                     'link': task_iteration.link, 'notes': task_iteration.notes,
                     'due_date': task_iteration.due_date.strftime("%m/%d/%y"),
@@ -72,6 +72,13 @@ def fetch_task_list(username: str) -> List[dict]:
             task_obj['timely_pred'] = 0
 
         task_list.append(task_obj)
+
+    if sort == "due_date":
+        task_list = sorted(task_list, key = lambda task: task["due_date"], reverse=True)
+    if sort == "priority":
+        task_list = sorted(task_list, key = lambda task: task["priority"], reverse=True)
+    if sort == "class":
+        task_list = sorted(task_list, key = lambda task: task["class"], reverse=True)
 
     return task_list
 
@@ -218,9 +225,10 @@ def fetch_user(username: str):
     return True
     
 
-def get_class_id_canvas(canvas_id: int):
+def get_class_id_canvas(canvas_id: int, username: str):
     """Returns the class_id of a class with a given canvas_id set by Canvas."""
-    class_id = db.session.query(Class).filter(Class.canvas_id == canvas_id).first()
+    class_id = db.session.query(Class).filter((Class.canvas_id == canvas_id) & 
+        (Class.username == username)).first()
     return class_id.class_id
 
 
@@ -251,7 +259,7 @@ def get_class_color(class_id: int):
 
 
 def get_task_groups(username: str, class_id: int):
-    """Returns the task groups (repeating tasks) for a user within a class with a given class_id"""
+    """Returns the task groups (repeating tasks) for a user within a class with a given class_id."""
     task_group = db.session.query(Task).filter((Task.username == username) & (
         Task.class_id == class_id) & (Task.repeat)).all()
 
@@ -261,3 +269,45 @@ def get_task_groups(username: str, class_id: int):
         groups.append(task_info)
 
     return groups
+
+
+def fetch_tasks_from_class(class_id: int, username: str):
+    """Returns all tasks for a given user in a given class with class_id."""
+    # task_id, task_title, repeating
+    # If only one iteration, show due date
+    task_groups = []
+    task_ids = []
+
+    tasks = db.session.query(Task).filter((Task.username == username) &
+        (Task.class_id == class_id)).all()
+
+    for task in tasks:
+        info = {"task_id": task.task_id, "title": task.title, "repeat": task.repeat, 
+            "due_date": None, "color": get_class_color(class_id),
+             "class_title": get_class_title(class_id)}
+        task_ids.append(task.task_id)
+        task_groups.append(info)
+
+    for task_id in task_ids:
+        num_iterations = db.session.query(TaskIteration).filter(
+            (TaskIteration.username == username) & (TaskIteration.task_id == task_id)).count()
+
+        if num_iterations == 1:
+            iteration = db.session.query(TaskIteration).filter(
+                (TaskIteration.username == username) & (TaskIteration.task_id == task_id)).first()
+            due_date = iteration.due_date
+
+            # Find dict where task_id is correct, set due_date
+            list(filter(lambda task: task["task_id"] == task_id, task_groups))[0]["due_date"] = due_date
+
+    #print(task_groups)
+
+    return task_groups
+
+
+def fetch_task_due_date(task_id: int, username: str):
+    """Fetches due date for task with given task_id."""
+    task_iteration = db.session.query(TaskIteration).filter((TaskIteration.username == username)
+        & (TaskIteration.task_id == task_id)).first()
+
+    return task_iteration.due_date

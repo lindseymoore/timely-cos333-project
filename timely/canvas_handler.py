@@ -40,7 +40,8 @@ def fetch_canvas_courses(curr_semester: str, username: str):
             new_class.num = int(course.course_code[3:6])
 
             #TODO implement edit class button to change the color afterwards
-            new_class.color = random.choice(['red', 'green', 'purple', 'orange'])
+            new_class.color = random.choice(['red', 'green', 'purple', 'orange',
+                                            'pink', 'blue', 'yellow', 'white'])
 
             new_class.canvas_id = course.id
 
@@ -70,7 +71,7 @@ def fetch_canvas_tasks(curr_semester: str, username: str):
         term = course.course_code[-5:]
         if term == curr_semester:
             canvas_class_id = course.id
-            class_id = get_class_id_canvas(canvas_class_id)
+            class_id = get_class_id_canvas(canvas_class_id, username)
 
             # TODO figure out if a task from Canvas is repeating or not, defaulting to false
             for assignment in course.get_assignments():

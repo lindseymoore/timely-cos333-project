@@ -8,10 +8,12 @@ from timely import app, db
 from timely.canvas_handler import fetch_canvas_courses, fetch_canvas_tasks
 from timely.cas_client import CASClient
 from timely.db_queries import (delete_class, delete_task, fetch_class_list,
-                               fetch_task_details, fetch_task_list, fetch_user,
+                               fetch_task_details, fetch_task_list,
+                               fetch_tasks_from_class, fetch_user,
                                mark_task_complete, fetch_curr_week, fetch_week)
-from timely.form_handler import (class_handler, insert_canvas_tasks,
-                                 task_handler, update_task_details)
+from timely.form_handler import (class_handler, create_new_group,
+                                 insert_canvas_tasks, task_handler,
+                                 update_task_details)
 from timely.models import User
 from timely.time_predict import update_completion_time, update_timely_pred
 
@@ -25,8 +27,13 @@ from timely.time_predict import update_completion_time, update_timely_pred
 def index():
     """Return the index page."""
     username = CASClient().authenticate()
+    if "sort" in request.args:
+        sort = request.args['sort']
+    else:
+        sort = "due_date"
+
     classes = fetch_class_list(username)
-    tasks = fetch_task_list(username)
+    tasks = fetch_task_list(username, sort)
     user = fetch_user(username)
     return render_template("index.html",
                 class_list=classes,
@@ -260,4 +267,36 @@ def canvas_import():
 def get_canvas_tasks():
     """Fetches new and updated tasks from Canvas to be displayed in Canvas import modal."""
     tasks = fetch_canvas_tasks("F2020", CASClient().authenticate())
+    return json.dumps(tasks, default=str)
+
+
+@app.route("/get_classes")
+def get_classes():
+    """Return all classes."""
+    classes = fetch_class_list(CASClient().authenticate())
+    return json.dumps(classes)
+
+
+@app.route("/group_task", methods=["POST"])
+def group_tasks():
+    """Groups tasks into repeating tasks based on users selection in task grouping modal."""
+    username = CASClient().authenticate()
+    task_ids = []
+    for task_id in request.form.values():
+        task_ids.append(task_id)
+
+    #print("TASK_IDS", task_ids)
+    create_new_group(task_ids, username)
+    return redirect("/")
+   
+
+@app.route("/get_tasks")
+def get_tasks():
+    """
+    Fetches all tasks associated with a given task and returns information in JSON format.
+    If class is left as none, return all tasks for all classes.
+    """
+    username = CASClient().authenticate()
+    class_id = request.args["class_id"]
+    tasks = fetch_tasks_from_class(class_id, username)
     return json.dumps(tasks, default=str)
