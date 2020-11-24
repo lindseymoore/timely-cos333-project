@@ -16,6 +16,7 @@ aria-labelledby="taskDetailsModal" aria-hidden="true">
           <h4>Link: </h4> <p><a href="#">{{task_details["link"]}}</a></p>
           <h4>Estimated Time: </h4> <p>{{task_details["est_time"]}}</p>
           <h4>Notes: </h4> <p>{{task_details["notes"]}}</p>
+          <canvas id="time-graph" width="300" height="150"></canvas>
         </div>
         {% include "components/edit-details.html" %}
       </div>
@@ -32,5 +33,51 @@ aria-labelledby="taskDetailsModal" aria-hidden="true">
       $( '#display-details' ).toggle();
       $( '#form_edit_details' ).toggle();
     });
+  });
+</script>
+
+<script>
+  // Global parameters:
+  // do not resize the chart canvas when its container does (keep at 600x400px)
+  Chart.defaults.global.responsive = false;
+  
+  // define the chart data
+  let chartData = {
+    labels : [{% for item in labels %}
+                "{{item}}",
+              {% endfor %}],
+    datasets : [{
+        label: '{{ legend }}',
+        fill: true,
+        lineTension: 0.1,
+        backgroundColor: "rgba(75,192,192,0.4)",
+        borderColor: "rgba(75,192,192,1)",
+        borderCapStyle: 'butt',
+        borderDash: [],
+        borderDashOffset: 0.0,
+        borderJoinStyle: 'miter',
+        pointBorderColor: "rgba(75,192,192,1)",
+        pointBackgroundColor: "#fff",
+        pointBorderWidth: 1,
+        pointHoverRadius: 5,
+        pointHoverBackgroundColor: "rgba(75,192,192,1)",
+        pointHoverBorderColor: "rgba(220,220,220,1)",
+        pointHoverBorderWidth: 2,
+        pointRadius: 1,
+        pointHitRadius: 10,
+        data : [{% for item in values %}
+                  {{item}},
+                {% endfor %}],
+        spanGaps: false
+    }]
+  }
+    
+  // get chart canvas
+  let ctx = $("time-graph").getContext("2d");
+    
+  // create the chart using the chart canvas
+  let timeGraph = new Chart(ctx, {
+    type: 'line',
+    data: chartData,
   });
 </script>
