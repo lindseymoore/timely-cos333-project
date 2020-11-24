@@ -9,7 +9,7 @@ from timely.db_queries import (delete_class, delete_task, fetch_class_list,
                                fetch_task_details, fetch_task_list, fetch_user,
                                mark_task_complete, fetch_class_details)
 from timely.models import User
-from timely.form_handler import class_handler, task_handler, update_task_details
+from timely.form_handler import class_handler, task_handler, update_task_details, update_class_details
 from timely.time_predict import update_completion_time, update_timely_pred
 
 # To run the application locally with CAS authentication, check out:
@@ -189,6 +189,7 @@ def class_details_modal():
 
 @app.route("/edit_class_details")
 def edit_class_details():
+    """Edit the class details modal."""
     username = CASClient().authenticate()
     class_details = {"title": None, "class_id": None, "dept": None, "num": None,
                 "color": None, "active_status": None, "username": username}
@@ -196,6 +197,6 @@ def edit_class_details():
     for key, item in request.args.items():
         class_details[key] = item
 
-    update_task_details(class_details)
+    update_class_details(class_details)
    
     return redirect("/")

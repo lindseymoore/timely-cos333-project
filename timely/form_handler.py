@@ -115,6 +115,7 @@ def update_class_details(class_details: dict):
     """Updates a class's details based on form input."""
     username = class_details['username']
     class_id = class_details['class_id']
+    print("class_id", class_id)
     class_info = db.session.query(Class).filter( \
                 (Class.username == username) &
                 (Class.class_id == class_id)).first()
