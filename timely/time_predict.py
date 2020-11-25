@@ -88,7 +88,7 @@ def find_avg_prediction(iteration_times: List[dict]) -> float:
     if num_iterations_compl <= weighted:
         weighted_time = recent_time/num_completed
         print("regular", weighted_time)
-        return round(weighted_time * 4)/ 4
+        return round(weighted_time * 2)/ 2
 
     # if there are no iterations for the task
     return iteration_times[0]["est_time"]
