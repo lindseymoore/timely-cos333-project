@@ -161,8 +161,8 @@ def mark_task_complete(task_id: int, username: str):
     task_iteration.completed = True
     db.session.commit()
 
-    # Create new task iteration if it is a repeating task
-    if task.repeat:
+    # Create new task iteration if it is a repeating task (and is not from Canvas)
+    if task.repeat and task_iteration.canvas_id is None:
         old_date = task_iteration.due_date
         freq = task.repeat_freq
 
@@ -185,7 +185,8 @@ def mark_task_complete(task_id: int, username: str):
             new_task_iteration = TaskIteration()
 
             # Insert into TaskIteration table
-            new_task_iteration.username  = task_iteration.username
+            new_task_iteration.username = task_iteration.username
+            new_task_iteration.iteration_title = task.title
             new_task_iteration.task_id  = task_iteration.task_id
             new_task_iteration.class_id = task_iteration.class_id
             new_task_iteration.iteration  = task_iteration.iteration + 1
@@ -339,13 +340,14 @@ def fetch_tasks_from_class(class_id: int, username: str):
 
         if num_iterations == 1:
             iteration = db.session.query(TaskIteration).filter(
-                (TaskIteration.username == username) & (TaskIteration.task_id == task_id)).first()
+                (TaskIteration.username == username) & (TaskIteration.class_id == class_id) &
+                (TaskIteration.task_id == task_id)).first()
             due_date = iteration.due_date
+            iteration_title = iteration.iteration_title
 
             # Find dict where task_id is correct, set due_date
             list(filter(lambda task: task["task_id"] == task_id, task_groups))[0]["due_date"] = due_date
-
-    #print(task_groups)
+            list(filter(lambda task: task["task_id"] == task_id, task_groups))[0]["iteration_title"] = iteration_title
 
     return task_groups
 

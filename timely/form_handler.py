@@ -90,7 +90,8 @@ def update_task_details(task_details: dict):
                 (TaskIteration.username == Task.username) & \
                 (TaskIteration.task_id == Task.task_id)).first()
 
-    task.title = task_details['title']
+    print(task_details['iteration_title'])
+    #task.title = task_details['group_title']
 
     if task_details["repeat_freq"] != "None" and task_details["repeat_freq"] is not None:
         task.repeat = True
@@ -115,6 +116,7 @@ def update_task_details(task_details: dict):
     task_iteration.due_time = task_details['due_time']
     task_iteration.notes = task_details['notes']
     task_iteration.est_time = task_details['est_time']
+    task_iteration.iteration_title = task_details['iteration_title']
 
     db.session.commit()
 

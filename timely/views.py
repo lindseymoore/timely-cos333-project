@@ -236,11 +236,12 @@ def task_details_modal_calendar():
 
 @app.route("/edit_task_details")
 def edit_task_details():
+    """Edit task details modal endpoint."""
     username = CASClient().authenticate()
-    task_details = {"title": None, "task_id": None, "class": None, "repeat": None,
+    task_details = {"group_title": None, "task_id": None, "class": None, "repeat": None,
                 "priority": None, "link": None, "due_date": None, "notes": None, 
                 "est_time": None, "repeat_freq": None, "repeat_end": None, "due_time": None, 
-                "username": username}
+                "username": username, "iteration_title": None}
 
     for key, item in request.args.items():
         task_details[key] = item
@@ -293,7 +294,7 @@ def group_tasks():
 @app.route("/get_tasks")
 def get_tasks():
     """
-    Fetches all tasks associated with a given task and returns information in JSON format.
+    Fetches all tasks associated with a given class and returns information in JSON format.
     If class is left as none, return all tasks for all classes.
     """
     username = CASClient().authenticate()
