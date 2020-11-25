@@ -9,6 +9,7 @@ from timely.canvas_handler import fetch_canvas_courses, fetch_canvas_tasks
 from timely.cas_client import CASClient
 from timely.db_queries import (delete_class, delete_task, fetch_class_details,
                                 fetch_class_list, fetch_task_details,
+                                fetch_task_list_view, fetch_task_calendar_view,
                                 fetch_task_list, fetch_user, mark_task_complete,
                                 fetch_curr_week, fetch_tasks_from_class,
                                 fetch_week)
@@ -35,7 +36,7 @@ def index():
         sort = "due_date"
 
     classes = fetch_class_list(username)
-    tasks = fetch_task_list(username, sort)
+    tasks = fetch_task_list_view(username, sort)
     user = fetch_user(username)
     return render_template("index.html",
                 class_list=classes,
@@ -47,7 +48,7 @@ def calendar():
     """Return the calendar page."""
     username = CASClient().authenticate()
     classes = fetch_class_list(username)
-    tasks = fetch_task_list(username)
+    tasks = fetch_task_calendar_view(username)
     week_dates = fetch_curr_week()
     return render_template("calendar.html",
                 class_list=classes,
@@ -59,7 +60,7 @@ def next_week():
     """Return the calendar page."""
     username = CASClient().authenticate()
     classes = fetch_class_list(username)
-    tasks = fetch_task_list(username)
+    tasks = fetch_task_calendar_view(username)
     week_dates = request.args["week-dates"]
     next_week_dates = fetch_week(week_dates, False)
     return render_template("calendar.html",
@@ -72,7 +73,7 @@ def prev_week():
     """Return the calendar page."""
     username = CASClient().authenticate()
     classes = fetch_class_list(username)
-    tasks = fetch_task_list(username)
+    tasks = fetch_task_calendar_view(username)
     week_dates = request.args["week-dates"]
     # week_dates = eval(week_dates)
     prev_week_dates = fetch_week(week_dates, True)
@@ -140,7 +141,7 @@ def completion_form():
     task_id = request.args["task_id"]
     iteration = request.args["iteration"]
     time = request.args["time"]
-    mark_task_complete(int(task_id), username)
+    mark_task_complete(int(task_id), int(iteration), username)
 
     update_completion_time(task_id, iteration, username, time)
     update_timely_pred(task_id, iteration, username)
@@ -216,7 +217,7 @@ def task_details_modal_list():
     username = CASClient().authenticate()
     task_details = fetch_task_details(request.args["task_id"], username)
     classes = fetch_class_list(username)
-    tasks = fetch_task_list(username)
+    tasks = fetch_task_list_view(username)
     return render_template("index.html",
                 class_list=classes,
                 task_list=tasks,
@@ -228,7 +229,7 @@ def task_details_modal_calendar():
     username = CASClient().authenticate()
     task_details = fetch_task_details(request.args["task_id"], username)
     classes = fetch_class_list(username)
-    tasks = fetch_task_list(username)
+    tasks = fetch_task_calendar_view(username)
     week_dates = fetch_curr_week()
     return render_template("calendar.html",
                 class_list=classes,

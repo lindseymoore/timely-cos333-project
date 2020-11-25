@@ -22,9 +22,10 @@ def fetch_task_times(task_id: str, username: str) -> List[dict]:
 
     times = []
     for iteration in query_result:
-        times.append({"iteration": iteration.iteration,
-            "est_time": iteration.est_time, "actual_time": iteration.actual_time,
-            "timely_pred": iteration.timely_pred, "completed": iteration.completed})
+        if iteration.actual_time is not None: # Only includes completed tasks in which the user typed actual time
+            times.append({"iteration": iteration.iteration,
+                "est_time": iteration.est_time, "actual_time": iteration.actual_time,
+                "timely_pred": iteration.timely_pred, "completed": iteration.completed})
 
     # Logging output
     print("Fetched iterations for TASK_ID=" + task_id + " & USERNAME=" + username[:-1] + ":")
@@ -116,11 +117,11 @@ def update_timely_pred(task_id: int, iteration: int, username: str):
     """
     times = fetch_task_times(task_id, username)
 
-    next_iteration = db.session.query(TaskIteration).filter( \
+    next_iterations = db.session.query(TaskIteration).filter( \
                 (TaskIteration.username == username) & \
                 (TaskIteration.task_id == task_id) & \
-                (TaskIteration.iteration == int(iteration) + 1)).first()
+                (TaskIteration.iteration > int(iteration))).all() # account for all subsequent iterations
 
-    if next_iteration is not None:
+    for next_iteration in next_iterations:
         next_iteration.timely_pred = find_avg_prediction(times)
         db.session.commit()

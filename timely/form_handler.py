@@ -1,6 +1,6 @@
 """Functions to process user input and insert as new entries in the database."""
 
-from datetime import datetime
+from datetime import timedelta, date, datetime
 
 from timely import db
 from timely.db_queries import (fetch_task_due_date, get_next_task_iteration,
@@ -32,7 +32,6 @@ def task_handler(details: dict):
    tables respectively.
     """
     task = Task()
-    task_iteration = TaskIteration()
 
     # Insert into task table
     task.username = details["username"]
@@ -56,26 +55,59 @@ def task_handler(details: dict):
     task_id = get_task_id(details['task_title'], details['class_id'])
     iteration = get_next_task_iteration(task_id)
 
-    # Insert into TaskIteration table
-    task_iteration.username = details["username"]
-    task_iteration.task_id = task_id
-    task_iteration.class_id = details['class_id']
-    task_iteration.iteration = iteration
-    task_iteration.priority = details["priority"]
-    task_iteration.link = details["link"]
-    task_iteration.due_date = details["due_date"]
-    task_iteration.due_time = details["due_time"]
+    increment = timedelta(days=1)
+    # Create new task iteration if it is a repeating task
+    if task.repeat:
+        freq = task.repeat_freq
 
-    task_iteration.notes = details["notes"]
-    task_iteration.completed = False
+        # Increment date object according to the repeat frequency
+        
+        if freq == "daily":
+            increment = timedelta(days=1)
+        elif freq == "weekly":
+            increment = timedelta(days=7)
+        elif freq == "biweekly":
+            increment = timedelta(days=14)
+        elif freq == "monthly":
+            increment = timedelta(weeks=4)
+        
+        end_date = task.repeat_end
+    elif task.repeat_end is None:
+        end_date = details["due_date"]
+        end_date = datetime.strptime(end_date, '%Y-%m-%d').date()
 
-    # Insert times into TaskIteration table
-    task_iteration.est_time = details["est_time"]
-    task_iteration.actual_time = None
-    task_iteration.timely_pred = details["est_time"]
+    
+    # Creates the next iteration of a task upon completion if the repeat end is not specified
+    # or next due date is before the repeat end date
+    due_date = details["due_date"]
+    new_date = datetime.strptime(due_date, '%Y-%m-%d').date()
+    
+    print(new_date, end_date)
+    while (new_date <= end_date):
+        task_iteration = TaskIteration()
+        # Insert into TaskIteration table
+        task_iteration.username = details["username"]
+        task_iteration.task_id = task_id
+        task_iteration.class_id = details['class_id']
+        task_iteration.iteration = iteration
+        task_iteration.priority = details["priority"]
+        task_iteration.link = details["link"]
+        task_iteration.due_date = new_date
+        task_iteration.due_time = details["due_time"]
 
-    db.session.add(task_iteration)
-    db.session.commit()
+        task_iteration.notes = details["notes"]
+        task_iteration.completed = False
+
+        # Insert times into TaskIteration table
+        task_iteration.est_time = details["est_time"]
+        task_iteration.actual_time = None
+        task_iteration.timely_pred = details["est_time"] # may need to edit display of the timely prediction to edit all subsequent iterations
+
+        db.session.add(task_iteration)
+        db.session.commit()
+        iteration += 1
+        new_date += increment
+    
 
 
 def update_task_details(task_details: dict):
