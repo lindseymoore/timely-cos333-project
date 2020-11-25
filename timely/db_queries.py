@@ -30,8 +30,80 @@ def fetch_class_list(username: str) -> List[dict]:
 
     return classes
 
+def fetch_task_list_view(username: str, sort: str = "due_date") -> List[dict]:
+    task_list = [] 
+    tasks = db.session.query(Task, Class).filter(Task.username == username
+                ).join(Class, Class.class_id == Task.class_id).all()
+    
+    for (task, course) in tasks:
+        task_iteration = db.session.query(TaskIteration).filter( \
+                (TaskIteration.username == username) & \
+                (TaskIteration.task_id == task.task_id) & \
+                    (TaskIteration.completed == False)).order_by(TaskIteration.iteration).first()
+        
+        if task_iteration is not None:
+            repeat_freq = None
+            repeat_end = None
 
-def fetch_task_list(username: str, sort: str = "due_date") -> List[dict]:
+            # If the task is repeating, make an additional query to find it's repeat_freq and repeat_end
+            if task.repeat:
+                repeat_freq = task.repeat_freq
+                repeat_end = task.repeat_end
+
+            # Create task_obj dictionary with all columns that will be displayed to the user
+            task_obj = {'title': task.title, 'class': course.title, 'task_id': task.task_id,
+                        'priority': task_iteration.priority, 'repeat': task.repeat,
+                        'est_time': task_iteration.est_time, 'timely_pred': task_iteration.timely_pred,
+                        'link': task_iteration.link, 'notes': task_iteration.notes,
+                        'due_date': task_iteration.due_date.strftime("%m/%d/%y"),
+                        'repeat_freq': repeat_freq, 'repeat_end': repeat_end,
+                        'completed': task_iteration.completed, 'iteration': task_iteration.iteration,
+                        'color': course.color, 'actual_time': task_iteration.actual_time}
+
+            if task_obj['timely_pred'] is None:
+                task_obj['timely_pred'] = 0
+
+            task_list.append(task_obj)
+
+        completed_iterations = db.session.query(TaskIteration).filter( \
+                (TaskIteration.username == username) & \
+                (TaskIteration.task_id == task.task_id) & \
+                    (TaskIteration.completed == True)).all()
+
+        for completed_iteration in completed_iterations:
+            repeat_freq = None
+            repeat_end = None
+
+            # If the task is repeating, make an additional query to find it's repeat_freq and repeat_end
+            if task.repeat:
+                repeat_freq = task.repeat_freq
+                repeat_end = task.repeat_end
+
+            # Create task_obj dictionary with all columns that will be displayed to the user
+            task_obj = {'title': task.title, 'class': course.title, 'task_id': task.task_id,
+                        'priority': completed_iteration.priority, 'repeat': task.repeat,
+                        'est_time': completed_iteration.est_time, 'timely_pred': completed_iteration.timely_pred,
+                        'link': completed_iteration.link, 'notes': completed_iteration.notes,
+                        'due_date': completed_iteration.due_date.strftime("%m/%d/%y"),
+                        'repeat_freq': repeat_freq, 'repeat_end': repeat_end,
+                        'completed': completed_iteration.completed, 'iteration': completed_iteration.iteration,
+                        'color': course.color, 'actual_time': completed_iteration.actual_time}
+
+            if task_obj['timely_pred'] is None:
+                task_obj['timely_pred'] = 0
+
+            task_list.append(task_obj)
+    
+    if sort == "due_date":
+        task_list = sorted(task_list, key = lambda task: task["due_date"], reverse=True)
+    if sort == "priority":
+        task_list = sorted(task_list, key = lambda task: task["priority"], reverse=True)
+    if sort == "class":
+        task_list = sorted(task_list, key = lambda task: task["class"], reverse=True)
+
+    return task_list
+
+def fetch_task_calendar_view(username: str) -> List[dict]:
     """
     Take a user with username, query the database to search for all tasks the user has inputted.
     Return a list of task dictionaries with keys:
@@ -42,6 +114,7 @@ def fetch_task_list(username: str, sort: str = "due_date") -> List[dict]:
         priority, link, notes, completed, color
     """
     task_list = []
+
 
     # JOIN query to get information from task, Class, and TaskIteration tables
     task_info = db.session.query(Task, Class, TaskIteration
@@ -73,13 +146,6 @@ def fetch_task_list(username: str, sort: str = "due_date") -> List[dict]:
 
         task_list.append(task_obj)
 
-    if sort == "due_date":
-        task_list = sorted(task_list, key = lambda task: task["due_date"], reverse=True)
-    if sort == "priority":
-        task_list = sorted(task_list, key = lambda task: task["priority"], reverse=True)
-    if sort == "class":
-        task_list = sorted(task_list, key = lambda task: task["class"], reverse=True)
-
     return task_list
 
 
@@ -107,6 +173,24 @@ def fetch_task_details(task_id: int, username: str):
 
     return task_details_obj
 
+
+def fetch_class_details(class_id: int, username: str):
+    """
+    Given a user with username and task with task_id, query the database to search for the details
+    of the class the user has clicked on. Return a dictionary representing the details of one class.
+    Fetches title, dept, num, color.
+    """
+    class_details_obj = {}
+
+    class_details = db.session.query(Class).filter((Class.username == username) &
+            (Class.class_id == class_id)).first()
+
+    class_details_obj = {"title": class_details.title, "id": class_details.class_id, 
+                "dept": class_details.dept, "num": class_details.num, "color": class_details.color}
+
+    return class_details_obj
+
+
 def fetch_curr_week():
     curr_date = date.today()
     offset = curr_date.weekday() #where 0 is monday
@@ -125,6 +209,7 @@ def fetch_curr_week():
         day += timedelta(days=1)
 
     return week
+
 
 def fetch_week(week_dates: str, prev: bool):
     curr_sunday = week_dates
@@ -145,63 +230,18 @@ def fetch_week(week_dates: str, prev: bool):
     return week
 
 
-def mark_task_complete(task_id: int, username: str):
+def mark_task_complete(task_id: int, iteration: int, username: str):
     """Update the task given by task_id as complete in the db."""
     # pylint: disable=singleton-comparison
-    task, task_iteration = db.session.query(Task, TaskIteration).filter( \
-                (Task.username == username) &
-                (Task.task_id == task_id)).join(TaskIteration, \
-                (TaskIteration.username == Task.username) & \
-                (TaskIteration.task_id == Task.task_id) & \
-                (TaskIteration.completed == False)).first()
+    task_iteration = db.session.query(TaskIteration).filter( \
+                (TaskIteration.username == username) & \
+                (TaskIteration.task_id == task_id) & \
+                (TaskIteration.iteration == int(iteration))).first()
+   
     # pylint: enable=singleton-comparison
 
     task_iteration.completed = True
     db.session.commit()
-
-    # Create new task iteration if it is a repeating task
-    if task.repeat:
-        old_date = task_iteration.due_date
-        freq = task.repeat_freq
-
-        # Increment date object according to the repeat frequency
-        increment = timedelta(days=0)
-        if freq == "daily":
-            increment = timedelta(days=1)
-        elif freq == "weekly":
-            increment = timedelta(days=7)
-        elif freq == "biweekly":
-            increment = timedelta(days=14)
-        elif freq == "monthly":
-            increment = timedelta(weeks=4)
-
-        new_date = old_date + increment
-
-        # Creates the next iteration of a task upon completion if the repeat end is not specified
-        # or next due date is before the repeat end date
-        if task.repeat_end is None or new_date <= task.repeat_end:
-            new_task_iteration = TaskIteration()
-
-            # Insert into TaskIteration table
-            new_task_iteration.username  = task_iteration.username
-            new_task_iteration.task_id  = task_iteration.task_id
-            new_task_iteration.class_id = task_iteration.class_id
-            new_task_iteration.iteration  = task_iteration.iteration + 1
-            new_task_iteration.priority = task_iteration.priority
-            new_task_iteration.link = task_iteration.link
-            new_task_iteration.due_date = new_date
-            new_task_iteration.due_time = task_iteration.due_time
-
-            new_task_iteration.notes = task_iteration.notes
-            new_task_iteration.completed = False
-
-            # Insert times into TaskIteration table
-            new_task_iteration.est_time = task_iteration.est_time
-            new_task_iteration.actual_time = None
-            new_task_iteration.timely_pred = None
-
-            db.session.add(new_task_iteration)
-            db.session.commit()
 
 
 def get_class_id(class_title: str) -> int:

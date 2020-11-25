@@ -34,7 +34,9 @@
           {% for class in class_list: %}
             <div class="pill-row">
               <div class="pill" style="border-left-color: var(--hl-{{class['color']}})">
-                {{class["title"]}}<br>
+                <a href="/class_details?class_id={{class['class_id']}}" class="title-link">
+                  {{class["title"]}}
+                </a><br>
                 <div class="d-flex justify-content-between">
                   <div class="subtle">{{class["dept"]}}{{class["num"]}}</div>
                   <i class="fa fa-trash open-DeleteClass" data-toggle="modal"
@@ -157,6 +159,10 @@
 
   {% if "task_details" in request.url_rule.rule%}
     {% include "components/task-details.html" %}
+  {% endif %}
+
+  {% if "class_details" in request.url_rule.rule%}
+    {% include "components/class-details.html" %}
   {% endif %}
 
   {% include "components/delete-class.html" %}
