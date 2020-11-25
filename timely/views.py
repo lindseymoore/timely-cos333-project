@@ -7,13 +7,16 @@ from flask import redirect, render_template, request
 from timely import app, db
 from timely.canvas_handler import fetch_canvas_courses, fetch_canvas_tasks
 from timely.cas_client import CASClient
-from timely.db_queries import (delete_class, delete_task, fetch_class_list,
-                               fetch_task_details, fetch_task_list_view, fetch_task_calendar_view,
-                               fetch_tasks_from_class, fetch_user,
-                               mark_task_complete, fetch_curr_week, fetch_week)
+from timely.db_queries import (delete_class, delete_task, fetch_class_details,
+                                fetch_class_list, fetch_task_details,
+                                fetch_task_list_view, fetch_task_calendar_view,
+                                fetch_task_list, fetch_user, mark_task_complete,
+                                fetch_curr_week, fetch_tasks_from_class,
+                                fetch_week)
 from timely.form_handler import (class_handler, create_new_group,
-                                 insert_canvas_tasks, task_handler,
-                                 update_task_details)
+                                insert_canvas_tasks,
+                                task_handler,
+                                update_class_details, update_task_details)
 from timely.models import User
 from timely.time_predict import update_completion_time, update_timely_pred
 
@@ -260,6 +263,35 @@ def canvas_import():
         task_list.append(json.loads(value))
     
     insert_canvas_tasks(task_list, username)
+    return redirect("/")
+
+
+@app.route("/class_details")
+def class_details_modal():
+    """Show the class details modal."""
+    username = CASClient().authenticate()
+    class_details = fetch_class_details(request.args["class_id"], username)
+    print(class_details)
+    classes = fetch_class_list(username)
+    tasks = fetch_task_list(username)
+    return render_template("index.html",
+                class_list=classes,
+                task_list=tasks,
+                class_details=class_details)
+
+
+@app.route("/edit_class_details")
+def edit_class_details():
+    """Edit the class details modal."""
+    username = CASClient().authenticate()
+    class_details = {"title": None, "class_id": None, "dept": None, "num": None,
+                "color": None, "active_status": None, "username": username}
+
+    for key, item in request.args.items():
+        class_details[key] = item
+
+    update_class_details(class_details)
+   
     return redirect("/")
 
 
