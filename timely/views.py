@@ -279,19 +279,6 @@ def edit_task_details():
    
     return redirect("/")
 
-@app.route("/class_details")
-def class_details_modal():
-    """Show the class details modal."""
-    username = CASClient().authenticate()
-    class_details = fetch_class_details(request.args["class_id"], username)
-    print(class_details)
-    classes = fetch_class_list(username)
-    tasks = fetch_task_list_view(username)
-    return render_template("index.html",
-                class_list=classes,
-                task_list=tasks,
-                class_details=class_details)
-
 
 @app.route("/edit_class_details")
 def edit_class_details():
@@ -333,21 +320,6 @@ def class_details_modal():
                 class_list=classes,
                 task_list=tasks,
                 class_details=class_details)
-
-
-@app.route("/edit_class_details")
-def edit_class_details():
-    """Edit the class details modal."""
-    username = CASClient().authenticate()
-    class_details = {"title": None, "class_id": None, "dept": None, "num": None,
-                "color": None, "active_status": None, "username": username}
-
-    for key, item in request.args.items():
-        class_details[key] = item
-
-    update_class_details(class_details)
-   
-    return redirect("/")
 
 
 @app.route("/get_canvas_tasks")
