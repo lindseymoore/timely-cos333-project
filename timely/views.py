@@ -7,17 +7,16 @@ from flask import redirect, render_template, request
 from timely import app, db
 from timely.canvas_handler import fetch_canvas_courses, fetch_canvas_tasks
 from timely.cas_client import CASClient
-from timely.db_queries import (delete_class, delete_task, fetch_class_list,
-                               fetch_task_details, fetch_task_list, fetch_user,
-                               mark_task_complete, fetch_class_details)
+from timely.db_queries import (delete_class, delete_task, fetch_class_details,
+                                fetch_class_list, fetch_task_details,
+                                fetch_task_list, fetch_user, mark_task_complete,
+                                fetch_curr_week, fetch_tasks_from_class,
+                                fetch_week)
+from timely.form_handler import (class_handler, create_new_group,
+                                insert_canvas_tasks,
+                                task_handler,
+                                update_class_details, update_task_details)
 from timely.models import User
-from timely.form_handler import class_handler, task_handler, update_task_details, update_class_details
-
-                               fetch_task_details, fetch_task_list,
-                               fetch_tasks_from_class, fetch_user,
-                               mark_task_complete, fetch_curr_week, fetch_week, create_new_group,
-                                 insert_canvas_tasks, task_handler,
-                                 update_task_details)
 from timely.time_predict import update_completion_time, update_timely_pred
 
 # To run the application locally with CAS authentication, check out:
