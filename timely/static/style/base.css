@@ -150,8 +150,6 @@ h1, h2, h3, h4, h5 {
 .nav-icon{
     width: 48px;
     height: 48px;
-    margin-right: -4px;
-    margin-left: -4px;
 }
 
 .arrow-left-icon{
@@ -189,8 +187,8 @@ hr {
 }
 
 .card img {
-    width: 12rem;
-    height: 12rem;
+    width: 11rem;
+    height: 11rem;
     object-fit: cover;
 }
 
@@ -216,4 +214,9 @@ hr {
 #display-details {
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+.calendar-date {
+    margin-left: -15px;
+    margin-right: -15px;
 }

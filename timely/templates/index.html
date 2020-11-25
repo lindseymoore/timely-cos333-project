@@ -15,10 +15,15 @@
       <div class="col-md-4 overflow-auto py-3">
         <div class="d-flex justify-content-between align-items-center pb-3">
           <h3 class="mb-0">Classes</h3>
-          <div class="d-flex">
+          <div class="d-flex align-items-center">
             {% if user_info %}
               <img src="{{ url_for('static', filename='image/canvas-logo.png') }}"
               height="24px" onclick="location.href='/canvas_class?'">
+            {% endif %}
+            {% if user_info == false %}
+              <button data-toggle="modal" data-target="#canvasKeyModal" class="btn btn-secondary mr-2">
+                Canvas Key
+              </button>
             {% endif %}
             <i class="fa fa-plus add ml-2" data-toggle="modal" data-target="#classModal"></i>
           </div>
@@ -51,7 +56,7 @@
               <a href="/?sort=class"><button class="btn btn-small btn-custom mr-1">Class</button></a>
               <a href="/?sort=priority"><button class="btn btn-small btn-custom">Priority</button></a>
             </div>
-            <div class="dropdown d-block d-md-none">
+            <div class="dropdown d-block d-sm-none">
               <button class="dropdown-toggle btn btn-small btn-custom" href="#" id="sortingDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 Sort
               </button>
@@ -63,11 +68,6 @@
             </div>
           </div>
           <div class="d-flex align-items-center">
-            {% if user_info == false %}
-              <button data-toggle="modal" data-target="#canvasKeyModal" class="btn btn-secondary mr-2">
-                Canvas Key
-              </button>
-            {% endif %}
             <button data-toggle="modal" data-target="#groupTasksModal" class="btn btn-secondary mr-2">
               Group
             </button>

@@ -4,8 +4,8 @@
   <div class="container full-height pb-5" style="max-width: 900px">
     {% include "components/navbar.html" %}
 
-    <h1 class="mx-auto"><b>About Us</b></h1>
-    <h4 class="mx-auto">A task manager that <em>actually</em> saves you time.</h4>
+    <h1 class="text-center"><b>About Us</b></h1>
+    <h4 class="text-center">A task manager that <em>actually</em> saves you time.</h4>
     <br>
     <p>Timely was started by a group of four Princeton computer science majors from the Class of 2022.
       We were tasked with creating an application for our COS333 class under the guidance of Professor
@@ -18,29 +18,29 @@
       time taken on an assignment to provide useful insights about student work habits that could be
       used to manage time better.
     </p>
-    <h4 class="mx-auto mb-3"><b>"You can't manage what you can't measure."</b></h4>
+    <h4 class="mb-3 text-center"><b>"You can't manage what you can't measure."</b></h4>
     <hr>
-    <p><h3 class="mx-auto"><b>Our Team</b></h3></p>
-    <div class="d-flex flex-row justify-content-between">
-      <div class="card" style="width: 12rem;">
+    <p><h3 class="text-center"><b>Our Team</b></h3></p>
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-center">
+      <div class="card mb-3" style="width: 11rem;">
         <img class="card-img-top" src="{{ url_for('static', filename='image/mariah.jpg') }}" alt="Mariah's Picture">
         <div class="card-body text-center">
           <b class="card-title"> Mariah Crawford</b>
         </div>
       </div>
-      <div class="card" style="width: 12rem;">
+      <div class="card mb-3" style="width: 11rem;">
         <img class="card-img-top" src="{{ url_for('static', filename='image/david.jpg') }}" alt="David's Picture">
         <div class="card-body text-center">
           <b class="card-title"> David Lipman</b>
         </div>
       </div>
-      <div class="card" style="width: 12rem;">
+      <div class="card mb-3" style="width: 11rem;">
         <img class="card-img-top" src="{{ url_for('static', filename='image/lindsey.jpeg') }}" alt="Lindsey's Picture">
         <div class="card-body text-center">
           <b class="card-title"> Lindsey Moore</b>
         </div>
       </div>
-      <div class="card" style="width: 12rem;">
+      <div class="card mb-3" style="width: 11rem;">
         <img class="card-img-top" src="{{ url_for('static', filename='image/orange.jpg') }}" alt="Jorge's Picture">
         <div class="card-body text-center">
           <b class="card-title"> Jorge Zreik</b>
