@@ -1,5 +1,7 @@
 """Declare application views."""
 
+import json
+
 from flask import redirect, render_template, request
 
 from timely import app, db
@@ -10,6 +12,12 @@ from timely.db_queries import (delete_class, delete_task, fetch_class_list,
                                mark_task_complete, fetch_class_details)
 from timely.models import User
 from timely.form_handler import class_handler, task_handler, update_task_details, update_class_details
+
+                               fetch_task_details, fetch_task_list,
+                               fetch_tasks_from_class, fetch_user,
+                               mark_task_complete, fetch_curr_week, fetch_week, create_new_group,
+                                 insert_canvas_tasks, task_handler,
+                                 update_task_details)
 from timely.time_predict import update_completion_time, update_timely_pred
 
 # To run the application locally with CAS authentication, check out:
@@ -22,14 +30,68 @@ from timely.time_predict import update_completion_time, update_timely_pred
 def index():
     """Return the index page."""
     username = CASClient().authenticate()
+    if "sort" in request.args:
+        sort = request.args['sort']
+    else:
+        sort = "due_date"
 
     classes = fetch_class_list(username)
-    tasks = fetch_task_list(username)
+    tasks = fetch_task_list(username, sort)
     user = fetch_user(username)
     return render_template("index.html",
                 class_list=classes,
                 task_list=tasks,
                 user_info = user)
+
+@app.route("/calendar")
+def calendar():
+    """Return the calendar page."""
+    username = CASClient().authenticate()
+    classes = fetch_class_list(username)
+    tasks = fetch_task_list(username)
+    week_dates = fetch_curr_week()
+    return render_template("calendar.html",
+                class_list=classes,
+                task_list=tasks,
+                week_dates=week_dates)
+
+@app.route("/calendar/next_week")
+def next_week():
+    """Return the calendar page."""
+    username = CASClient().authenticate()
+    classes = fetch_class_list(username)
+    tasks = fetch_task_list(username)
+    week_dates = request.args["week-dates"]
+    next_week_dates = fetch_week(week_dates, False)
+    return render_template("calendar.html",
+                class_list=classes,
+                task_list=tasks,
+                week_dates=next_week_dates)
+
+@app.route("/calendar/prev_week")
+def prev_week():
+    """Return the calendar page."""
+    username = CASClient().authenticate()
+    classes = fetch_class_list(username)
+    tasks = fetch_task_list(username)
+    week_dates = request.args["week-dates"]
+    # week_dates = eval(week_dates)
+    prev_week_dates = fetch_week(week_dates, True)
+    return render_template("calendar.html",
+                class_list=classes,
+                task_list=tasks,
+                week_dates=prev_week_dates)
+
+@app.route("/about")
+def about():
+    """Display about page."""
+    return render_template("about.html")
+
+
+@app.route("/feedback")
+def feedback():
+    """Display the feedback page."""
+    return render_template("feedback.html")
 
 
 @app.route("/task_form")
@@ -68,7 +130,7 @@ def class_form():
 
     return redirect("/")
 
-
+@app.route("/calendar/completion_form")
 @app.route("/completion_form")
 def completion_form():
     """
@@ -79,13 +141,15 @@ def completion_form():
     task_id = request.args["task_id"]
     iteration = request.args["iteration"]
     time = request.args["time"]
-
     mark_task_complete(int(task_id), username)
 
     update_completion_time(task_id, iteration, username, time)
     update_timely_pred(task_id, iteration, username)
-
-    return redirect("/")
+    
+    if request.path == "/calendar/completion_form":
+        return redirect("/calendar")
+    else:
+        return redirect("/")
 
 
 @app.route("/delete_class")
@@ -95,12 +159,16 @@ def delete_class_endpoint():
     delete_class(request.args["class_id"])
     return redirect("/")
 
-
+@app.route("/calendar/delete_task")
 @app.route("/delete_task")
 def delete_task_endpoint():
     """Delete the task given by the request argument task_id."""
     delete_task(request.args["task_id"])
-    return redirect("/")
+
+    if request.path == "/calendar/delete_task":
+        return redirect("/calendar")
+    else:
+        return redirect("/")
 
 
 @app.route('/logout', methods=['GET'])
@@ -143,13 +211,11 @@ def canvas_task():
     fetch_canvas_tasks("F2020", username)
     return redirect("/")
 
-
-@app.route("/task_details")
-def task_details_modal():
+@app.route("/task_details_list_view")
+def task_details_modal_list():
     """Show the task details modal."""
     username = CASClient().authenticate()
     task_details = fetch_task_details(request.args["task_id"], username)
-    print(task_details)
     classes = fetch_class_list(username)
     tasks = fetch_task_list(username)
     return render_template("index.html",
@@ -157,6 +223,19 @@ def task_details_modal():
                 task_list=tasks,
                 task_details=task_details)
 
+@app.route("/task_details_calendar_view")
+def task_details_modal_calendar():
+    """Show the task details modal."""
+    username = CASClient().authenticate()
+    task_details = fetch_task_details(request.args["task_id"], username)
+    classes = fetch_class_list(username)
+    tasks = fetch_task_list(username)
+    week_dates = fetch_curr_week()
+    return render_template("calendar.html",
+                class_list=classes,
+                task_list=tasks,
+                task_details=task_details,
+                week_dates=week_dates)
 
 @app.route("/edit_task_details")
 def edit_task_details():
@@ -170,8 +249,22 @@ def edit_task_details():
         task_details[key] = item
 
     update_task_details(task_details)
-   
+
     return redirect("/")
+
+
+@app.route("/canvas_import", methods=["POST"])
+def canvas_import():
+    """Handle the canvas import modal."""
+    username = CASClient().authenticate()
+    task_list = []
+    for value in request.form.values():
+        # json.loads returns dictionary, first key is status (new or updated), second is task itself
+        task_list.append(json.loads(value))
+    
+    insert_canvas_tasks(task_list, username)
+    return redirect("/")
+
 
 @app.route("/class_details")
 def class_details_modal():
@@ -200,3 +293,42 @@ def edit_class_details():
     update_class_details(class_details)
    
     return redirect("/")
+
+
+@app.route("/get_canvas_tasks")
+def get_canvas_tasks():
+    """Fetches new and updated tasks from Canvas to be displayed in Canvas import modal."""
+    tasks = fetch_canvas_tasks("F2020", CASClient().authenticate())
+    return json.dumps(tasks, default=str)
+
+
+@app.route("/get_classes")
+def get_classes():
+    """Return all classes."""
+    classes = fetch_class_list(CASClient().authenticate())
+    return json.dumps(classes)
+
+
+@app.route("/group_task", methods=["POST"])
+def group_tasks():
+    """Groups tasks into repeating tasks based on users selection in task grouping modal."""
+    username = CASClient().authenticate()
+    task_ids = []
+    for task_id in request.form.values():
+        task_ids.append(task_id)
+
+    #print("TASK_IDS", task_ids)
+    create_new_group(task_ids, username)
+    return redirect("/")
+   
+
+@app.route("/get_tasks")
+def get_tasks():
+    """
+    Fetches all tasks associated with a given task and returns information in JSON format.
+    If class is left as none, return all tasks for all classes.
+    """
+    username = CASClient().authenticate()
+    class_id = request.args["class_id"]
+    tasks = fetch_tasks_from_class(class_id, username)
+    return json.dumps(tasks, default=str)

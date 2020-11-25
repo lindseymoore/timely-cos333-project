@@ -1,7 +1,10 @@
 """Functions to process user input and insert as new entries in the database."""
 
+from datetime import datetime
+
 from timely import db
-from timely.db_queries import (get_next_task_iteration, get_task_id)
+from timely.db_queries import (fetch_task_due_date, get_next_task_iteration,
+                               get_task_id)
 from timely.models import Class, Task, TaskIteration
 
 
@@ -88,10 +91,10 @@ def update_task_details(task_details: dict):
 
     task.title = task_details['title']
 
-    if task_details["repeat_freq"] != "":
+    if task_details["repeat_freq"] != "None" and task_details["repeat_freq"] is not None:
         task.repeat = True
         task.repeat_freq = task_details["repeat_freq"]
-        if task_details["repeat_end"] != "":
+        if task_details["repeat_end"] != "None":
             task.repeat_end = task_details["repeat_end"]
         else:
             task.repeat_end = None
@@ -102,7 +105,10 @@ def update_task_details(task_details: dict):
         task.repeat_freq = task_details['repeat_freq']
         task.repeat_end = task_details['repeat_end']
 
-    task_iteration.priority = task_details['priority']
+    if task_details['priority'] == 'None' or task_details['priority'] is None:
+        task_iteration.priority = None
+    else:
+        task_iteration.priority = task_details['priority']
     task_iteration.link = task_details['link']
     task_iteration.due_date = task_details['due_date']
     task_iteration.due_time = task_details['due_time']
@@ -110,6 +116,7 @@ def update_task_details(task_details: dict):
     task_iteration.est_time = task_details['est_time']
 
     db.session.commit()
+
 
 def update_class_details(class_details: dict):
     """Updates a class's details based on form input."""
@@ -127,3 +134,90 @@ def update_class_details(class_details: dict):
     class_info.color = class_details['color']
 
     db.session.commit()
+
+
+def insert_canvas_tasks(task_list: list, username: str):
+    """
+    Takes as input task_list, a list of dictionaries with the first key being a task's status
+    (new or updated), and the second key beind a dictionary of informaton about the task. The
+    function inserts a new task into the database, or udpates the altered values of an updated task.
+    """
+    for task_info in task_list:
+        new_status = task_info["status"]
+        task = task_info["task"]
+
+        if new_status == "new":
+            new_task = Task()
+            task_iteration = TaskIteration()
+
+            new_task.username = username
+            new_task.class_id = task["class_id"]
+            new_task.title = task["title"]
+
+            db.session.add(new_task)
+            db.session.commit()
+
+            task_id = get_task_id(task["title"], task["class_id"])
+            iteration = get_next_task_iteration(task_id)
+            task_iteration.username = username
+            task_iteration.task_id = task_id
+            task_iteration.class_id = task["class_id"]
+            task_iteration.iteration = iteration
+            task_iteration.link = task["link"]
+            task_iteration.due_date = datetime.strptime(task["due_date"], '%Y-%m-%d')
+            task_iteration.canvas_id = task["canvas_task_id"]
+            task_iteration.completed = task["completed"]
+
+            db.session.add(task_iteration)
+            db.session.commit()
+
+        else:
+            update_task, task_iteration = db.session.query(Task, TaskIteration).filter(
+                TaskIteration.username == username).filter(
+                TaskIteration.canvas_id == task["canvas_task_id"]).filter(
+                    TaskIteration.task_id == Task.task_id).first()
+
+            # print(update_task.title)
+            # print(task_iteration.link, task_iteration.due_date)
+
+            update_task.title = task["title"]
+            #print(task["title"])
+            task_iteration.link = task["link"]
+            #print(task["link"])
+            task_iteration.due_date = datetime.strptime(task["due_date"], '%Y-%m-%d')
+            #print(datetime.strptime(task["due_date"], '%Y-%m-%d'))
+            task_iteration.completed = task["completed"]
+            #print(task["completed"])
+
+            db.session.commit()
+
+
+def create_new_group(task_ids: list, username: str):
+    """Function to create new repeating task group based on task grouping modal."""
+    task_group = {}
+    for task_id in task_ids:
+        task_group[task_id] = fetch_task_due_date(task_id, username)
+    task_group = sorted(task_group, key = task_group.get)
+    group_task_id = task_group[0]
+    task = db.session.query(Task).filter((Task.username == username) & 
+        (Task.task_id == group_task_id))
+
+    # Make first iteration of task repeating
+    task.repeating = True
+    db.session.commit()
+
+    # Update next iterations of task to be repeating tasks of first iteration. Delete their entries
+    # in the Task table.
+    for iteration, old_task_id in enumerate(task_group[1:]):
+        # Update task_id and iteration of next task_iteration in the group
+        task_iteration = db.session.query(TaskIteration).filter((TaskIteration.username == username)
+            & (TaskIteration.task_id == old_task_id)).first()
+      
+        task_iteration.task_id = group_task_id
+        task_iteration.iteration = iteration + 2
+
+        db.session.commit()
+
+        # Delete entry in Task table from database - unnecessary because it's now repeating
+        db.session.query(Task).filter(Task.task_id == old_task_id).delete()
+        db.session.commit()

@@ -1,0 +1,128 @@
+<!-- Group Tasks Modal -->
+<div class="modal fade" id="groupTasksModal" tabindex="-1" role="dialog"
+aria-labelledby="groupTasksModal" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="d-flex align-items-center">
+          <h3 class="modal-title" id="classModal">Group Tasks</h3>
+        </div>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body px-3">
+        <div id="class-selection">
+          <h5>Select a Class</h5>
+          <div class="pill-box"></div>
+          <div id="class-loading-message">Loading Classes...</div>
+          <div class="modal-footer justify-content-center">
+            <button type="button" class="btn btn-secondary ml-3" data-dismiss="modal">Cancel</button>
+          </div>
+        </div>
+        <div id="task-selection" class="d-none">
+          <form action="/group_task" method="post">
+            <div id="group">
+              <h5>Tasks to Group</h5>
+              <div class="pill-box" id="group-list"></div>
+              <div class="d-flex justify-content-center show-more-div"></div>
+            </div>
+            <div id="task-loading-message">Loading tasks...</div>
+            <div class="modal-footer justify-content-center">
+              <button type="submit" id="btn-groupTasks" class="btn btn-primary">Group</button>
+              <button type="button" class="btn btn-secondary ml-3" data-dismiss="modal">Cancel</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    $(document).ready(function() {
+      $('#groupTasksModal').on('hidden.bs.modal', function (e) {
+        $("#group-list").empty();
+        $("#class-selection .pill-box").empty();
+        $("#class-selection").show();
+        $("#task-selection").addClass("d-none");
+      });
+
+      $('#groupTasksModal').on('shown.bs.modal', function (e) {
+        $.getJSON({url: "/get_classes", success: function(data) {
+          if (data.length === 0) {
+            $("#class-selection .pill-box").append(`<div class="mx-auto">No classes found</div>`);
+          }
+          $("#class-loading-message").hide();
+          $.each(data, function(index, classVar) {
+            $("#class-selection .pill-box").append(
+              `<div class="pill-row">
+                <div class="pill" style="border-left-color: var(--hl-${classVar['color']})" data-id="${classVar['class_id']}">
+                  ${classVar["title"]}<br>
+                  <div class="d-flex justify-content-between">
+                    <div class="subtle">${classVar["dept"]}${classVar["num"]}</div>
+                  </div>
+                </div>
+              </div>`
+            );
+          });
+          $("#class-selection .pill").on("click", function() {
+            showTasks($(this).attr("data-id"));
+          });
+        }});
+      });
+      
+      function showTasks(id) {
+        $("#class-selection").hide();
+        $("#task-selection").removeClass("d-none");
+        
+        $.getJSON({url: `/get_tasks?class_id=${id}`, success: function(data) {
+          // Hide Loading Message
+          $("#task-loading-message").hide();
+          
+          if (data.length === 0) {
+            $("#group-list").append(`<div class="mx-auto">No tasks found</div>`);
+          }
+
+          // Add Tasks to DOM
+          $.each(data, function(count, task) {
+            $("#group-list").append(
+              `<div class="pill-row">
+                <div class="form-check d-flex align-items-center">
+                  <input name="task${count}" class="pill-check" type="checkbox"
+                  id="task${count}">
+                </div>
+                <label for="task${count}" class="pill mr-3" style="border-left-color: var(--hl-${task["color"]})">
+                  <div class="d-flex justify-content-between">
+                    <div class="pill-left">
+                      ${task["title"]}
+                    </div>
+                    <div>
+                      ${task["due_date"]}
+                    </div>
+                  </div>
+                  <div class="subtle pill-left">${task["class_title"]}</div>
+                </label>
+              </div>`
+            );
+            $(`#task${count}`).attr("value", task["task_id"]); 
+          });
+
+          // Hide all tasks except the first 10
+          if ($("#group-list").children().length > 10) {
+            $("#group-list").children().slice(10).hide();
+            $("#group .show-more-div").append(
+              '<button class="btn btn-custom" type="button" id="group-show-more" data-count="10">Show More</button>'
+            );
+            $("#group-show-more").on("click", function() {
+              let currentCount = $("#group-show-more").data("count");
+              $("#group-show-more").data("count", currentCount + 10);
+              $("#group-list").children().slice(currentCount, Math.min(currentCount + 10, data.length)).show();
+              if (currentCount + 10 >= data.length) {
+                $("#group-show-more").hide();
+              }
+            });
+          }
+        }});
+      }
+    });
+  </script>
+</div>
