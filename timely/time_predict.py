@@ -91,7 +91,7 @@ def fetch_graph_times(task_id: int, iteration: int, username: str):
                 (TaskIteration.username == username) & \
                 (TaskIteration.task_id == task_id) & \
                 (TaskIteration.completed == True) & \
-                (TaskIteration.iteration < iteration)).all()
+                (TaskIteration.iteration < int(iteration))).all()
     actual_times = []       
     predicted_times = []
 

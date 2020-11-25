@@ -16,7 +16,7 @@ aria-labelledby="taskDetailsModal" aria-hidden="true">
           <h4>Link: </h4> <p><a href="#">{{task_details["link"]}}</a></p>
           <h4>Estimated Time: </h4> <p>{{task_details["est_time"]}}</p>
           <h4>Notes: </h4> <p>{{task_details["notes"]}}</p>
-          <canvas id="time-graph" width="300" height="150"></canvas>
+          <canvas id="time-graph" width="400" height="300"></canvas>
         </div>
         {% include "components/edit-details.html" %}
       </div>
@@ -40,15 +40,15 @@ aria-labelledby="taskDetailsModal" aria-hidden="true">
   // Global parameters:
   // do not resize the chart canvas when its container does (keep at 600x400px)
   Chart.defaults.global.responsive = false;
-  
+ 
   // define the chart data
   let chartData = {
     labels : [{% for item in labels %}
                 "{{item}}",
               {% endfor %}],
     datasets : [{
-        label: '{{ legend }}',
-        fill: true,
+        label: 'Actual Time',
+        fill: false,
         lineTension: 0.1,
         backgroundColor: "rgba(75,192,192,0.4)",
         borderColor: "rgba(75,192,192,1)",
@@ -56,7 +56,7 @@ aria-labelledby="taskDetailsModal" aria-hidden="true">
         borderDash: [],
         borderDashOffset: 0.0,
         borderJoinStyle: 'miter',
-        pointBorderColor: "rgba(75,192,192,1)",
+        pointBorderColor: "white",
         pointBackgroundColor: "#fff",
         pointBorderWidth: 1,
         pointHoverRadius: 5,
@@ -65,7 +65,30 @@ aria-labelledby="taskDetailsModal" aria-hidden="true">
         pointHoverBorderWidth: 2,
         pointRadius: 1,
         pointHitRadius: 10,
-        data : [{% for item in values %}
+        data : [{% for item in actual_values %}
+                  {{item}},
+                {% endfor %}],
+        spanGaps: false
+    }, {
+        label: 'Timely Prediction',
+        fill: false,
+        lineTension: 0.1,
+        backgroundColor: "rgba(142, 88, 255, 0.4)",
+        borderColor: "#8e58ff",
+        borderCapStyle: 'butt',
+        borderDash: [],
+        borderDashOffset: 0.0,
+        borderJoinStyle: 'miter',
+        pointBorderColor: "white",
+        pointBackgroundColor: "#fff",
+        pointBorderWidth: 1,
+        pointHoverRadius: 5,
+        pointHoverBackgroundColor: "rgba(142, 88, 255, 1)",
+        pointHoverBorderColor: "rgba(200,200,200,1)",
+        pointHoverBorderWidth: 2,
+        pointRadius: 1,
+        pointHitRadius: 10,
+        data : [{% for item in predicted_values %}
                   {{item}},
                 {% endfor %}],
         spanGaps: false
@@ -73,11 +96,47 @@ aria-labelledby="taskDetailsModal" aria-hidden="true">
   }
     
   // get chart canvas
-  let ctx = $("time-graph").getContext("2d");
-    
+  let ctx = $('#time-graph');//document.getElementById('chart-area').getContext("2d");
+  // Define axes
+  let options = {
+    scales: {
+      yAxes: [{
+          ticks: {
+              beginAtZero:true,
+              fontColor: 'white'
+          },
+          scaleLabel: {
+              display: true,
+              labelString: 'Time (hrs.)',
+              fontSize: 15,
+              fontColor: 'white'
+          }
+      }],
+      xAxes: [{
+          ticks: {
+              beginAtZero:true,
+              fontColor: 'white'
+          },
+          scaleLabel: {
+              display: true,
+              labelString: 'Iteration',
+              fontSize: 15,
+              fontColor: 'white'
+          }
+      }]
+    } ,
+    legend: {
+      labels: {
+          // This more specific font property overrides the global property
+          fontColor: 'white'
+      }
+    }
+  };
   // create the chart using the chart canvas
   let timeGraph = new Chart(ctx, {
     type: 'line',
     data: chartData,
+    scaleFontColor: "#fffff",
+    options: options
   });
 </script>

@@ -226,13 +226,18 @@ def task_details_modal_list():
         curr_iteration = task_details["iteration"]
         times = fetch_graph_times(task_id, curr_iteration, username)
         legend = "Task Completion Time"
-        labels = list(range(1, curr_iteration - 1))
-        values = times["actual_times"]
+        labels = list(range(1, curr_iteration))
+        actual_values = times["actual_times"]
+        predicted_values = times["predicted_times"]
+        print(labels)
+        print(times)
         return render_template("index.html",
                     class_list=classes,
                     task_list=tasks,
                     task_details=task_details,
-                    values=values, labels=labels, legend=legend)
+                    actual_values=actual_values,
+                    predicted_values=predicted_values, 
+                    labels=labels, legend=legend)
     
     else:
         return render_template("index.html",
