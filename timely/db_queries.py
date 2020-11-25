@@ -109,6 +109,7 @@ def fetch_task_details(task_id: int, username: str):
 
     return task_details_obj
 
+
 def fetch_curr_week():
     curr_date = date.today()
     offset = curr_date.weekday() #where 0 is monday

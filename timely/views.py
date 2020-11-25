@@ -241,7 +241,7 @@ def edit_task_details():
     task_details = {"group_title": None, "task_id": None, "class": None, "repeat": None,
                 "priority": None, "link": None, "due_date": None, "notes": None, 
                 "est_time": None, "repeat_freq": None, "repeat_end": None, "due_time": None, 
-                "username": username, "iteration_title": None}
+                "username": username, "iteration_title": None, "iteration": None}
 
     for key, item in request.args.items():
         task_details[key] = item

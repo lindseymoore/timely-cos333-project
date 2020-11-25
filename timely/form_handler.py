@@ -2,6 +2,8 @@
 
 from datetime import datetime
 
+from sqlalchemy import desc
+
 from timely import db
 from timely.db_queries import (fetch_task_due_date, get_next_task_iteration,
                                get_task_id)
@@ -83,15 +85,20 @@ def update_task_details(task_details: dict):
     """Updates a task's details based on form input."""
     username = task_details['username']
     task_id = task_details['task_id']
-    print("task_id", task_id)
+    #iteration = task_details['iteration']
+    #print("iteration", iteration)
+
+    # TODO ORDERING BY DESCENDING ITERATION IS A HACKY SOLUTION - INSTEAD PASS ITERATION FROM FRONTEND WHEN UPDATING
     task, task_iteration = db.session.query(Task, TaskIteration).filter( \
                 (Task.username == username) &
                 (Task.task_id == task_id)).join(TaskIteration, \
                 (TaskIteration.username == Task.username) & \
-                (TaskIteration.task_id == Task.task_id)).first()
+                (TaskIteration.task_id == Task.task_id)).order_by(
+                    desc(TaskIteration.iteration)).first()
 
-    print(task_details['iteration_title'])
-    #task.title = task_details['group_title']
+    print(task)
+    print(task_iteration)
+    task.title = task_details['group_title']
 
     if task_details["repeat_freq"] != "None" and task_details["repeat_freq"] is not None:
         task.repeat = True
