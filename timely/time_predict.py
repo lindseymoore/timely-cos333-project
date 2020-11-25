@@ -42,24 +42,63 @@ def find_avg_prediction(iteration_times: List[dict]) -> float:
         timely_pred
     Return a predicted time for the task.
     """
-    total_time = 0
+    older_time = 0
+    recent_time = 0
+    recent_task_weight = 0.60
+    older_task_weight = 0.40
+    
+    older_num_completed = 0
+    recent_num_completed = 0
     num_completed = 0
 
-    for iteration in iteration_times:
-        if iteration["completed"]:
-            total_time += iteration["actual_time"]
-            num_completed += 1
+    weighted = 3.0 # number of most recent iterations that are given greater weight
 
-    if num_completed == 0:
-        return iteration_times[0]["est_time"]
-    else:
-        return total_time / num_completed
+    num_iterations_compl = len(iteration_times) - 1
+    weighted_start = num_iterations_compl - weighted + 1
+    print(num_iterations_compl)
+
+    for iteration in iteration_times:
+        if num_iterations_compl > weighted:
+            if iteration["completed"] & (iteration["iteration"] < weighted_start):
+                print("not weighted:", iteration["actual_time"])
+                older_time += iteration["actual_time"]
+                older_num_completed += 1
+            if iteration["completed"] & (iteration["iteration"] >= weighted_start):
+                print("weighted:", iteration["actual_time"])
+                recent_time += iteration["actual_time"]
+                recent_num_completed += 1
+
+        # if there is not enough iterations for weighting to start
+        else:
+            if iteration["completed"]:
+                recent_time += iteration["actual_time"]
+                num_completed += 1
+
+    print("numcompleted", num_completed)
+
+    if num_iterations_compl > weighted:
+        print(num_iterations_compl)
+        older_avg_time = older_time / older_num_completed
+        print("older avg", older_avg_time)
+        recent_avg_time = recent_time / recent_num_completed
+        print("recent avg", recent_avg_time)
+        weighted_time = older_avg_time * older_task_weight + recent_avg_time * recent_task_weight
+        return round(weighted_time * 2)/ 2
+
+    if num_iterations_compl <= weighted:
+        weighted_time = recent_time/num_completed
+        print("regular", weighted_time)
+        return round(weighted_time * 2)/ 2
+
+    # if there are no iterations for the task
+    return iteration_times[0]["est_time"]
+
 
 
 def update_completion_time(task_id: int, iteration: int, username: str, actual_time: float):
     """
     Take task_id, iteration, and username.
-    Update the actual_time it takes to complete a task upon completion fo the task.
+    Update the actual_time it takes to complete a task upon completion for the task.
     """
     task_iteration = db.session.query(TaskIteration).filter( \
                 (TaskIteration.username == username) & (TaskIteration.task_id == task_id) & \
