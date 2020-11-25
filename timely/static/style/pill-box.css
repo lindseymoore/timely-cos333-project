@@ -46,3 +46,23 @@
     flex-direction: row;
     align-items: center;
 }
+
+@media (max-width: 768px) {
+    .small-pill:first-child .pill {
+        border-radius: 5px 5px 0px 0px;
+    }
+    .small-pill:last-child .pill {
+        border-radius: 0px 0px 5px 5px;
+    }
+    .small-pill:only-child .pill {
+        border-radius: 5px;
+    }
+    .small-pill .pill {
+        font-size: 0.6em;
+        border-left-width: 5px;
+        padding: 3px 2px;
+    }
+    .small-pill .pill-left {
+        text-overflow: clip;
+    }
+}

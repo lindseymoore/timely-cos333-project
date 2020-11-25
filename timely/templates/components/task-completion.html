@@ -4,7 +4,7 @@ aria-labelledby="taskCompletionModal" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h3 class="modal-title" id="classModal">Mark as Complete</h3>
+        <h3 class="modal-title">Mark as Complete</h3>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -27,8 +27,16 @@ aria-labelledby="taskCompletionModal" aria-hidden="true">
         let taskId = $(this).data('id');
         let iteration = $(this).data('iteration');
         let time = $("input#time-taken").val();
+        
+        let loc = window.location.href; // returns the full URL
+        if(/calendar/.test(loc)) {
+          href = "/calendar/completion_form"
+        }else{
+          href = "/completion_form"
+        }
+        
         $(".modal-footer #btn-completeTask").attr("onclick",
-        "/completion_form?task_id=" + taskId + "&iteration=" + iteration);
+        href + "?task_id=" + taskId + "&iteration=" + iteration);
       });
       $(document).on("click", "#btn-completeTask", function () {
         let time = $("input#time-taken").val();
