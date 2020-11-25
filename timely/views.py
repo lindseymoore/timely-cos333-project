@@ -216,7 +216,8 @@ def task_details_modal_list():
     """Show the task details modal."""
     username = CASClient().authenticate()
     task_id = request.args["task_id"]
-    task_details = fetch_task_details(task_id, username)
+    iteration = request.args["iteration"]
+    task_details = fetch_task_details(task_id, iteration, username)
     print(task_details)
     classes = fetch_class_list(username)
     tasks = fetch_task_list(username)
@@ -248,7 +249,8 @@ def task_details_modal_list():
 def task_details_modal_calendar():
     """Show the task details modal."""
     username = CASClient().authenticate()
-    task_details = fetch_task_details(request.args["task_id"], username)
+    iteration = request.args["iteration"]
+    task_details = fetch_task_details(request.args["task_id"], iteration, username)
     classes = fetch_class_list(username)
     tasks = fetch_task_list(username)
     week_dates = fetch_curr_week()
