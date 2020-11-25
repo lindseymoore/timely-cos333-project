@@ -82,12 +82,14 @@ def update_task_details(task_details: dict):
     """Updates a task's details based on form input."""
     username = task_details['username']
     task_id = task_details['task_id']
+    iteration = task_details['iteration']
     print("task_id", task_id)
     task, task_iteration = db.session.query(Task, TaskIteration).filter( \
                 (Task.username == username) &
                 (Task.task_id == task_id)).join(TaskIteration, \
                 (TaskIteration.username == Task.username) & \
-                (TaskIteration.task_id == Task.task_id)).first()
+                (TaskIteration.task_id == Task.task_id) & \
+                (TaskIteration.iteration == iteration)).first()
 
     task.title = task_details['title']
 

@@ -103,8 +103,6 @@ def fetch_task_details(task_id: int, iteration: int, username: str):
                 "notes": task_iteration.notes, "est_time": task_iteration.est_time}
     if task_details_obj['est_time'] is None:
         task_details_obj['est_time'] = 0
-    # it doesnt know which iteration to get for the details, thus need iteration in the parameters
-    print("DETAILS", task_iteration.iteration)
 
     return task_details_obj
 
