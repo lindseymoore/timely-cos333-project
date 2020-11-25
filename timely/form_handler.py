@@ -96,8 +96,8 @@ def update_task_details(task_details: dict):
                 (TaskIteration.task_id == Task.task_id)).order_by(
                     desc(TaskIteration.iteration)).first()
 
-    print(task)
-    print(task_iteration)
+    # print(task)
+    # print(task_iteration)
     task.title = task_details['group_title']
 
     if task_details["repeat_freq"] != "None" and task_details["repeat_freq"] is not None:
