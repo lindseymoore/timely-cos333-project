@@ -16,7 +16,10 @@ aria-labelledby="taskDetailsModal" aria-hidden="true">
           <h4>Link: </h4> <p><a href="#">{{task_details["link"]}}</a></p>
           <h4>Estimated Time: </h4> <p>{{task_details["est_time"]}}</p>
           <h4>Notes: </h4> <p>{{task_details["notes"]}}</p>
-          <canvas id="time-graph" width="400" height="300"></canvas>
+          {% if task_details["repeating"] %}
+            <h4>Time Analytics: </h4>
+            <canvas id="time-graph" width="400" height="300"></canvas>
+          {% endif %}
         </div>
         {% include "components/edit-details.html" %}
       </div>
@@ -110,6 +113,9 @@ aria-labelledby="taskDetailsModal" aria-hidden="true">
               labelString: 'Time (hrs.)',
               fontSize: 15,
               fontColor: 'white'
+          },
+          gridLines: {
+            zeroLineColor: '#828282'
           }
       }],
       xAxes: [{
@@ -122,6 +128,9 @@ aria-labelledby="taskDetailsModal" aria-hidden="true">
               labelString: 'Iteration',
               fontSize: 15,
               fontColor: 'white'
+          },
+          gridLines: {
+            zeroLineColor: '#828282'
           }
       }]
     } ,

@@ -221,11 +221,11 @@ def task_details_modal_list():
     classes = fetch_class_list(username)
     tasks = fetch_task_list(username)
 
-    # For tasks that have iteratio time data
-    if task_details["repeating"] == True:
+    # For tasks that have iteration time data
+    if task_details["repeating"] is True:
         curr_iteration = task_details["iteration"]
+        print(curr_iteration)
         times = fetch_graph_times(task_id, curr_iteration, username)
-        legend = "Task Completion Time"
         labels = list(range(1, curr_iteration))
         actual_values = times["actual_times"]
         predicted_values = times["predicted_times"]
@@ -237,10 +237,9 @@ def task_details_modal_list():
                     task_details=task_details,
                     actual_values=actual_values,
                     predicted_values=predicted_values, 
-                    labels=labels, legend=legend)
-    
-    else:
-        return render_template("index.html",
+                    labels=labels)
+    print("HELLOWORLD")
+    return render_template("index.html",
                     class_list=classes,
                     task_list=tasks,
                     task_details=task_details)
@@ -267,6 +266,7 @@ def edit_task_details():
                 "est_time": None, "repeat_freq": None, "repeat_end": None, "due_time": None, 
                 "username": username}
 
+    print("EDIT DETAILS", request.args["iteration"])
     for key, item in request.args.items():
         task_details[key] = item
 
