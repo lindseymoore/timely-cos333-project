@@ -10,7 +10,7 @@ from timely.cas_client import CASClient
 from timely.db_queries import (delete_class, delete_task, fetch_class_details,
                                 fetch_class_list, fetch_task_details,
                                 fetch_task_list_view, fetch_task_calendar_view,
-                                fetch_task_list, fetch_user, mark_task_complete,
+                                fetch_user, mark_task_complete,
                                 fetch_curr_week, fetch_tasks_from_class,
                                 fetch_week)
 from timely.form_handler import (class_handler, create_new_group,
@@ -273,7 +273,7 @@ def class_details_modal():
     class_details = fetch_class_details(request.args["class_id"], username)
     print(class_details)
     classes = fetch_class_list(username)
-    tasks = fetch_task_list(username)
+    tasks = fetch_task_list_view(username)
     return render_template("index.html",
                 class_list=classes,
                 task_list=tasks,
