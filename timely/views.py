@@ -43,6 +43,11 @@ def index():
                 task_list=tasks,
                 user_info = user)
 
+@app.route("/landing")
+def landing():
+    """Return the landing page."""
+    return render_template("landing.html")
+
 @app.route("/calendar")
 def calendar():
     """Return the calendar page."""
