@@ -145,20 +145,18 @@ def fetch_week(week_dates: str, prev: bool):
     return week
 
 
-def mark_task_complete(task_id: int, username: str):
+def mark_task_complete(task_id: int, iteration: int, username: str):
     """Update the task given by task_id as complete in the db."""
     # pylint: disable=singleton-comparison
-    task, task_iteration = db.session.query(Task, TaskIteration).filter( \
-                (Task.username == username) &
-                (Task.task_id == task_id)).join(TaskIteration, \
-                (TaskIteration.username == Task.username) & \
-                (TaskIteration.task_id == Task.task_id) & \
-                (TaskIteration.completed == False)).first()
+    task_iteration = db.session.query(TaskIteration).filter( \
+                (TaskIteration.username == username) & \
+                (TaskIteration.task_id == task_id) & \
+                (TaskIteration.iteration == int(iteration))).first()
+   
     # pylint: enable=singleton-comparison
 
     task_iteration.completed = True
     db.session.commit()
-
 
 
 def get_class_id(class_title: str) -> int:
