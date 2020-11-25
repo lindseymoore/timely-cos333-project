@@ -13,12 +13,12 @@ from timely.db_queries import (delete_class, delete_task, fetch_class_details,
                                 fetch_user, mark_task_complete,
                                 fetch_curr_week, fetch_tasks_from_class,
                                 fetch_week)
-from timely.form_handler import (class_handler, create_new_group,
-                                insert_canvas_tasks,
-                                task_handler,
-                                update_class_details, update_task_details)
+
 from timely.models import User
-from timely.time_predict import update_completion_time, update_timely_pred
+# , update_class_details
+from timely.form_handler import (class_handler, create_new_group, insert_canvas_tasks, task_handler,
+                                update_task_details, update_class_details)
+from timely.time_predict import update_completion_time, update_timely_pred, fetch_graph_times
 
 # To run the application locally with CAS authentication, check out:
 # "https://stackoverflow.com/questions/50236117/"
@@ -42,6 +42,7 @@ def index():
                 class_list=classes,
                 task_list=tasks,
                 user_info = user)
+
 
 @app.route("/calendar")
 def calendar():
@@ -141,7 +142,9 @@ def completion_form():
     task_id = request.args["task_id"]
     iteration = request.args["iteration"]
     time = request.args["time"]
-    mark_task_complete(int(task_id), int(iteration), username)
+
+    mark_task_complete(int(task_id), username)
+
 
     update_completion_time(task_id, iteration, username, time)
     update_timely_pred(task_id, iteration, username)
@@ -164,7 +167,6 @@ def delete_class_endpoint():
 def delete_task_endpoint():
     """Delete the task given by the request argument task_id."""
     delete_task(request.args["task_id"])
-
     if request.path == "/calendar/delete_task":
         return redirect("/calendar")
     else:
@@ -211,23 +213,48 @@ def canvas_task():
     fetch_canvas_tasks("F2020", username)
     return redirect("/")
 
+
 @app.route("/task_details_list_view")
 def task_details_modal_list():
     """Show the task details modal."""
     username = CASClient().authenticate()
-    task_details = fetch_task_details(request.args["task_id"], username)
+    task_id = request.args["task_id"]
+    iteration = request.args["iteration"]
+    task_details = fetch_task_details(task_id, iteration, username)
+    print(task_details)
     classes = fetch_class_list(username)
     tasks = fetch_task_list_view(username)
+
+    # For tasks that have iteration time data
+    if task_details["repeating"] is True:
+        curr_iteration = task_details["iteration"]
+        print(curr_iteration)
+        times = fetch_graph_times(task_id, curr_iteration, username)
+        labels = list(range(1, curr_iteration))
+        actual_values = times["actual_times"]
+        predicted_values = times["predicted_times"]
+        print(labels)
+        print(times)
+        return render_template("index.html",
+                    class_list=classes,
+                    task_list=tasks,
+                    task_details=task_details,
+                    actual_values=actual_values,
+                    predicted_values=predicted_values, 
+                    labels=labels)
+    print("HELLOWORLD")
+
     return render_template("index.html",
-                class_list=classes,
-                task_list=tasks,
-                task_details=task_details)
+                    class_list=classes,
+                    task_list=tasks,
+                    task_details=task_details)
 
 @app.route("/task_details_calendar_view")
 def task_details_modal_calendar():
     """Show the task details modal."""
     username = CASClient().authenticate()
-    task_details = fetch_task_details(request.args["task_id"], username)
+    iteration = request.args["iteration"]
+    task_details = fetch_task_details(request.args["task_id"], iteration, username)
     classes = fetch_class_list(username)
     tasks = fetch_task_calendar_view(username)
     week_dates = fetch_curr_week()
@@ -240,7 +267,7 @@ def task_details_modal_calendar():
 @app.route("/edit_task_details")
 def edit_task_details():
     username = CASClient().authenticate()
-    task_details = {"title": None, "task_id": None, "class": None, "repeat": None,
+    task_details = {"title": None, "task_id": None, "class": None, "repeat": None, "iteration": None,
                 "priority": None, "link": None, "due_date": None, "notes": None, 
                 "est_time": None, "repeat_freq": None, "repeat_end": None, "due_time": None, 
                 "username": username}
@@ -249,6 +276,34 @@ def edit_task_details():
         task_details[key] = item
 
     update_task_details(task_details)
+   
+    return redirect("/")
+
+@app.route("/class_details")
+def class_details_modal():
+    """Show the class details modal."""
+    username = CASClient().authenticate()
+    class_details = fetch_class_details(request.args["class_id"], username)
+    print(class_details)
+    classes = fetch_class_list(username)
+    tasks = fetch_task_list_view(username)
+    return render_template("index.html",
+                class_list=classes,
+                task_list=tasks,
+                class_details=class_details)
+
+
+@app.route("/edit_class_details")
+def edit_class_details():
+    """Edit the class details modal."""
+    username = CASClient().authenticate()
+    class_details = {"title": None, "class_id": None, "dept": None, "num": None,
+                "color": None, "active_status": None, "username": username}
+
+    for key, item in request.args.items():
+        class_details[key] = item
+
+    update_class_details(class_details)
 
     return redirect("/")
 
