@@ -140,8 +140,8 @@ h1, h2, h3, h4, h5 {
 .week-day {
     width: calc(100%/7);
     border-style: solid;
-    border-width: 0px 3px 0px 0px;
-    border-color: #e5e5e5;
+    border-width: 0px 1px 0px 1px;
+    border-color: var(--dark-5);
 }
 .week-day:last-child {
     border-style: none;

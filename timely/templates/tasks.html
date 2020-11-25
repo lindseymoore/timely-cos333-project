@@ -1,4 +1,4 @@
-<div class="pill-row">
+<div class="pill-row small-pill">
     <div class="pill" style="border-left-color: var(--hl-{{task['color']}})">
       <div class="d-flex justify-content-between">
         <div class="pill-left">
@@ -6,7 +6,7 @@
             {{task["title"]}}
           </a>
         </div>
-        <div>
+        <div class="d-none d-sm-inline">
           {% if task["repeat"] %}
             <span class="fa fa-repeat mr-1"></span>
           {% endif %}
@@ -16,11 +16,11 @@
       <div class="d-flex justify-content-between">
         <div class="subtle pill-left">{{task["class"]}}</div>
         <div>
-          <i class="fa fa-check-square open-CompleteTask" data-toggle="modal"
+          <i class="fa fa-check-square open-CompleteTask d-none d-sm-inline" data-toggle="modal"
           data-target="#taskCompletionModal" data-id="{{task['task_id']}}" 
           data-iteration="{{task['iteration']}}">
           </i>
-          <i class="fa fa-trash ml-1 open-DeleteTask" data-toggle="modal"
+          <i class="fa fa-trash ml-1 open-DeleteTask d-none d-sm-inline" data-toggle="modal"
           data-target="#deleteTaskModal" data-id="{{task['task_id']}}">
           </i>
         </div>
