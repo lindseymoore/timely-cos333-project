@@ -405,3 +405,16 @@ def fetch_available_colors(username: str):
         all_colors.pop(all_colors.index(course.color))
 
     return all_colors
+
+
+def classes_from_canvas(username: str):
+    """Fetches all classes that a given user has imported from Canvas. Returns list of canvas_ids
+    of classes from Canvas."""
+    classes = db.session.query(Class).filter(Class.username == username).all()
+
+    canvas_ids = []
+    for course in classes:
+        canvas_ids.append(course.canvas_id)
+
+    return canvas_ids
+    
