@@ -122,3 +122,17 @@ def fetch_canvas_tasks(curr_semester: str, username: str):
     updated_tasks = sorted(updated_tasks, key = lambda task: task["due_date"], reverse=True)
     all_tasks = {"new": new_tasks, "updated": updated_tasks}
     return all_tasks
+
+
+def validate_api_key(api_key: str):
+    """Function to check whether or not a Canvas API key is valid. Returns True if api_key is valid,
+    False otherwise."""
+    canvas = Canvas(API_URL, api_key)
+    valid_key = True
+
+    try:
+        canvas.get_courses()[0]
+    except Exception:
+        valid_key = False
+
+    return valid_key

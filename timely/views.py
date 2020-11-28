@@ -5,7 +5,7 @@ import json
 from flask import redirect, render_template, request
 
 from timely import app, db
-from timely.canvas_handler import fetch_canvas_courses, fetch_canvas_tasks
+from timely.canvas_handler import fetch_canvas_courses, fetch_canvas_tasks, validate_api_key
 from timely.cas_client import CASClient
 from timely.db_queries import (delete_class, delete_task, fetch_class_details,
                                 fetch_class_list, fetch_task_details,
@@ -14,7 +14,7 @@ from timely.db_queries import (delete_class, delete_task, fetch_class_details,
                                 fetch_curr_week, fetch_tasks_from_class,
                                 fetch_week)
 
-from timely.models import User
+from timely.models import User, Task
 # , update_class_details
 from timely.form_handler import (class_handler, create_new_group, insert_canvas_tasks, task_handler,
                                 update_task_details, update_class_details)
@@ -35,6 +35,7 @@ def index():
     else:
         sort = "due_date"
 
+    #print(db.session.query(Task).all())
     classes = fetch_class_list(username)
     tasks = fetch_task_list_view(username, sort)
     user = fetch_user(username)
@@ -187,10 +188,18 @@ def canvas_key():
     """
     username = CASClient().authenticate()
     api_key = request.args["api_key"]
-    new_user = User(username = username, api_key = api_key)
-    db.session.add(new_user)
-    db.session.commit()
-    return redirect("/")
+    is_valid_key = validate_api_key(api_key)
+
+    if is_valid_key:
+        new_user = User(username = username, api_key = api_key)
+        db.session.add(new_user)
+        db.session.commit()
+
+        return redirect("/")
+    else:
+        # TODO Create custom error page with custom error message: invalid Canvas API key, make sure
+        # to follow instructions carefully and copy-paste your key precisely.
+        return redirect("/")
 
 
 @app.route("/canvas_class")
