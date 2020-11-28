@@ -60,6 +60,9 @@ aria-labelledby="groupTasksModal" aria-hidden="true">
         $("#btn-groupTasks").addClass("d-none");
         $("#task-selection").addClass("d-none");
         $("#title-selection").removeClass("d-none");
+        // Create array of all selected tasks
+        // Find task with maximum number of iterations
+        // Prepopulate text field with group title of task with most iterations
       });
 
       $('#groupTasksModal').on('shown.bs.modal', function (e) {
@@ -101,6 +104,7 @@ aria-labelledby="groupTasksModal" aria-hidden="true">
 
           // Add Tasks to DOM
           $.each(data, function(count, task) {
+            let repeating = task["repeat"]
             $("#group-list").append(
               `<div class="pill-row">
                 <div class="form-check d-flex align-items-center">
@@ -110,7 +114,7 @@ aria-labelledby="groupTasksModal" aria-hidden="true">
                 <label for="task${count}" class="pill mr-3" style="border-left-color: var(--hl-${task["color"]})">
                   <div class="d-flex justify-content-between">
                     <div class="pill-left">
-                      ${task["iteration_title"]}
+                      ${task["title"]}
                     </div>
                     <div>
                       ${task["due_date"]}

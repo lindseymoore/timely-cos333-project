@@ -300,4 +300,5 @@ def get_tasks():
     username = CASClient().authenticate()
     class_id = request.args["class_id"]
     tasks = fetch_tasks_from_class(class_id, username)
+    #print(tasks)
     return json.dumps(tasks, default=str)

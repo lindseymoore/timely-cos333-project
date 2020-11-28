@@ -338,6 +338,7 @@ def fetch_tasks_from_class(class_id: int, username: str):
     for task_id in task_ids:
         num_iterations = db.session.query(TaskIteration).filter(
             (TaskIteration.username == username) & (TaskIteration.task_id == task_id)).count()
+        list(filter(lambda task: task["task_id"] == task_id, task_groups))[0]["num_iterations"] = num_iterations
 
         if num_iterations == 1:
             iteration = db.session.query(TaskIteration).filter(
