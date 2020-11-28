@@ -201,6 +201,7 @@ def insert_canvas_tasks(task_list: list, username: str):
             task_iteration.due_date = datetime.strptime(task["due_date"], '%Y-%m-%d')
             task_iteration.canvas_id = task["canvas_task_id"]
             task_iteration.completed = task["completed"]
+            task_iteration.priority = task["priority"]
 
             db.session.add(task_iteration)
             db.session.commit()

@@ -112,8 +112,8 @@ def fetch_canvas_tasks(curr_semester: str, username: str):
                 # it's new
                 task_in_db = canvas_task_in_db(canvas_task_id, username)
                 if task_in_db[0] is False:
+                    task_info["priority"] = 1 # set priority to 1 by default for new Canvas tasks
                     new_tasks.append(task_info)
-                    #print('New task added.')
                 else:
                     current_task = task_in_db[1]
                     if current_task["due_date"] != due_date.date() \
