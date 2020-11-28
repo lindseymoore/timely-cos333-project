@@ -16,24 +16,28 @@ aria-labelledby="groupTasksModal" aria-hidden="true">
           <h5>Select a Class</h5>
           <div class="pill-box"></div>
           <div id="class-loading-message">Loading Classes...</div>
-          <div class="modal-footer justify-content-center">
-            <button type="button" class="btn btn-secondary ml-3" data-dismiss="modal">Cancel</button>
-          </div>
         </div>
-        <div id="task-selection" class="d-none">
-          <form action="/group_task" method="post">
+        <form action="/group_task" method="post">
+          <div id="task-selection" class="d-none">
             <div id="group">
               <h5>Tasks to Group</h5>
               <div class="pill-box" id="group-list"></div>
               <div class="d-flex justify-content-center show-more-div"></div>
             </div>
             <div id="task-loading-message">Loading tasks...</div>
-            <div class="modal-footer justify-content-center">
-              <button type="submit" id="btn-groupTasks" class="btn btn-primary">Group</button>
-              <button type="button" class="btn btn-secondary ml-3" data-dismiss="modal">Cancel</button>
+          </div>
+          <div id="title-selection" class="d-none">
+            <div class="form-group">
+              <label for="group_title">New Group Title</label>
+              <input type="text" class="form-control" name="group_title" id="group-title">
             </div>
-          </form>
-        </div>
+          </div>
+          <div class="modal-footer justify-content-center">
+            <button type="button" id="btn-selectTasks" class="btn btn-primary d-none">Select</button>
+            <button type="submit" id="btn-groupTasks" class="btn btn-primary d-none">Group</button>
+            <button type="button" class="btn btn-secondary ml-3" data-dismiss="modal">Cancel</button>
+          </div>
+        </form>
       </div>
     </div>
   </div>
@@ -44,6 +48,18 @@ aria-labelledby="groupTasksModal" aria-hidden="true">
         $("#class-selection .pill-box").empty();
         $("#class-selection").show();
         $("#task-selection").addClass("d-none");
+        $("#title-selection").addClass("d-none");
+        $("#btn-selectTasks").addClass("d-none");
+        $("#task-loading-message").show();
+        $("#class-loading-message").show();
+      });
+
+      // Select tasks button action
+      $("#btn-selectTasks").on("click", function() {
+        $("#btn-groupTasks").removeClass("d-none");
+        $("#btn-groupTasks").addClass("d-none");
+        $("#task-selection").addClass("d-none");
+        $("#title-selection").removeClass("d-none");
       });
 
       $('#groupTasksModal').on('shown.bs.modal', function (e) {
@@ -73,6 +89,7 @@ aria-labelledby="groupTasksModal" aria-hidden="true">
       function showTasks(id) {
         $("#class-selection").hide();
         $("#task-selection").removeClass("d-none");
+        $("#btn-selectTasks").removeClass("d-none");
         
         $.getJSON({url: `/get_tasks?class_id=${id}`, success: function(data) {
           // Hide Loading Message
