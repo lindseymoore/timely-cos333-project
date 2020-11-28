@@ -143,8 +143,7 @@ def completion_form():
     iteration = request.args["iteration"]
     time = request.args["time"]
 
-    mark_task_complete(int(task_id), username)
-
+    mark_task_complete(int(task_id), int(iteration), username)
 
     update_completion_time(task_id, iteration, username, time)
     update_timely_pred(task_id, iteration, username)
