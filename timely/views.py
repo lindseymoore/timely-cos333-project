@@ -10,7 +10,7 @@ from timely.cas_client import CASClient
 from timely.db_queries import (delete_class, delete_task, fetch_class_details,
                                 fetch_class_list, fetch_task_details,
                                 fetch_task_list_view, fetch_task_calendar_view,
-                                fetch_user, mark_task_complete,
+                                fetch_user, mark_task_complete, uncomplete_task,
                                 fetch_curr_week, fetch_tasks_from_class,
                                 fetch_week)
 
@@ -153,6 +153,27 @@ def completion_form():
     else:
         return redirect("/")
 
+@app.route("/calendar/uncomplete")
+@app.route("/uncomplete")
+def uncomplete():
+    """
+    Retrieve the status of tasks that are marked complete
+    and update the database completed column.
+    """
+    username = CASClient().authenticate()
+    task_id = request.args["task_id"]
+    iteration = request.args["iteration"]
+    time = None
+
+    uncomplete_task(int(task_id), int(iteration), username)
+
+    update_completion_time(task_id, iteration, username, time)
+    update_timely_pred(task_id, iteration, username)
+    
+    if request.path == "/calendar/uncomplete":
+        return redirect("/calendar")
+    else:
+        return redirect("/")
 
 @app.route("/delete_class")
 def delete_class_endpoint():

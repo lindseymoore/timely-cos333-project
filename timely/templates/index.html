@@ -134,6 +134,9 @@
                   <div class="d-flex justify-content-between">
                     <div class="pill-left">
                       <del>{{task["title"]}}</del>
+                      <a href="/uncomplete?task_id={{task['task_id']}}&iteration={{task['iteration']}}">
+                        <i class="fa fa-check-square"></i>
+                      </a>
                       <i class="fa fa-trash ml-1 open-DeleteTask" data-toggle="modal"
                           data-target="#deleteTaskModal" data-id="{{task['task_id']}}">
                       </i>
