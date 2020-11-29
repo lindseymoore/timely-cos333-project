@@ -13,7 +13,16 @@
       <label for="priority">Priority</label>
       <select class="form-control" name="priority" id="edit_priority">
         <option value="{{task_details['priority']}}">
-          Current: {{task_details['priority']}}
+          Current: 
+            {%if task_details["priority"] == 0%}
+              Low
+            {%endif%}
+            {%if task_details["priority"] == 1%}
+              Medium
+            {%endif%}
+            {%if task_details["priority"] == 2%}
+              High
+            {%endif%}
         </option>
         <option value=0>
           Low
