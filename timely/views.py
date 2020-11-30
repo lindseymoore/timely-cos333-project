@@ -216,20 +216,21 @@ def canvas_task():
 @app.route("/task_details_calendar_view")
 @app.route("/task_details_list_view")
 def task_details_modal():
-    """Show the task details modal."""
-    if request.path == "/task_details_calendar_view":
-        template = "calendar.html"
-    else:
-        template = "index.html"
-    
+    """Show the task details modal."""    
     username = CASClient().authenticate()
     task_id = request.args["task_id"]
     iteration = request.args["iteration"]
     task_details = fetch_task_details(task_id, iteration, username)
     print(task_details)
     classes = fetch_class_list(username)
-    tasks = fetch_task_list_view(username)
     week_dates = fetch_curr_week()
+
+    if request.path == "/task_details_calendar_view":
+        template = "calendar.html"
+        tasks = fetch_task_calendar_view(username)
+    else:
+        template = "index.html"
+        tasks = fetch_task_list_view(username)
 
     # For tasks that have iteration time data
     if task_details["repeating"] is True:
@@ -256,7 +257,7 @@ def task_details_modal():
                 task_list=tasks,
                 task_details=task_details,
                 week_dates=week_dates)
-                
+
 
 @app.route("/edit_task_details")
 def edit_task_details():
