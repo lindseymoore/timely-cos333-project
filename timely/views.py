@@ -213,9 +213,15 @@ def canvas_task():
     return redirect("/")
 
 
+@app.route("/task_details_calendar_view")
 @app.route("/task_details_list_view")
-def task_details_modal_list():
+def task_details_modal():
     """Show the task details modal."""
+    if request.path == "/task_details_calendar_view":
+        template = "calendar.html"
+    else:
+        template = "index.html"
+    
     username = CASClient().authenticate()
     task_id = request.args["task_id"]
     iteration = request.args["iteration"]
@@ -223,6 +229,7 @@ def task_details_modal_list():
     print(task_details)
     classes = fetch_class_list(username)
     tasks = fetch_task_list_view(username)
+    week_dates = fetch_curr_week()
 
     # For tasks that have iteration time data
     if task_details["repeating"] is True:
@@ -234,33 +241,22 @@ def task_details_modal_list():
         predicted_values = times["predicted_times"]
         print(labels)
         print(times)
-        return render_template("index.html",
-                    class_list=classes,
-                    task_list=tasks,
-                    task_details=task_details,
-                    actual_values=actual_values,
-                    predicted_values=predicted_values, 
-                    labels=labels)
+        
+        return render_template(template,
+                class_list=classes,
+                task_list=tasks,
+                task_details=task_details,
+                week_dates=week_dates,
+                actual_values=actual_values,
+                predicted_values=predicted_values, 
+                labels=labels)
 
-    return render_template("index.html",
-                    class_list=classes,
-                    task_list=tasks,
-                    task_details=task_details)
-
-@app.route("/task_details_calendar_view")
-def task_details_modal_calendar():
-    """Show the task details modal."""
-    username = CASClient().authenticate()
-    iteration = request.args["iteration"]
-    task_details = fetch_task_details(request.args["task_id"], iteration, username)
-    classes = fetch_class_list(username)
-    tasks = fetch_task_calendar_view(username)
-    week_dates = fetch_curr_week()
-    return render_template("calendar.html",
+    return render_template(template,
                 class_list=classes,
                 task_list=tasks,
                 task_details=task_details,
                 week_dates=week_dates)
+                
 
 @app.route("/edit_task_details")
 def edit_task_details():
