@@ -79,8 +79,8 @@ def create_all_iterations(task, iteration: int, due_date, details: dict):
         increment = fetch_increment(task.repeat_freq)
         end_date = task.repeat_end
     elif task.repeat_end is None:
+        increment = timedelta(days=1)
         end_date = due_date
-        end_date = datetime.strptime(end_date, '%Y-%m-%d').date()
 
     # Creates the next iteration of a task upon completion if the repeat end is not specified
     # or next due date is before the repeat end date
