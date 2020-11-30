@@ -33,7 +33,7 @@ aria-labelledby="groupTasksModal" aria-hidden="true">
             </div>
           </div>
           <div class="modal-footer justify-content-center">
-            <button type="button" id="btn-selectTasks" class="btn btn-primary d-none">Select</button>
+            <button type="button" id="btn-selectTasks" class="btn btn-primary d-none" disabled>Select</button>
             <button type="submit" id="btn-groupTasks" class="btn btn-primary d-none">Group</button>
             <button type="button" class="btn btn-secondary ml-3" data-dismiss="modal">Cancel</button>
           </div>
@@ -57,12 +57,15 @@ aria-labelledby="groupTasksModal" aria-hidden="true">
       // Select tasks button action
       $("#btn-selectTasks").on("click", function() {
         $("#btn-groupTasks").removeClass("d-none");
-        $("#btn-groupTasks").addClass("d-none");
+        $("#btn-selectTasks").addClass("d-none");
         $("#task-selection").addClass("d-none");
         $("#title-selection").removeClass("d-none");
-        // Create array of all selected tasks
-        // Find task with maximum number of iterations
-        // Prepopulate text field with group title of task with most iterations
+        let iterationCounts = [];
+        $(".pill-check:checkbox:checked").each(function () {
+          iterationCounts.push({title: $(this).data("title"), count: $(this).data("count")});
+        });
+        iterationCounts.sort((a, b) => b.count - a.count);
+        $("#group-title").attr("value", iterationCounts[0].title);
       });
 
       $('#groupTasksModal').on('shown.bs.modal', function (e) {
@@ -88,7 +91,7 @@ aria-labelledby="groupTasksModal" aria-hidden="true">
           });
         }});
       });
-      
+
       function showTasks(id) {
         $("#class-selection").hide();
         $("#task-selection").removeClass("d-none");
@@ -125,6 +128,8 @@ aria-labelledby="groupTasksModal" aria-hidden="true">
               </div>`
             );
             $(`#task${count}`).attr("value", task["task_id"]); 
+            $(`#task${count}`).data("num_iterations", task["num_iterations"]);
+            $(`#task${count}`).data("title", task["title"]); 
           });
 
           // Hide all tasks except the first 10
@@ -142,6 +147,13 @@ aria-labelledby="groupTasksModal" aria-hidden="true">
               }
             });
           }
+
+          // Disable select button if no tasks selected
+          let checkBoxes = $('.pill-check');
+          checkBoxes.change(function () {
+              $('#btn-selectTasks').prop('disabled', checkBoxes.filter(':checked').length < 1);
+          });
+          checkBoxes.change();
         }});
       }
     });
