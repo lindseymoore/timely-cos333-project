@@ -59,31 +59,32 @@ def task_handler(details: dict):
     due_date = datetime.strptime(details["due_date"], '%Y-%m-%d').date()
     create_all_iterations(task, iteration, due_date, details)
 
+def fetch_increment(frequency: str):
+    """Determine increment for a date object according to the repeat frequency"""
+    if frequency == "daily":
+        increment = timedelta(days=1)
+    elif frequency == "weekly":
+        increment = timedelta(days=7)
+    elif frequency == "biweekly":
+        increment = timedelta(days=14)
+    elif frequency == "monthly":
+        increment = timedelta(weeks=4)
+    
+    return increment
+
 def create_all_iterations(task, iteration: int, due_date, details: dict):
     """Creates all iterations of a given repeating task."""
     # Create new task iteration if it is a repeating task
     if task.repeat:
-        freq = task.repeat_freq
-
-        # Increment date object according to the repeat frequency        
-        if freq == "daily":
-            increment = timedelta(days=1)
-        elif freq == "weekly":
-            increment = timedelta(days=7)
-        elif freq == "biweekly":
-            increment = timedelta(days=14)
-        elif freq == "monthly":
-            increment = timedelta(weeks=4)
-        
+        increment = fetch_increment(task.repeat_freq)
         end_date = task.repeat_end
     elif task.repeat_end is None:
-        end_date = due_date #details["due_date"]
+        end_date = due_date
         end_date = datetime.strptime(end_date, '%Y-%m-%d').date()
 
     # Creates the next iteration of a task upon completion if the repeat end is not specified
     # or next due date is before the repeat end date
-    #due_date = details["due_date"]
-    new_date = due_date #datetime.strptime(due_date, '%Y-%m-%d').date() #FIXXXX
+    new_date = due_date
 
     print(new_date, end_date)
     while (new_date <= end_date):
@@ -130,16 +131,7 @@ def update_task_details(task_details: dict):
         task.repeat = True
         if task.repeat_freq != task_details["repeat_freq"]:
             task.repeat_freq = task_details["repeat_freq"]
-            freq = task.repeat_freq
-            if freq == "daily":
-                increment = timedelta(days=1)
-            elif freq == "weekly":
-                increment = timedelta(days=7)
-            elif freq == "biweekly":
-                increment = timedelta(days=14)
-            elif freq == "monthly":
-                increment = timedelta(weeks=4)
-
+            increment = fetch_increment(task.repeat_freq)
             update_repeat_freq(task, task_id, increment, int(iteration), task_details)
         
         if task_details["repeat_end"] != "None":
@@ -169,11 +161,11 @@ def update_task_details(task_details: dict):
 def update_repeat_freq(task, task_id, increment, iteration: int, task_details: dict):
     """Updates the repeat frequency of a given task by deleting all subsequent iterations 
     and creating new iterations."""
-    next_iteration =  db.session.query(TaskIteration).filter((TaskIteration.task_id == task_id) & \
+    curr_iteration =  db.session.query(TaskIteration).filter((TaskIteration.task_id == task_id) & \
         (TaskIteration.iteration == int(iteration)) & \
         (TaskIteration.completed == False)).first()
 
-    curr_due_date = next_iteration.due_date
+    curr_due_date = curr_iteration.due_date
     curr_due_date += increment
 
     # Delete all subseqeunt tasks upon editing task repeat freq

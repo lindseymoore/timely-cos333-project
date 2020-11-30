@@ -241,7 +241,6 @@ def task_details_modal_list():
                     actual_values=actual_values,
                     predicted_values=predicted_values, 
                     labels=labels)
-    print("HELLOWORLD")
 
     return render_template("index.html",
                     class_list=classes,
