@@ -19,7 +19,7 @@ aria-labelledby="taskDetailsModal" aria-hidden="true">
           <h4>Due Date: </h4> <p>{{task_details["due_date"]}}</p>
           <h4>Priority: </h4> <p>{{task_details["priority"]}}</p>
           <h4>Link: </h4> <p><a href="#">{{task_details["link"]}}</a></p>
-          <h4>Estimated Time: </h4> <p>{{task_details["est_time"]}}</p>
+          <h4>Estimated Time: </h4> <p>{{task_details["est_time"]}} h</p>
           <h4>Notes: </h4> <p>{{task_details["notes"]}}</p>
           {% if task_details["repeating"] %}
             <h4>Time Analytics: </h4>
