@@ -185,32 +185,58 @@ def insert_canvas_tasks(task_list: list, username: str):
             db.session.commit()
 
 
-def create_new_group(task_ids: list, username: str):
+def create_new_group(task_ids: list, group_title: str, username: str):
     """Function to create new repeating task group based on task grouping modal."""
-    task_group = {}
+    group_task_id = task_ids[0]
     for task_id in task_ids:
-        task_group[task_id] = fetch_task_due_date(task_id, username)
-    task_group = sorted(task_group, key = task_group.get)
-    group_task_id = task_group[0]
-    task = db.session.query(Task).filter((Task.username == username) & 
-        (Task.task_id == group_task_id))
+        try:
+            group_task_id = get_task_id(group_title, task_id)
+        except Exception:
+            continue
+
+    # task_group = {}
+    # for task_id in task_ids:
+    #     task_group[task_id] = fetch_task_due_date(task_id, username)
+    # task_group = sorted(task_group, key = task_group.get)
+    # group_task_id = task_group[0]
+    task = db.session.query(Task).filter((Task.username == username) &
+        (Task.task_id == group_task_id)).first()
 
     # Make first iteration of task repeating
-    task.repeating = True
+    task.repeat = True
+    task.title = group_title
+
+    #print(task.repeating)
+    #print(task.title)
     db.session.commit()
 
     # Update next iterations of task to be repeating tasks of first iteration. Delete their entries
     # in the Task table.
-    for iteration, old_task_id in enumerate(task_group[1:]):
-        # Update task_id and iteration of next task_iteration in the group
+
+    task_ids.pop(task_ids.index(group_task_id))
+    for old_task_id in task_ids:
         task_iteration = db.session.query(TaskIteration).filter((TaskIteration.username == username)
             & (TaskIteration.task_id == old_task_id)).first()
-      
+        
+        task_iteration.iteration = get_next_task_iteration(group_task_id)
         task_iteration.task_id = group_task_id
-        task_iteration.iteration = iteration + 2
+        #print(task_iteration)
 
         db.session.commit()
 
-        # Delete entry in Task table from database - unnecessary because it's now repeating
         db.session.query(Task).filter(Task.task_id == old_task_id).delete()
         db.session.commit()
+
+    # for iteration, old_task_id in enumerate(task_group[1:]):
+    #     # Update task_id and iteration of next task_iteration in the group
+    #     task_iteration = db.session.query(TaskIteration).filter((TaskIteration.username == username)
+    #         & (TaskIteration.task_id == old_task_id)).first()
+     
+    #     task_iteration.task_id = group_task_id
+    #     task_iteration.iteration = iteration + 2
+
+    #     db.session.commit()
+
+    #     # Delete entry in Task table from database - unnecessary because it's now repeating
+    #     db.session.query(Task).filter(Task.task_id == old_task_id).delete()
+    #     db.session.commit()

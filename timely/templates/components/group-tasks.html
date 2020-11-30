@@ -64,7 +64,7 @@ aria-labelledby="groupTasksModal" aria-hidden="true">
         $(".pill-check:checkbox:checked").each(function () {
           iterationCounts.push({title: $(this).data("title"), count: $(this).data("count")});
         });
-        iterationCounts.sort((a, b) => b.count - a.count);
+        iterationCounts.sort((a, b) => (b.count > a.count));
         $("#group-title").attr("value", iterationCounts[0].title);
       });
 
@@ -106,6 +106,9 @@ aria-labelledby="groupTasksModal" aria-hidden="true">
           }
 
           // Add Tasks to DOM
+          // If title is none, show iteration_title
+          // If due_date is none, either leave blank or state "Group"
+          // Isn't properly fetching task with most iterations
           $.each(data, function(count, task) {
             let repeating = task["repeat"]
             $("#group-list").append(

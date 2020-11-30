@@ -34,6 +34,7 @@ def index():
 
     classes = fetch_class_list(username)
     tasks = fetch_task_list(username, sort)
+    #print(tasks)
     user = fetch_user(username)
     return render_template("index.html",
                 class_list=classes,
@@ -98,12 +99,14 @@ def task_form():
     Entries being inserted into tables: task, task_details, task_time, repeating_task.
     """
     username = CASClient().authenticate()
-    details = {'task_title': None, 'group_title': None, 'class_id': None, 'dept' : None, 'num': None,
+    details = {'task_title': None, 'class_id': None, 'dept' : None, 'num': None,
     'priority': None, 'est_time': None, 'link': None, 'notes': None, 'due_date': None,
     'due_time': None, 'repeat_freq': None, 'repeat_end': None, 'username': username}
 
     for key, item in request.args.items():
         details[key] = item
+
+    details['group_title'] = details['task_title']
 
     task_handler(details)
 
@@ -283,11 +286,17 @@ def group_tasks():
     """Groups tasks into repeating tasks based on users selection in task grouping modal."""
     username = CASClient().authenticate()
     task_ids = []
-    for task_id in request.form.values():
-        task_ids.append(task_id)
+    group_title = ""
+
+    for value in request.form.values():
+        try:
+            task_id = int(value)
+            task_ids.append(task_id)
+        except ValueError:
+            group_title = value
 
     #print("TASK_IDS", task_ids)
-    create_new_group(task_ids, username)
+    create_new_group(task_ids, group_title, username)
     return redirect("/")
    
 
@@ -300,5 +309,13 @@ def get_tasks():
     username = CASClient().authenticate()
     class_id = request.args["class_id"]
     tasks = fetch_tasks_from_class(class_id, username)
-    #print(tasks)
+    
+    # Set null due_dates to 'Group' to avoid showing null due dates on modal
+    for task in tasks:
+        if task["due_date"] is None:
+            task["due_date"] = "Group"
+        if task["title"] is None or task["title"] == "":
+            task["title"] = task["iteration_title"]
+
+    print(tasks)
     return json.dumps(tasks, default=str)

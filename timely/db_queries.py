@@ -338,6 +338,12 @@ def fetch_tasks_from_class(class_id: int, username: str):
     for task_id in task_ids:
         num_iterations = db.session.query(TaskIteration).filter(
             (TaskIteration.username == username) & (TaskIteration.task_id == task_id)).count()
+        if num_iterations == 0:
+            # Based on bug where ghost tasks are appearing - remove task if there are no iterations
+            task_ids.pop(task_ids.index(task_id))
+            task_groups.pop(next((index for (index, d) in enumerate(task_groups) if d['task_id'] == task_id), None))
+            continue
+
         list(filter(lambda task: task["task_id"] == task_id, task_groups))[0]["num_iterations"] = num_iterations
 
         if num_iterations == 1:
@@ -351,6 +357,7 @@ def fetch_tasks_from_class(class_id: int, username: str):
             list(filter(lambda task: task["task_id"] == task_id, task_groups))[0]["due_date"] = due_date
             list(filter(lambda task: task["task_id"] == task_id, task_groups))[0]["iteration_title"] = iteration_title
 
+    #print(task_groups)
     return task_groups
 
 
