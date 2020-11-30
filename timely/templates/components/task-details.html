@@ -29,7 +29,13 @@ aria-labelledby="taskDetailsModal" aria-hidden="true">
               High
             {%endif%}
           </p>
-          <h4>Link: </h4> <p><a href="#">{{task_details["link"]}}</a></p>
+          {# Fixes links without protocol by making them absolute. #}
+          {% if "http" in task_details['link'] %}
+            {% set link = task_details['link'] %}
+          {% else %}
+            {% set link = "//" + task_details['link'] %}
+          {% endif %}
+          <h4>Link: </h4> <p><a target="_blank" href="{{link}}">{{task_details["link"]}}</a></p>
           <h4>Estimated Time: </h4> <p>{{task_details["est_time"]}}</p>
           <h4>Notes: </h4> <p>{{task_details["notes"]}}</p>
           {% if task_details["repeating"] %}
