@@ -168,7 +168,8 @@ def uncomplete():
     uncomplete_task(int(task_id), int(iteration), username)
 
     update_completion_time(task_id, iteration, username, time)
-    update_timely_pred(task_id, iteration, username)
+    if int(iteration) > 1:
+        update_timely_pred(task_id, iteration, username)
     
     if request.path == "/calendar/uncomplete":
         return redirect("/calendar")
