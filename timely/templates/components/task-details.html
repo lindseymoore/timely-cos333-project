@@ -17,7 +17,18 @@ aria-labelledby="taskDetailsModal" aria-hidden="true">
           <h4>Class: </h4> <p>{{task_details["class"]}}</p>
           <h4>Repeating: </h4> <p>{{task_details["repeating"]}}</p>
           <h4>Due Date: </h4> <p>{{task_details["due_date"]}}</p>
-          <h4>Priority: </h4> <p>{{task_details["priority"]}}</p>
+          <h4>Priority: </h4>
+          <p>
+            {%if task_details["priority"] == 0%}
+              Low
+            {%endif%}
+            {%if task_details["priority"] == 1%}
+              Medium
+            {%endif%}
+            {%if task_details["priority"] == 2%}
+              High
+            {%endif%}
+          </p>
           {# Fixes links without protocol by making them absolute. #}
           {% if "http" in task_details['link'] %}
             {% set link = task_details['link'] %}
