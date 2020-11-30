@@ -162,8 +162,15 @@ def mark_task_complete(task_id: int, username: str):
     task_iteration.completed = True
     db.session.commit()
 
-    # Create new task iteration if it is a repeating task (and is not from Canvas)
-    if task.repeat and task_iteration.canvas_id is None:
+    task_from_canvas = False
+    all_iterations = db.session.query(TaskIteration).filter((TaskIteration.username == username) &
+        (TaskIteration.task_id == task_id)).all()
+    for iteration in all_iterations:
+        if iteration.canvas_id is not None:
+            task_from_canvas = True
+
+    # Create new task iteration if it is a repeating task (and none of its iterations are from Canvas)
+    if task.repeat and task_from_canvas is False:
         old_date = task_iteration.due_date
         freq = task.repeat_freq
 

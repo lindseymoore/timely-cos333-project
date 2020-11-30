@@ -47,8 +47,9 @@ def find_avg_prediction(iteration_times: List[dict]) -> float:
 
     for iteration in iteration_times:
         if iteration["completed"]:
-            total_time += iteration["actual_time"]
-            num_completed += 1
+            if iteration["actual_time"] is not None:
+                total_time += iteration["actual_time"]
+                num_completed += 1
 
     if num_completed == 0:
         return iteration_times[0]["est_time"]

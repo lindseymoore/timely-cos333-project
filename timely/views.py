@@ -218,6 +218,7 @@ def task_details_modal_list():
     task_details = fetch_task_details(request.args["task_id"], username)
     classes = fetch_class_list(username)
     tasks = fetch_task_list(username)
+    #print(tasks)
     return render_template("index.html",
                 class_list=classes,
                 task_list=tasks,
