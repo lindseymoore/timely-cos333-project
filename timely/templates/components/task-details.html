@@ -16,7 +16,14 @@ aria-labelledby="taskDetailsModal" aria-hidden="true">
       <div class="modal-body">
         <div id="display-details">
           <h4>Class: </h4> <p>{{task_details["class"]}}</p>
-          <h4>Repeating: </h4> <p>{{task_details["repeating"]}}</p>
+          <h4>Repeating: </h4> 
+          <p>
+            {% if task_details["repeating"] %}
+              Yes
+            {% else %}
+              No
+            {% endif %}
+          </p>
           {% if task_details["repeating"] %}
             <h4>Group: </h4> <p>{{task_details["group_title"]}}</p>
           {% endif %}
