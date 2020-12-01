@@ -4,7 +4,8 @@ aria-labelledby="taskDetailsModal" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h3 class="modal-title">{{task_details["title"]}}</h3>
+        <!-- Maybe an error here -->
+        <h3 class="modal-title">{{task_details["iteration_title"]}}</h3>
         <div>
           <i class="fa fa-edit ml-2" id="edit"></i>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -16,9 +17,29 @@ aria-labelledby="taskDetailsModal" aria-hidden="true">
         <div id="display-details">
           <h4>Class: </h4> <p>{{task_details["class"]}}</p>
           <h4>Repeating: </h4> <p>{{task_details["repeating"]}}</p>
+          {% if task_details["repeating"] %}
+            <h4>Group: </h4> <p>{{task_details["group_title"]}}</p>
+          {% endif %}
           <h4>Due Date: </h4> <p>{{task_details["due_date"]}}</p>
-          <h4>Priority: </h4> <p>{{task_details["priority"]}}</p>
-          <h4>Link: </h4> <p><a href="#">{{task_details["link"]}}</a></p>
+          <h4>Priority: </h4>
+          <p>
+            {%if task_details["priority"] == 0%}
+              Low
+            {%endif%}
+            {%if task_details["priority"] == 1%}
+              Medium
+            {%endif%}
+            {%if task_details["priority"] == 2%}
+              High
+            {%endif%}
+          </p>
+          {# Fixes links without protocol by making them absolute. #}
+          {% if "http" in task_details['link'] %}
+            {% set link = task_details['link'] %}
+          {% else %}
+            {% set link = "//" + task_details['link'] %}
+          {% endif %}
+          <h4>Link: </h4> <p><a target="_blank" href="{{link}}">{{task_details["link"]}}</a></p>
           <h4>Estimated Time: </h4> <p>{{task_details["est_time"]}} h</p>
           <h4>Notes: </h4> <p>{{task_details["notes"]}}</p>
           {% if task_details["repeating"] %}
