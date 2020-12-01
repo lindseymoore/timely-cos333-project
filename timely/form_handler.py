@@ -87,14 +87,12 @@ def create_all_iterations(task, iteration: int, due_date, details: dict):
     elif task.repeat_end is None:
         increment = timedelta(days=1)
         end_date = due_date
-    print("INITIAL ITERATION", iteration)
     # Creates the next iteration of a task upon completion if the repeat end is not specified
     # or next due date is before the repeat end date
     new_date = due_date
 
     print(new_date, end_date)
     while (new_date <= end_date):
-        print("ITERATION", iteration)
         task_iteration = TaskIteration()
         # Insert into TaskIteration table
         task_iteration.username = details["username"]
