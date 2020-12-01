@@ -102,6 +102,8 @@ def fetch_task_list_view(username: str, sort: str = "due_date") -> List[dict]:
         task_list = sorted(task_list, key = lambda task: task["priority"], reverse=True)
     if sort == "class":
         task_list = sorted(task_list, key = lambda task: task["class"], reverse=True)
+    if sort == "title":
+        task_list = sorted(task_list, key = lambda task: task["iteration_title"], reverse=False)
 
     return task_list
 
