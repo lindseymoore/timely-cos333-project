@@ -1,29 +1,15 @@
 {% extends "base.html" %}
 
 {% block content %}
+<div style="position: absolute; width: 100vw; height: 100px; background: var(--hl-purple)"></div>
   <div class="container-fluid full-height pb-5 px-0" style="max-width: 900px;">
-    <nav class="navbar navbar-expand-md navbar-dark bg-none">
-      <a class="navbar-brand" href="#" id="logo">Timely</a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-    
-      <div class="collapse navbar-collapse" id="navbar">
-        <ul class="navbar-nav ml-auto align-items-center text-center">
-          <li class="nav-item">
-            <a class="nav-link" href="/feedback">Feedback</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/about">About</a>
-          </li>
-        </ul>
-      </div>
-    </nav>
+    {% include "components/navbar-public.html" %}
+    <br>
 
     <!-- TODO: Remove lazy styling helper classes -->
     <h1 class="massive text-center"><b>A better way to work.</b></h1>
     <h5 class="text-center">Get started now!</h5>
-      <button class="mx-auto btn btn-custom mb-3" href="/#">Sign In</button>
+    <a class="mx-auto mb-3" href="/list"><button class="btn btn-custom">Sign In</button></a>
     <img style="width: 90%;" class="mx-auto" src="{{ url_for('static', filename='image/TimelyLanding.png') }}">
   </div>
 {% endblock %}

@@ -2,7 +2,11 @@
 
 {% block content %}
   <div class="container full-height pb-5" style="max-width: 900px">
-    {% include "components/navbar.html" %}
+    {% if public %}
+      {% include "components/navbar-public.html" %}
+    {% else %}
+      {% include "components/navbar.html" %}
+    {% endif %}
 
     <h1 class="text-center"><b>About Us</b></h1>
     <h4 class="text-center">A task manager that <em>actually</em> saves you time.</h4>
