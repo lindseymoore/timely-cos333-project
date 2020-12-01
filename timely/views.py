@@ -226,9 +226,16 @@ def canvas_key():
     """
     username = CASClient().authenticate()
     api_key = request.args["api_key"]
-    new_user = User(username = username, api_key = api_key)
-    db.session.add(new_user)
-    db.session.commit()
+
+    user = db.session.query(User).filter(User.username == username).first()
+    if user is None:
+        new_user = User(username = username, api_key = api_key)
+        db.session.add(new_user)
+        db.session.commit()
+    else:
+        user.api_key = api_key
+        db.session.commit()
+        
     return redirect("/list")
 
 
