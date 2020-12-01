@@ -149,7 +149,7 @@ def fetch_task_calendar_view(username: str) -> List[dict]:
     return task_list
 
 
-def fetch_task_details(task_id: int, username: str):
+def fetch_task_details(task_id: int, iteration: int, username: str):
     """
     Given a user with username and task with task_id, query the database to search for the details
     of the class the user has clicked on. Return a dictionary representing the details of one task.
@@ -157,19 +157,18 @@ def fetch_task_details(task_id: int, username: str):
     """
     task_details_obj = {}
 
-    details = db.session.query(Task, TaskIteration).filter((Task.username == username) &
+    task, task_iteration = db.session.query(Task, TaskIteration).filter((Task.username == username) &
             (Task.task_id == task_id)).join(TaskIteration, (TaskIteration.username == Task.username)
-            & (TaskIteration.task_id == Task.task_id)).all()
-
-    for (task, task_iteration) in details:
-        task_details_obj = {"title": task.title, "class": get_class_title(task.class_id),
-                    "id": task.task_id, "repeat_freq": task.repeat_freq, "repeat_end": task.repeat_end,
-                    "repeating": task.repeat, "iteration": task_iteration.iteration,
-                    "priority": task_iteration.priority, "link": task_iteration.link,
-                    "due_date": task_iteration.due_date.strftime("%m/%d/%y"),
-                    "notes": task_iteration.notes, "est_time": task_iteration.est_time}
-        if task_details_obj['est_time'] is None:
-            task_details_obj['est_time'] = 0
+            & (TaskIteration.task_id == Task.task_id) & (TaskIteration.iteration == iteration)).first()
+    
+    task_details_obj = {"title": task.title, "class": get_class_title(task.class_id),
+                "id": task.task_id, "repeat_freq": task.repeat_freq, "repeat_end": task.repeat_end,
+                "repeating": task.repeat, "iteration": task_iteration.iteration,
+                "priority": task_iteration.priority, "link": task_iteration.link,
+                "due_date": task_iteration.due_date.strftime("%m/%d/%y"),
+                "notes": task_iteration.notes, "est_time": task_iteration.est_time}
+    if task_details_obj['est_time'] is None:
+        task_details_obj['est_time'] = 0
 
     return task_details_obj
 
@@ -394,3 +393,28 @@ def fetch_task_due_date(task_id: int, username: str):
         & (TaskIteration.task_id == task_id)).first()
 
     return task_iteration.due_date
+
+
+def fetch_available_colors(username: str):
+    """Fetches all un-used class colors for a given user."""
+    classes = db.session.query(Class).filter(Class.username == username).all()
+
+    # UPDATE TO INCLUDE COMPREHENSIVE LIST OF COLORS
+    all_colors = ['red', 'green', 'purple', 'orange', 'pink', 'blue', 'yellow', 'white']
+    for course in classes:
+        all_colors.pop(all_colors.index(course.color))
+
+    return all_colors
+
+
+def classes_from_canvas(username: str):
+    """Fetches all classes that a given user has imported from Canvas. Returns list of canvas_ids
+    of classes from Canvas."""
+    classes = db.session.query(Class).filter(Class.username == username).all()
+
+    canvas_ids = []
+    for course in classes:
+        canvas_ids.append(course.canvas_id)
+
+    return canvas_ids
+    

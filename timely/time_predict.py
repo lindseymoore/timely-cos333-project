@@ -125,3 +125,24 @@ def update_timely_pred(task_id: int, iteration: int, username: str):
     for next_iteration in next_iterations:
         next_iteration.timely_pred = find_avg_prediction(times)
         db.session.commit()
+
+def fetch_graph_times(task_id: int, iteration: int, username: str):
+    prev_iterations = db.session.query(TaskIteration).filter( \
+                (TaskIteration.username == username) & \
+                (TaskIteration.task_id == task_id) & \
+                (TaskIteration.completed == True) & \
+                (TaskIteration.iteration < int(iteration))).order_by(TaskIteration.iteration).all()
+
+    actual_times = []       
+    predicted_times = []
+
+    for prev in prev_iterations:
+        actual_times.append(prev.actual_time)
+        predicted_times.append(prev.timely_pred)
+
+    times = {"actual_times": actual_times, "predicted_times": predicted_times}
+
+    return times
+
+
+

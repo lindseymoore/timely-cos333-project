@@ -7,8 +7,10 @@ from datetime import datetime
 from canvasapi import Canvas
 
 from timely import db
-from timely.db_queries import (canvas_task_in_db, get_api_key, get_class_color,
-                               get_class_id_canvas, get_class_title)
+from timely.db_queries import (canvas_task_in_db, classes_from_canvas,
+                               fetch_available_colors, get_api_key,
+                               get_class_color, get_class_id_canvas,
+                               get_class_title)
 from timely.models import Class
 
 API_URL = "https://princeton.instructure.com"
@@ -25,8 +27,14 @@ def fetch_canvas_courses(curr_semester: str, username: str):
     api_key = get_api_key(username)
     canvas = Canvas(API_URL, api_key)
     classes = []
+    colors = fetch_available_colors(username)
+    current_canvas_classes = classes_from_canvas(username) #Classes from Canvas already in db
 
     for course in canvas.get_courses():
+        # Check if this course is already in the db
+        if course.id in current_canvas_classes:
+            continue
+
         term = course.course_code[-5:]
         if term == curr_semester:
             new_class = Class(username = username, active_status = True)
@@ -40,8 +48,12 @@ def fetch_canvas_courses(curr_semester: str, username: str):
             new_class.num = int(course.course_code[3:6])
 
             #TODO implement edit class button to change the color afterwards
-            new_class.color = random.choice(['red', 'green', 'purple', 'orange',
-                                            'pink', 'blue', 'yellow', 'white'])
+            if len(colors) > 0:
+                new_class.color = random.choice(colors)
+                colors.pop(colors.index(new_class.color))
+            else:
+                #TODO MAKE CONDITION MORE ELABORATE
+                new_class.color = 'red'
 
             new_class.canvas_id = course.id
 
@@ -100,13 +112,10 @@ def fetch_canvas_tasks(curr_semester: str, username: str):
                 # it's new
                 task_in_db = canvas_task_in_db(canvas_task_id, username)
                 if task_in_db[0] is False:
+                    task_info["priority"] = 1 # set priority to 1 by default for new Canvas tasks
                     new_tasks.append(task_info)
-                    #print('New task added.')
                 else:
                     current_task = task_in_db[1]
-                    # print(current_task["due_date"], due_date.date())
-                    # print(current_task["link"], task_info["link"])
-                    # print(current_task["title"], task_info["title"])
                     if current_task["due_date"] != due_date.date() \
                        or current_task["link"] != task_info["link"] \
                        or current_task["title"] != task_info["title"]:
