@@ -2,8 +2,9 @@
     <div class="pill" style="border-left-color: var(--hl-{{task['color']}})">
       <div class="d-flex justify-content-between">
         <div class="pill-left">
+          <!-- Maybe an error here -->
           <a href="/task_details_calendar_view?task_id={{task['task_id']}}&iteration={{task['iteration']}}" class="title-link">
-            {{task["title"]}}
+            {{task["iteration_title"]}}
           </a>
         </div>
         <div class="d-none d-sm-inline">
