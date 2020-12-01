@@ -134,7 +134,9 @@
                 <div class="pill" style="border-left-color: var(--hl-{{task['color']}})">
                   <div class="d-flex justify-content-between">
                     <div class="pill-left">
-                      <del>{{task["iteration_title"]}}</del>
+                      <a href="/task_details_list_view?task_id={{task['task_id']}}&iteration={{task['iteration']}}" class="title-link">
+                        <del>{{task["iteration_title"]}}</del>
+                      </a>
                       <i class="fa fa-trash ml-1 open-DeleteTask" data-toggle="modal"
                           data-target="#deleteTaskModal" data-id="{{task['task_id']}}">
                       </i>
