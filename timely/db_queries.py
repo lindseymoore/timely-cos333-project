@@ -247,6 +247,19 @@ def mark_task_complete(task_id: int, iteration: int, username: str):
     task_iteration.completed = True
     db.session.commit()
 
+def uncomplete_task(task_id: int, iteration: int, username: str):
+    """Update the task given by task_id as complete in the db."""
+    # pylint: disable=singleton-comparison
+    task_iteration = db.session.query(TaskIteration).filter( \
+                (TaskIteration.username == username) & \
+                (TaskIteration.task_id == task_id) & \
+                (TaskIteration.iteration == int(iteration))).first()
+   
+    # pylint: enable=singleton-comparison
+
+    task_iteration.completed = False
+    db.session.commit()
+
 
 def get_class_id(class_title: str) -> int:
     """Return class_id for a given class_title, where class_id is autoincrementing."""
