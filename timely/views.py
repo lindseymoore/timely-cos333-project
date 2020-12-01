@@ -25,7 +25,7 @@ from timely.time_predict import update_completion_time, update_timely_pred, fetc
 # It may be necessary to install certificates
 
 
-@app.route("/")
+@app.route("/list")
 @app.route("/index")
 def index():
     """Return the index page."""
@@ -42,6 +42,17 @@ def index():
                 class_list=classes,
                 task_list=tasks,
                 user_info = user)
+
+@app.route("/")
+def landing():
+    """Return the landing page."""
+    # Redirects to list if user is logged in
+    try:
+        CASClient().authenticate()
+    except:
+        return render_template("landing.html")
+    else:
+        return redirect("/list")
 
 
 @app.route("/calendar")
@@ -86,13 +97,17 @@ def prev_week():
 @app.route("/about")
 def about():
     """Display about page."""
-    return render_template("about.html")
+    if "public" in request.args.keys():
+        public = True
+    else:
+        public = False
+    return render_template("about.html", public=public)
 
 
 @app.route("/feedback")
 def feedback():
     """Display the feedback page."""
-    return render_template("feedback.html")
+    return render_template("feedback.html", public=True)
 
 
 @app.route("/task_form")
@@ -113,7 +128,7 @@ def task_form():
 
     task_handler(details)
 
-    return redirect("/")
+    return redirect("/list")
 
 
 @app.route("/class_form")
@@ -131,7 +146,7 @@ def class_form():
 
     class_handler(class_details)
 
-    return redirect("/")
+    return redirect("/list")
 
 @app.route("/calendar/completion_form")
 @app.route("/completion_form")
@@ -153,7 +168,7 @@ def completion_form():
     if request.path == "/calendar/completion_form":
         return redirect("/calendar")
     else:
-        return redirect("/")
+        return redirect("/list")
 
 @app.route("/calendar/uncomplete")
 @app.route("/uncomplete")
@@ -183,7 +198,7 @@ def delete_class_endpoint():
     """
     Delete the class given by the request argument class_id and all of the tasks related to it."""
     delete_class(request.args["class_id"])
-    return redirect("/")
+    return redirect("/list")
 
 @app.route("/calendar/delete_task")
 @app.route("/delete_task")
@@ -193,7 +208,7 @@ def delete_task_endpoint():
     if request.path == "/calendar/delete_task":
         return redirect("/calendar")
     else:
-        return redirect("/")
+        return redirect("/list")
 
 
 @app.route('/logout', methods=['GET'])
@@ -214,7 +229,7 @@ def canvas_key():
     new_user = User(username = username, api_key = api_key)
     db.session.add(new_user)
     db.session.commit()
-    return redirect("/")
+    return redirect("/list")
 
 
 @app.route("/canvas_class")
@@ -224,7 +239,7 @@ def canvas_class():
     """
     username = CASClient().authenticate()
     fetch_canvas_courses("F2020", username)
-    return redirect("/")
+    return redirect("/list")
 
 
 @app.route("/canvas_task")
@@ -234,7 +249,7 @@ def canvas_task():
     """
     username = CASClient().authenticate()
     fetch_canvas_tasks("F2020", username)
-    return redirect("/")
+    return redirect("/list")
 
 
 @app.route("/task_details_calendar_view")
@@ -313,7 +328,7 @@ def edit_class_details():
 
     update_class_details(class_details)
 
-    return redirect("/")
+    return redirect("/list")
 
 
 @app.route("/canvas_import", methods=["POST"])
@@ -326,7 +341,7 @@ def canvas_import():
         task_list.append(json.loads(value))
     
     insert_canvas_tasks(task_list, username)
-    return redirect("/")
+    return redirect("/list")
 
 
 @app.route("/class_details")
@@ -341,7 +356,6 @@ def class_details_modal():
                 class_list=classes,
                 task_list=tasks,
                 class_details=class_details)
-
 
 @app.route("/get_canvas_tasks")
 def get_canvas_tasks():
@@ -373,7 +387,7 @@ def group_tasks():
 
     #print("TASK_IDS", task_ids)
     create_new_group(task_ids, group_title, username)
-    return redirect("/")
+    return redirect("/list")
    
 
 @app.route("/get_tasks")
