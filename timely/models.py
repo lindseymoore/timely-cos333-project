@@ -61,6 +61,8 @@ class TaskIteration(db.Model):
     iteration: int
         Iteration of a given task (if repeating - i.e., Weekly Reading 3 will have iteration=3).
         If not repeating, iteration = 1.
+    iteration_title: str
+        Title of the task iteration
     priority: int
         The user"s prioritization of an task, has values {0, 1, 2}
     completed: Boolean
@@ -86,10 +88,11 @@ class TaskIteration(db.Model):
     username = Column(String, primary_key = True)
     task_id = Column(Integer, primary_key = True)
     iteration = Column(Integer, primary_key = True)
+    iteration_title = Column(String)
     class_id = Column(Integer)
     priority = Column(Integer)
     completed = Column(Boolean)
-    link = Column(String) 
+    link = Column(String)
     due_date = Column(Date)
     due_time = Column(Time)
     notes = Column(String)
