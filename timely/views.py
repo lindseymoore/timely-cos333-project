@@ -357,3 +357,13 @@ def get_tasks():
     class_id = request.args["class_id"]
     tasks = fetch_tasks_from_class(class_id, username)
     return json.dumps(tasks, default=str)
+
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template("404.html"), 404
+
+
+@app.errorhandler(500)
+def server_error(e):
+    return render_template("500.html"), 404
