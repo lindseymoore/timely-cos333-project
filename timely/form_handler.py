@@ -58,29 +58,6 @@ def task_handler(details: dict):
     task_id = get_task_id(details['group_title'], details['class_id'])
     iteration = get_next_task_iteration(task_id)
 
-
-    # Insert into TaskIteration table
-    task_iteration.username = details["username"]
-    task_iteration.iteration_title = details["task_title"]
-    task_iteration.task_id = task_id
-    task_iteration.class_id = details['class_id']
-    task_iteration.iteration = iteration
-    task_iteration.priority = details["priority"]
-    task_iteration.link = details["link"]
-    task_iteration.due_date = details["due_date"]
-    task_iteration.due_time = details["due_time"]
-
-    task_iteration.notes = details["notes"]
-    task_iteration.completed = False
-
-    # Insert times into TaskIteration table
-    task_iteration.est_time = details["est_time"]
-    task_iteration.actual_time = None
-    task_iteration.timely_pred = details["est_time"]
-
-    db.session.add(task_iteration)
-    db.session.commit()
-
     # Create new task iteration if it is a repeating task
     if task.repeat:
         due_date = datetime.strptime(details["due_date"], '%Y-%m-%d').date()
@@ -110,18 +87,20 @@ def create_all_iterations(task, iteration: int, due_date, details: dict):
     elif task.repeat_end is None:
         increment = timedelta(days=1)
         end_date = due_date
-
+    print("INITIAL ITERATION", iteration)
     # Creates the next iteration of a task upon completion if the repeat end is not specified
     # or next due date is before the repeat end date
     new_date = due_date
 
     print(new_date, end_date)
     while (new_date <= end_date):
+        print("ITERATION", iteration)
         task_iteration = TaskIteration()
         # Insert into TaskIteration table
         task_iteration.username = details["username"]
         task_iteration.task_id = task.task_id
         task_iteration.class_id = details['class_id']
+        task_iteration.iteration_title = details["task_title"]
         task_iteration.iteration = iteration
         #task_iteration.iteration_title = details["task_title"] -> add this line in
         task_iteration.priority = details["priority"]
