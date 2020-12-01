@@ -50,11 +50,10 @@ def landing():
     try:
         CASClient().authenticate()
     except:
-        pass
+        return render_template("landing.html")
     else:
         return redirect("/list")
 
-    return render_template("landing.html")
 
 @app.route("/calendar")
 def calendar():
