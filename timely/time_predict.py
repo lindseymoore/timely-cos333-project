@@ -58,6 +58,7 @@ def find_avg_prediction(iteration_times: List[dict]) -> float:
     weighted_start = num_iterations_compl - weighted + 1
     print(num_iterations_compl)
 
+    # Will probably be errors here
     for iteration in iteration_times:
         if num_iterations_compl > weighted:
             if iteration["completed"] & (iteration["iteration"] < weighted_start):
@@ -72,8 +73,9 @@ def find_avg_prediction(iteration_times: List[dict]) -> float:
         # if there is not enough iterations for weighting to start
         else:
             if iteration["completed"]:
-                recent_time += iteration["actual_time"]
-                num_completed += 1
+                if iteration["actual_time"] is not None:
+                    recent_time += iteration["actual_time"]
+                    num_completed += 1
 
     print("numcompleted", num_completed)
 
@@ -93,7 +95,6 @@ def find_avg_prediction(iteration_times: List[dict]) -> float:
 
     # if there are no iterations for the task
     return iteration_times[0]["est_time"]
-
 
 
 def update_completion_time(task_id: int, iteration: int, username: str, actual_time: float):

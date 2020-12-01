@@ -109,6 +109,8 @@ def task_form():
     for key, item in request.args.items():
         details[key] = item
 
+    details['group_title'] = details['task_title']
+
     task_handler(details)
 
     return redirect("/")
@@ -247,6 +249,7 @@ def task_details_modal_list():
                     task_list=tasks,
                     task_details=task_details)
 
+  
 @app.route("/task_details_calendar_view")
 def task_details_modal_calendar():
     """Show the task details modal."""
@@ -262,13 +265,16 @@ def task_details_modal_calendar():
                 task_details=task_details,
                 week_dates=week_dates)
 
+  
 @app.route("/edit_task_details")
 def edit_task_details():
+    """Edit task details modal endpoint."""
     username = CASClient().authenticate()
-    task_details = {"title": None, "task_id": None,"class_id": None, "repeat": None, "iteration": None,
+    # Potentially change class_id to class
+    task_details = {"group_title": None, "task_id": None,"class_id": None, "repeat": None, "iteration": None,
                 "priority": None, "link": None, "due_date": None, "notes": None, 
                 "est_time": None, "repeat_freq": None, "repeat_end": None, "due_time": None, 
-                "username": username}
+                "username": username, "iteration_title": None, "iteration": None}
 
     for key, item in request.args.items():
         task_details[key] = item
@@ -339,21 +345,36 @@ def group_tasks():
     """Groups tasks into repeating tasks based on users selection in task grouping modal."""
     username = CASClient().authenticate()
     task_ids = []
-    for task_id in request.form.values():
-        task_ids.append(task_id)
+    group_title = ""
+
+    for value in request.form.values():
+        try:
+            task_id = int(value)
+            task_ids.append(task_id)
+        except ValueError:
+            group_title = value
 
     #print("TASK_IDS", task_ids)
-    create_new_group(task_ids, username)
+    create_new_group(task_ids, group_title, username)
     return redirect("/")
    
 
 @app.route("/get_tasks")
 def get_tasks():
     """
-    Fetches all tasks associated with a given task and returns information in JSON format.
+    Fetches all tasks associated with a given class and returns information in JSON format.
     If class is left as none, return all tasks for all classes.
     """
     username = CASClient().authenticate()
     class_id = request.args["class_id"]
     tasks = fetch_tasks_from_class(class_id, username)
+    
+    # Set null due_dates to 'Group' to avoid showing null due dates on modal
+    for task in tasks:
+        if task["due_date"] is None:
+            task["due_date"] = "Group"
+        if task["title"] is None or task["title"] == "":
+            task["title"] = task["iteration_title"]
+
+    print(tasks)
     return json.dumps(tasks, default=str)
