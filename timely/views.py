@@ -222,14 +222,14 @@ def task_details_modal_list():
     task_id = request.args["task_id"]
     iteration = request.args["iteration"]
     task_details = fetch_task_details(task_id, iteration, username)
-    print(task_details)
+    #print(task_details)
     classes = fetch_class_list(username)
     tasks = fetch_task_list_view(username)
 
     # For tasks that have iteration time data
     if task_details["repeating"] is True:
         curr_iteration = task_details["iteration"]
-        print(curr_iteration)
+        #print(curr_iteration)
         times = fetch_graph_times(task_id, curr_iteration, username)
         labels = list(range(1, curr_iteration))
         actual_values = times["actual_times"]
