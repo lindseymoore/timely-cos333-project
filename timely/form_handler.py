@@ -1,6 +1,6 @@
 """Functions to process user input and insert as new entries in the database."""
 
-from datetime import datetime
+from datetime import timedelta, date, datetime
 
 from sqlalchemy import desc
 
@@ -34,7 +34,6 @@ def task_handler(details: dict):
    tables respectively.
     """
     task = Task()
-    task_iteration = TaskIteration()
 
     # Insert into task table
     task.username = details["username"]
@@ -58,6 +57,7 @@ def task_handler(details: dict):
     task_id = get_task_id(details['group_title'], details['class_id'])
     iteration = get_next_task_iteration(task_id)
 
+
     # Insert into TaskIteration table
     task_iteration.username = details["username"]
     task_iteration.iteration_title = details["task_title"]
@@ -80,21 +80,80 @@ def task_handler(details: dict):
     db.session.add(task_iteration)
     db.session.commit()
 
+    # Create new task iteration if it is a repeating task
+    due_date = datetime.strptime(details["due_date"], '%Y-%m-%d').date()
+    create_all_iterations(task, iteration, due_date, details)
+
+    
+def fetch_increment(frequency: str):
+    """Determine increment for a date object according to the repeat frequency"""
+    if frequency == "daily":
+        increment = timedelta(days=1)
+    elif frequency == "weekly":
+        increment = timedelta(days=7)
+    elif frequency == "biweekly":
+        increment = timedelta(days=14)
+    elif frequency == "monthly":
+        increment = timedelta(weeks=4)
+    
+    return increment
+
+  
+def create_all_iterations(task, iteration: int, due_date, details: dict):
+    """Creates all iterations of a given repeating task."""
+    # Create new task iteration if it is a repeating task
+    if task.repeat:
+        increment = fetch_increment(task.repeat_freq)
+        end_date = task.repeat_end
+    elif task.repeat_end is None:
+        end_date = due_date
+        end_date = datetime.strptime(end_date, '%Y-%m-%d').date()
+
+    # Creates the next iteration of a task upon completion if the repeat end is not specified
+    # or next due date is before the repeat end date
+    new_date = due_date
+
+    print(new_date, end_date)
+    while (new_date <= end_date):
+        task_iteration = TaskIteration()
+        # Insert into TaskIteration table
+        task_iteration.username = details["username"]
+        task_iteration.task_id = task.task_id
+        task_iteration.class_id = details['class_id']
+        task_iteration.iteration = iteration
+        #task_iteration.iteration_title = details["task_title"] -> add this line in
+        task_iteration.priority = details["priority"]
+        task_iteration.link = details["link"]
+        task_iteration.due_date = new_date
+        task_iteration.due_time = details["due_time"]
+
+        task_iteration.notes = details["notes"]
+        task_iteration.completed = False
+
+        # Insert times into TaskIteration table
+        task_iteration.est_time = details["est_time"]
+        task_iteration.actual_time = None
+        task_iteration.timely_pred = details["est_time"] # may need to edit display of the timely prediction to edit all subsequent iterations
+
+        db.session.add(task_iteration)
+        db.session.commit()
+        iteration += 1
+        new_date += increment
+
 
 def update_task_details(task_details: dict):
     """Updates a task's details based on form input."""
     username = task_details['username']
     task_id = task_details['task_id']
-    #iteration = task_details['iteration']
-    #print("iteration", iteration)
+    iteration = task_details['iteration']
+    #print("task_id", task_id)
 
-    # TODO ORDERING BY DESCENDING ITERATION IS A HACKY SOLUTION - INSTEAD PASS ITERATION FROM FRONTEND WHEN UPDATING
     task, task_iteration = db.session.query(Task, TaskIteration).filter( \
                 (Task.username == username) &
                 (Task.task_id == task_id)).join(TaskIteration, \
                 (TaskIteration.username == Task.username) & \
-                (TaskIteration.task_id == Task.task_id)).order_by(
-                    desc(TaskIteration.iteration)).first()
+                (TaskIteration.task_id == Task.task_id) & \
+                (TaskIteration.iteration == iteration)).first()
 
     # print(task)
     # print(task_iteration)
@@ -102,7 +161,11 @@ def update_task_details(task_details: dict):
 
     if task_details["repeat_freq"] != "None" and task_details["repeat_freq"] is not None:
         task.repeat = True
-        task.repeat_freq = task_details["repeat_freq"]
+        if task.repeat_freq != task_details["repeat_freq"]:
+            task.repeat_freq = task_details["repeat_freq"]
+            increment = fetch_increment(task.repeat_freq)
+            update_repeat_freq(task, task_id, increment, int(iteration), task_details)
+        
         if task_details["repeat_end"] != "None":
             task.repeat_end = task_details["repeat_end"]
         else:
@@ -124,6 +187,44 @@ def update_task_details(task_details: dict):
     task_iteration.notes = task_details['notes']
     task_iteration.est_time = task_details['est_time']
     task_iteration.iteration_title = task_details['iteration_title']
+
+    db.session.commit()
+
+
+def update_repeat_freq(task, task_id, increment, iteration: int, task_details: dict):
+    """Updates the repeat frequency of a given task by deleting all subsequent iterations 
+    and creating new iterations."""
+    curr_iteration =  db.session.query(TaskIteration).filter((TaskIteration.task_id == task_id) & \
+        (TaskIteration.iteration == int(iteration)) & \
+        (TaskIteration.completed == False)).first()
+
+    curr_due_date = curr_iteration.due_date
+    curr_due_date += increment
+
+    # Delete all subseqeunt tasks upon editing task repeat freq
+    db.session.query(TaskIteration).filter((TaskIteration.task_id == task_id) & \
+        (TaskIteration.iteration > int(iteration)) & \
+        (TaskIteration.completed == False)).delete()
+    db.session.commit()
+
+    iteration += 1
+    create_all_iterations(task, iteration, curr_due_date, task_details)
+
+
+def update_class_details(class_details: dict):
+    """Updates a class's details based on form input."""
+    username = class_details['username']
+    class_id = class_details['class_id']
+    print("class_id", class_id)
+    class_info = db.session.query(Class).filter( \
+                (Class.username == username) &
+                (Class.class_id == class_id)).first()
+
+    class_info.title = class_details['title']
+
+    class_info.dept = class_details['dept']
+    class_info.num = class_details['num']
+    class_info.color = class_details['color']
 
     db.session.commit()
 
@@ -160,6 +261,7 @@ def insert_canvas_tasks(task_list: list, username: str):
             task_iteration.due_date = datetime.strptime(task["due_date"], '%Y-%m-%d')
             task_iteration.canvas_id = task["canvas_task_id"]
             task_iteration.completed = task["completed"]
+            task_iteration.priority = task["priority"]
 
             db.session.add(task_iteration)
             db.session.commit()

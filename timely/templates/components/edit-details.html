@@ -3,17 +3,26 @@
       <label for="title">Name</label>
       <input type="text" class="form-control" name="iteration_title" id="edit_task_title" value="{{task_details['iteration_title']}}">
       <input type="hidden" id="edit_task_id" name="task_id" value="{{task_details['id']}}">
-      <!-- <input type="hidden" id="edit_task_iteration" name="task_iteration" value="{{task_details['iteration']}}"> -->
+      <input type="hidden" id="edit_iteration" name="iteration" value="{{task_details['iteration']}}">
     </div>
     <div class="form-group">
       <label for="class_id">Class</label>
-      <input type="text" class="form-control" name="class_id" id="edit_class_id" value="{{task_details['class']}}" disabled>
+      <input type="text" class="form-control" name="class_id" id="edit_class_id" value="{{task_details['class']}}" disabled required>
     </div>
     <div class="form-group">
       <label for="priority">Priority</label>
       <select class="form-control" name="priority" id="edit_priority">
         <option value="{{task_details['priority']}}">
-          Current: {{task_details['priority']}}
+          Current: 
+            {%if task_details["priority"] == 0%}
+              Low
+            {%endif%}
+            {%if task_details["priority"] == 1%}
+              Medium
+            {%endif%}
+            {%if task_details["priority"] == 2%}
+              High
+            {%endif%}
         </option>
         <option value=0>
           Low
@@ -75,4 +84,11 @@
       <button type="submit" class="btn btn-primary">Submit</button>
     </div>
 </form>
-  
+
+<script>
+  $(document).ready(function() {
+    $("#edit_due_date").flatpickr();
+    $("#edit_repeat_end").flatpickr();
+  });
+</script>
+   

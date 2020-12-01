@@ -12,13 +12,18 @@
 
     <!-- TODO: Remove lazy styling helper classes -->
     <div class="row flex-grow-1 overflow-auto" style="background: var(--dark-4);">
-      <div class="col-4 overflow-auto py-3">
+      <div class="col-md-4 overflow-auto py-3">
         <div class="d-flex justify-content-between align-items-center pb-3">
           <h3 class="mb-0">Classes</h3>
-          <div class="d-flex">
+          <div class="d-flex align-items-center">
             {% if user_info %}
               <img src="{{ url_for('static', filename='image/canvas-logo.png') }}"
               height="24px" onclick="location.href='/canvas_class?'">
+            {% endif %}
+            {% if user_info == false %}
+              <button data-toggle="modal" data-target="#canvasKeyModal" class="btn btn-secondary mr-2">
+                Canvas Key
+              </button>
             {% endif %}
             <i class="fa fa-plus add ml-2" data-toggle="modal" data-target="#classModal"></i>
           </div>
@@ -29,7 +34,9 @@
           {% for class in class_list: %}
             <div class="pill-row">
               <div class="pill" style="border-left-color: var(--hl-{{class['color']}})">
-                {{class["title"]}}<br>
+                <a href="/class_details?class_id={{class['class_id']}}" class="title-link">
+                  {{class["title"]}}
+                </a><br>
                 <div class="d-flex justify-content-between">
                   <div class="subtle">{{class["dept"]}}{{class["num"]}}</div>
                   <i class="fa fa-trash open-DeleteClass" data-toggle="modal"
@@ -42,22 +49,29 @@
         </div>
       </div>
 
-      <div class="col-8 overflow-auto py-3" id="task-col">
+      <div class="col-md-8 overflow-auto py-3" id="task-col">
         <div class="d-flex justify-content-between align-items-center pb-3">
           <div class="d-flex align-items-center">
             <h3 class="mb-0 mr-3">Tasks</h3>
-            <a href="/?sort=due_date"><button class="btn btn-small btn-custom mr-1">Date</button></a>
-            <a href="/?sort=class"><button class="btn btn-small btn-custom mr-1">Class</button></a>
-            <a href="/?sort=priority"><button class="btn btn-small btn-custom">Priority</button></a>
+            <div class="d-none d-sm-block">
+              <a href="/?sort=due_date"><button class="btn btn-small btn-custom mr-1">Date</button></a>
+              <a href="/?sort=class"><button class="btn btn-small btn-custom mr-1">Class</button></a>
+              <a href="/?sort=priority"><button class="btn btn-small btn-custom">Priority</button></a>
+            </div>
+            <div class="dropdown d-block d-sm-none">
+              <button class="dropdown-toggle btn btn-small btn-custom" href="#" id="sortingDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Sort
+              </button>
+              <div class="dropdown-menu">
+                <a class="dropdown-item" href="/?sort=due_date">Date</a>
+                <a class="dropdown-item" href="/?sort=class">Class</a>
+                <a class="dropdown-item" href="/?sort=priority">Priority</a>
+              </div>
+            </div>
           </div>
           <div class="d-flex align-items-center">
-            {% if user_info == false %}
-              <button data-toggle="modal" data-target="#canvasKeyModal" class="btn btn-secondary mr-2">
-                Canvas Key
-              </button>
-            {% endif %}
             <button data-toggle="modal" data-target="#groupTasksModal" class="btn btn-secondary mr-2">
-              Group Tasks
+              Group
             </button>
             <!-- TODO: Remove -->
             {% if user_info %}
@@ -78,7 +92,8 @@
                   <div class="pill" style="border-left-color: var(--hl-{{task['color']}})">
                     <div class="d-flex justify-content-between">
                       <div class="pill-left">
-                        <a href="/task_details_list_view?task_id={{task['task_id']}}" class="title-link">
+                        <!-- Maybe an error here.-->
+                        <a href="/task_details_list_view?task_id={{task['task_id']}}&iteration={{task['iteration']}}" class="title-link">
                           {{task["iteration_title"]}}
                         </a>
                       </div>
@@ -145,6 +160,10 @@
 
   {% if "task_details" in request.url_rule.rule%}
     {% include "components/task-details.html" %}
+  {% endif %}
+
+  {% if "class_details" in request.url_rule.rule%}
+    {% include "components/class-details.html" %}
   {% endif %}
 
   {% include "components/delete-class.html" %}
