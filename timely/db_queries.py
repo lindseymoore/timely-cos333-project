@@ -58,7 +58,8 @@ def fetch_task_list_view(username: str, sort: str = "due_date") -> List[dict]:
                         'due_date': task_iteration.due_date.strftime("%m/%d/%y"),
                         'repeat_freq': repeat_freq, 'repeat_end': repeat_end,
                         'completed': task_iteration.completed, 'iteration': task_iteration.iteration,
-                        'color': course.color, 'actual_time': task_iteration.actual_time}
+                        'color': course.color, 'actual_time': task_iteration.actual_time,
+                        'iteration_title': task_iteration.iteration_title}
 
             if task_obj['timely_pred'] is None:
                 task_obj['timely_pred'] = 0
@@ -87,7 +88,8 @@ def fetch_task_list_view(username: str, sort: str = "due_date") -> List[dict]:
                         'due_date': completed_iteration.due_date.strftime("%m/%d/%y"),
                         'repeat_freq': repeat_freq, 'repeat_end': repeat_end,
                         'completed': completed_iteration.completed, 'iteration': completed_iteration.iteration,
-                        'color': course.color, 'actual_time': completed_iteration.actual_time}
+                        'color': course.color, 'actual_time': completed_iteration.actual_time,
+                        'iteration_title': completed_iteration.iteration_title}
 
             if task_obj['timely_pred'] is None:
                 task_obj['timely_pred'] = 0
@@ -102,6 +104,7 @@ def fetch_task_list_view(username: str, sort: str = "due_date") -> List[dict]:
         task_list = sorted(task_list, key = lambda task: task["class"], reverse=True)
 
     return task_list
+
 
 def fetch_task_calendar_view(username: str) -> List[dict]:
     """
