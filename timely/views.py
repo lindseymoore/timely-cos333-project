@@ -393,5 +393,4 @@ def get_tasks():
         if task["title"] is None or task["title"] == "":
             task["title"] = task["iteration_title"]
 
-    print(tasks)
     return json.dumps(tasks, default=str)
