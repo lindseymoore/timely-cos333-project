@@ -82,119 +82,122 @@ aria-labelledby="taskDetailsModal" aria-hidden="true">
         $("#task-current-freq").html("Current: " + 
           task_details['repeat_freq'].charAt(0).toUpperCase() + task_details["repeat_freq"].slice(1));
         $("#edit_repeat_end").attr("value", task_details['repeat_end']);
-        $("#edit_notes").attr("value", task_details['notes']);	
+        $("#edit_notes").attr("value", task_details['notes']);
+
+        // Handle graph data
+        if (task_details["repeating"]) {
+          $.getJSON({url: "/get_graph_data" + taskId, success: function(times) {
+            createChart(times);
+          }});
+        }
       }});
     });
   });
 </script>
 
 <script>
-  // Global parameters:
-  // do not resize the chart canvas when its container does (keep at 600x400px)
-  Chart.defaults.global.responsive = false;
- 
-  // define the chart data
-  let chartData = {
-    labels : [{% for item in labels %}
-                "{{item}}",
-              {% endfor %}],
-    datasets : [{
-        label: 'Actual Time',
-        fill: false,
-        lineTension: 0.1,
-        backgroundColor: "rgba(75,192,192,0.4)",
-        borderColor: "rgba(75,192,192,1)",
-        borderCapStyle: 'butt',
-        borderDash: [],
-        borderDashOffset: 0.0,
-        borderJoinStyle: 'miter',
-        pointBorderColor: "white",
-        pointBackgroundColor: "#fff",
-        pointBorderWidth: 1,
-        pointHoverRadius: 5,
-        pointHoverBackgroundColor: "rgba(75,192,192,1)",
-        pointHoverBorderColor: "rgba(220,220,220,1)",
-        pointHoverBorderWidth: 2,
-        pointRadius: 1,
-        pointHitRadius: 10,
-        data : [{% for item in actual_values %}
-                  {{item}},
-                {% endfor %}],
-        spanGaps: false
-    }, {
-        label: 'Timely Prediction',
-        fill: false,
-        lineTension: 0.1,
-        backgroundColor: "rgba(142, 88, 255, 0.4)",
-        borderColor: "#8e58ff",
-        borderCapStyle: 'butt',
-        borderDash: [],
-        borderDashOffset: 0.0,
-        borderJoinStyle: 'miter',
-        pointBorderColor: "white",
-        pointBackgroundColor: "#fff",
-        pointBorderWidth: 1,
-        pointHoverRadius: 5,
-        pointHoverBackgroundColor: "rgba(142, 88, 255, 1)",
-        pointHoverBorderColor: "rgba(200,200,200,1)",
-        pointHoverBorderWidth: 2,
-        pointRadius: 1,
-        pointHitRadius: 10,
-        data : [{% for item in predicted_values %}
-                  {{item}},
-                {% endfor %}],
-        spanGaps: false
-    }]
-  }
-    
-  // get chart canvas
-  let ctx = $('#time-graph');//document.getElementById('chart-area').getContext("2d");
-  // Define axes
-  let options = {
-    scales: {
-      yAxes: [{
-          ticks: {
-              beginAtZero:true,
-              fontColor: 'white'
-          },
-          scaleLabel: {
-              display: true,
-              labelString: 'Time (hrs.)',
-              fontSize: 15,
-              fontColor: 'white'
-          },
-          gridLines: {
-            zeroLineColor: '#828282'
-          }
-      }],
-      xAxes: [{
-          ticks: {
-              beginAtZero:true,
-              fontColor: 'white'
-          },
-          scaleLabel: {
-              display: true,
-              labelString: 'Iteration',
-              fontSize: 15,
-              fontColor: 'white'
-          },
-          gridLines: {
-            zeroLineColor: '#828282'
-          }
+  function createChart(times) {
+    // Global parameters:
+    // do not resize the chart canvas when its container does (keep at 600x400px)
+    Chart.defaults.global.responsive = false;
+  
+    // define the chart data
+    let chartData = {
+      labels : times.labels,
+      datasets : [{
+          label: 'Actual Time',
+          fill: false,
+          lineTension: 0.1,
+          backgroundColor: "rgba(75,192,192,0.4)",
+          borderColor: "rgba(75,192,192,1)",
+          borderCapStyle: 'butt',
+          borderDash: [],
+          borderDashOffset: 0.0,
+          borderJoinStyle: 'miter',
+          pointBorderColor: "white",
+          pointBackgroundColor: "#fff",
+          pointBorderWidth: 1,
+          pointHoverRadius: 5,
+          pointHoverBackgroundColor: "rgba(75,192,192,1)",
+          pointHoverBorderColor: "rgba(220,220,220,1)",
+          pointHoverBorderWidth: 2,
+          pointRadius: 1,
+          pointHitRadius: 10,
+          data : times.actual_values,
+          spanGaps: false
+      }, {
+          label: 'Timely Prediction',
+          fill: false,
+          lineTension: 0.1,
+          backgroundColor: "rgba(142, 88, 255, 0.4)",
+          borderColor: "#8e58ff",
+          borderCapStyle: 'butt',
+          borderDash: [],
+          borderDashOffset: 0.0,
+          borderJoinStyle: 'miter',
+          pointBorderColor: "white",
+          pointBackgroundColor: "#fff",
+          pointBorderWidth: 1,
+          pointHoverRadius: 5,
+          pointHoverBackgroundColor: "rgba(142, 88, 255, 1)",
+          pointHoverBorderColor: "rgba(200,200,200,1)",
+          pointHoverBorderWidth: 2,
+          pointRadius: 1,
+          pointHitRadius: 10,
+          data : times.predicted_values,
+          spanGaps: false
       }]
-    } ,
-    legend: {
-      labels: {
-          // This more specific font property overrides the global property
-          fontColor: 'white'
-      }
     }
-  };
-  // create the chart using the chart canvas
-  let timeGraph = new Chart(ctx, {
-    type: 'line',
-    data: chartData,
-    scaleFontColor: "#fffff",
-    options: options
-  });
+      
+    // get chart canvas
+    let ctx = $('#time-graph');//document.getElementById('chart-area').getContext("2d");
+    // Define axes
+    let options = {
+      scales: {
+        yAxes: [{
+            ticks: {
+                beginAtZero:true,
+                fontColor: 'white'
+            },
+            scaleLabel: {
+                display: true,
+                labelString: 'Time (hrs.)',
+                fontSize: 15,
+                fontColor: 'white'
+            },
+            gridLines: {
+              zeroLineColor: '#828282'
+            }
+        }],
+        xAxes: [{
+            ticks: {
+                beginAtZero:true,
+                fontColor: 'white'
+            },
+            scaleLabel: {
+                display: true,
+                labelString: 'Iteration',
+                fontSize: 15,
+                fontColor: 'white'
+            },
+            gridLines: {
+              zeroLineColor: '#828282'
+            }
+        }]
+      } ,
+      legend: {
+        labels: {
+            // This more specific font property overrides the global property
+            fontColor: 'white'
+        }
+      }
+    };
+    // create the chart using the chart canvas
+    let timeGraph = new Chart(ctx, {
+      type: 'line',
+      data: chartData,
+      scaleFontColor: "#fffff",
+      options: options
+    });
+  }
 </script>

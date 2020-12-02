@@ -269,8 +269,20 @@ def edit_task_details():
         task_details[key] = item
 
     update_task_details(task_details)
-   
+
     return json.dumps({"success":True})
+
+
+@app.route("/get_graph_data", methods=["GET"])
+def get_graph_data():
+    username = CASClient().authenticate()
+    task_id = request.args["task_id"]
+    iteration = request.args["iteration"]
+
+    # Contains labels, actual_times, and predicted_times
+    times = fetch_graph_times(task_id, iteration, username)
+
+    return json.dumps(times)
 
 
 @app.route("/edit_class_details", methods=["POST"])

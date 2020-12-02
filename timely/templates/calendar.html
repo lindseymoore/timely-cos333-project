@@ -133,9 +133,7 @@
   {% include "components/create-task.html" %}
   {% include "components/create-class.html" %}
 
-  {% if "task_details" in request.url_rule.rule%}
-    {% include "components/task-details.html" %}
-  {% endif %}
+  {% include "components/task-details.html" %}
 
   {% include "components/delete-class.html" %}
   {% include "components/delete-task.html" %}
