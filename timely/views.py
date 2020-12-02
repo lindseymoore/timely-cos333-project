@@ -278,11 +278,10 @@ def get_graph_data():
     username = CASClient().authenticate()
     task_id = request.args["task_id"]
     iteration = request.args["iteration"]
-
     # Contains labels, actual_times, and predicted_times
     times = fetch_graph_times(task_id, iteration, username)
 
-    return json.dumps(times)
+    return json.dumps(times, default=dict)# dumps is for str formatting dict
 
 
 @app.route("/edit_class_details", methods=["POST"])
