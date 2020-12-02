@@ -230,6 +230,16 @@ hr {
     margin-right: -15px;
 }
 
+.required {
+    color: red;
+  }
+
+/* for form validation */
+.green-check {
+    background-position: right .9rem center !important;
+}
+
 .massive {
     size: 5em;
 }
+

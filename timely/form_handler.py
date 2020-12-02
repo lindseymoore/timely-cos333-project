@@ -79,18 +79,21 @@ def fetch_increment(frequency: str):
 def create_all_iterations(task, iteration: int, due_date, details: dict):
     """Creates all iterations of a given repeating task."""
     # Create new task iteration if it is a repeating task
+    increment = timedelta(weeks=10) # for non-repeating task
     if task.repeat:
         increment = fetch_increment(task.repeat_freq)
         end_date = task.repeat_end
     elif task.repeat_end is None:
         increment = timedelta(days=1)
         end_date = due_date
+        # end_date = datetime.strptime(end_date, '%Y-%m-%d').date()
+
+
     # Creates the next iteration of a task upon completion if the repeat end is not specified
     # or next due date is before the repeat end date
     new_date = due_date
-
-    print(new_date, end_date)
-    while (new_date <= end_date):
+    
+    while new_date <= end_date:
         task_iteration = TaskIteration()
         # Insert into TaskIteration table
         task_iteration.username = details["username"]
@@ -115,6 +118,7 @@ def create_all_iterations(task, iteration: int, due_date, details: dict):
         db.session.add(task_iteration)
         db.session.commit()
         iteration += 1
+
         new_date += increment
 
 
