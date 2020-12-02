@@ -44,8 +44,8 @@ def index():
     return render_template("index.html",
                 class_list=classes,
                 task_list=tasks,
-                user_info = user)
-                #colors = colors)
+                user_info = user,
+                colors = colors)
 
 @app.route("/")
 def landing():
