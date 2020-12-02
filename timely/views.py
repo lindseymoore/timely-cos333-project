@@ -363,10 +363,12 @@ def class_details_modal():
     print(class_details)
     classes = fetch_class_list(username)
     tasks = fetch_task_list_view(username)
+    colors = fetch_available_colors(username)
     return render_template("index.html",
                 class_list=classes,
                 task_list=tasks,
-                class_details=class_details)
+                class_details=class_details,
+                colors = colors)
 
 @app.route("/get_canvas_tasks")
 def get_canvas_tasks():
