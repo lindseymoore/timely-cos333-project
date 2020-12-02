@@ -5,7 +5,7 @@ aria-labelledby="taskDetailsModal" aria-hidden="true">
     <div class="modal-content">
       <div class="modal-header">
         <!-- Maybe an error here -->
-        <h3 class="modal-title">{{task_details["iteration_title"]}}</h3>
+        <h3 class="modal-title">Task Details</h3>
         <div>
           <i class="fa fa-edit ml-2" id="edit"></i>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -14,46 +14,7 @@ aria-labelledby="taskDetailsModal" aria-hidden="true">
         </div>
       </div>
       <div class="modal-body">
-        <div id="display-details">
-          <h4>Class: </h4> <p>{{task_details["class"]}}</p>
-          <h4>Repeating: </h4> 
-          <p>
-            {% if task_details["repeating"] %}
-              Yes
-            {% else %}
-              No
-            {% endif %}
-          </p>
-          {% if task_details["repeating"] %}
-            <h4>Group: </h4> <p>{{task_details["group_title"]}}</p>
-          {% endif %}
-          <h4>Due Date: </h4> <p>{{task_details["due_date"]}}</p>
-          <h4>Priority: </h4>
-          <p>
-            {%if task_details["priority"] == 0%}
-              Low
-            {%endif%}
-            {%if task_details["priority"] == 1%}
-              Medium
-            {%endif%}
-            {%if task_details["priority"] == 2%}
-              High
-            {%endif%}
-          </p>
-          {# Fixes links without protocol by making them absolute. #}
-          {% if "http" in task_details['link'] %}
-            {% set link = task_details['link'] %}
-          {% else %}
-            {% set link = "//" + task_details['link'] %}
-          {% endif %}
-          <h4>Link: </h4> <p><a target="_blank" href="{{link}}">{{task_details["link"]}}</a></p>
-          <h4>Estimated Time: </h4> <p>{{task_details["est_time"]}} h</p>
-          <h4>Notes: </h4> <p>{{task_details["notes"]}}</p>
-          {% if task_details["repeating"] %}
-            <h4>Time Analytics: </h4>
-            <canvas id="time-graph" width="400" height="300"></canvas>
-          {% endif %}
-        </div>
+        <div id="display-details"></div>
         {% include "components/edit-details.html" %}
       </div>
     </div>
@@ -62,12 +23,67 @@ aria-labelledby="taskDetailsModal" aria-hidden="true">
 
 <script>
   $(document).ready(function() {
-    $('#taskDetailsModal').modal('toggle');
     $("#form_edit_details").hide();
     
     $('#edit').click( function() {
-      $( '#display-details' ).toggle();
-      $( '#form_edit_details' ).toggle();
+      $("#display-details").toggle();
+      $("#form_edit_details").toggle();
+    });
+
+    $('#taskDetailsModal').on('hidden.bs.modal', function (e) {
+      $("#display-details").html("");
+      $("#display-details").show();
+      $("#form_edit_details").hide();
+    });
+
+    $(document).on("click", ".open-TaskDetails", function () {		
+      let taskId = $(this).data('id');
+      $.getJSON({url: "/task_details" + taskId, success: function(task_details) {
+        
+        $("#display-details").append(
+          `<h4>Title: </h4> <p>${task_details["task_title"]}</p>
+          <h4>Class: </h4> <p>${task_details["class"]}</p>
+          <h4>Repeating: </h4> 
+          <p>
+            ${task_details["repeating"] ? "Yes" : "No"}
+          </p>
+          ${task_details["repeating"] ? `<h4>Group: </h4> <p>${task_details["group_title"]}</p>` : "" }
+          <h4>Due Date: </h4> <p>${task_details["due_date"]}</p>
+          <h4>Priority: </h4>
+          <p>
+            ${task_details["priority"] == 0 ? "Low" : ""}
+            ${task_details["priority"] == 1 ? "Medium" : ""}
+            ${task_details["priority"] == 2 ? "High" : ""}
+          </p>
+          {# Fixes links without protocol by making them absolute. #}
+          <h4>Link: </h4> <p><a target="_blank" href="${task_details["link"].search("http") >= 0 ? task_details['link'] : "//" + task_details['link']}">${task_details["link"]}</a></p>
+          <h4>Estimated Time: </h4> <p>${task_details["est_time"]} h</p>
+          <h4>Notes: </h4> <p>${task_details["notes"]}</p>
+          ${task_details["repeating"] ?
+            `<h4>Time Analytics: </h4>
+            <canvas id="time-graph" width="400" height="300"></canvas>` :
+            ""}`
+        );
+        $("#edit_task_title").attr("value", task_details['iteration_title']);
+        $("#edit_task_id").attr("value", task_details['id']);
+        $("#edit_iteration").attr("value", task_details['iteration']);
+        $("#edit_class_id").attr("value", task_details['class']);
+        $("#task-current-priority").attr("value", task_details['priority']);
+        if (task_details['priority'] == 0)
+          $("#task-current-priority").html("Current: Low");
+        else if (task_details['priority'] == 1)
+          $("#task-current-priority").html("Current: Medium");
+        else if (task_details['priority'] == 2)
+          $("#task-current-priority").html("Current: High");
+        $("#edit_est_time").attr("value", task_details['est_time']);
+        $("#edit_link").attr("value", task_details['link']);
+        $("#edit_due_date").attr("value", task_details['due_date']);
+        $("#task-current-freq").attr("value", task_details['repeat_freq']);
+        $("#task-current-freq").html("Current: " + 
+          task_details['repeat_freq'].charAt(0).toUpperCase() + task_details["repeat_freq"].slice(1));
+        $("#edit_repeat_end").attr("value", task_details['repeat_end']);
+        $("#edit_notes").attr("value", task_details['notes']);	
+      }});
     });
   });
 </script>

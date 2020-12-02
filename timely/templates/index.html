@@ -18,7 +18,30 @@
           <div class="d-flex align-items-center">
             {% if user_info %}
               <img src="{{ url_for('static', filename='image/canvas-logo.png') }}"
-              height="24px" onclick="location.href='/canvas_class?'">
+              height="24px" id="canvas-class-button" href='/canvas_class'>
+              <script>
+                $(document).ready(function() {
+                  $("#canvas-class-button").click(function(event) {
+                    /* stop form from submitting normally */
+                    event.preventDefault();
+      
+                    /* get the action attribute from the <form action=""> element */
+                    let $form = $(this),
+                      url = $form.attr('href');
+      
+                    /* Send the data using post with element id name and name2*/
+                    let posting = $.post(url);
+      
+                    /* Alerts the results */
+                    posting.done(function() {
+                      location.reload();
+                    });
+                    posting.fail(function() {
+                      console.log("failed");
+                    });
+                  });
+                });
+              </script>
             {% endif %}
             {% if user_info == false %}
               <button data-toggle="modal" data-target="#canvasKeyModal" class="btn btn-secondary mr-2">
@@ -34,7 +57,8 @@
           {% for class in class_list: %}
             <div class="pill-row">
               <div class="pill" style="border-left-color: var(--hl-{{class['color']}})">
-                <a href="/class_details?class_id={{class['class_id']}}" class="title-link">
+                <a data-toggle="modal" data-target="#classDetailsModal"
+                data-id="{{class['class_id']}}" class="title-link open-ClassDetails">
                   {{class["title"]}}
                 </a><br>
                 <div class="d-flex justify-content-between">
@@ -95,7 +119,8 @@
                     <div class="d-flex justify-content-between">
                       <div class="pill-left">
                         <!-- Maybe an error here.-->
-                        <a href="/task_details_list_view?task_id={{task['task_id']}}&iteration={{task['iteration']}}" class="title-link">
+                        <a data-toggle="modal" data-target="#taskDetailsModal"
+                        data-id="?task_id={{task['task_id']}}&iteration={{task['iteration']}}" class="title-link open-TaskDetails">
                           {{task["iteration_title"]}}
                         </a>
                       </div>
@@ -145,12 +170,33 @@
                 <div class="pill" style="border-left-color: var(--hl-{{task['color']}})">
                   <div class="d-flex justify-content-between">
                     <div class="pill-left">
-                      <a href="/task_details_list_view?task_id={{task['task_id']}}&iteration={{task['iteration']}}" class="title-link">
+                      <a data-toggle="modal" data-target="#taskDetailsModal" data-id="?task_id={{task['task_id']}}&iteration={{task['iteration']}}" class="title-link open-TaskDetails">
                         <del>{{task["iteration_title"]}}</del>
                       </a>
-                      <a href="/uncomplete?task_id={{task['task_id']}}&iteration={{task['iteration']}}">
-                        <i class="fa fa-check-square ml-1"></i>
-                      </a>
+                      <i href="/uncomplete?task_id={{task['task_id']}}&iteration={{task['iteration']}}" id="uncomplete-{{task['task_id']}}-{{task['iteration']}}" class="fa fa-check-square ml-1"></i>
+                      <script>
+                        $(document).ready(function() {
+                          $("#uncomplete-{{task['task_id']}}-{{task['iteration']}}").click(function(event) {
+                            /* stop form from submitting normally */
+                            event.preventDefault();
+              
+                            /* get the action attribute from the <form action=""> element */
+                            let $button = $(this),
+                              url = $button.attr('href');
+              
+                            /* Send the data using post with element id name and name2*/
+                            let posting = $.post(url);
+              
+                            /* Alerts the results */
+                            posting.done(function() {
+                              location.reload(true);
+                            });
+                            posting.fail(function() {
+                              console.log("failed");
+                            });
+                          });
+                        });
+                      </script>
                       <i class="fa fa-trash ml-1 open-DeleteTask" data-toggle="modal"
                           data-target="#deleteTaskModal" data-id="{{task['task_id']}}">
                       </i>
@@ -174,20 +220,15 @@
   {% include "components/create-task.html" %}
   {% include "components/create-class.html" %}
 
-  {% if "task_details" in request.url_rule.rule%}
-    {% include "components/task-details.html" %}
-  {% endif %}
+  {% include "components/task-details.html" %}
 
-  {% if "class_details" in request.url_rule.rule%}
-    {% include "components/class-details.html" %}
-  {% endif %}
+  {% include "components/class-details.html" %}
 
   {% include "components/delete-class.html" %}
   {% include "components/delete-task.html" %}
 
   {% include "components/task-completion.html" %}
 
-  {% include "components/canvas-key.html" %}
   {% include "components/canvas-import.html" %}
 
   {% include "components/group-tasks.html" %}

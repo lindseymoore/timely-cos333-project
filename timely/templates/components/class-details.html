@@ -4,22 +4,17 @@ aria-labelledby="classDetailsModal" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h3 class="modal-title" id="classDetailsModal">{{class_details["title"]}}</h3>
+        <h3 class="modal-title" id="classDetailsModal">Class Details</h3>
         <div>
-          <i class="fa fa-edit ml-2" id="edit"></i>
+          <i class="fa fa-edit ml-2" id="edit-class"></i>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
       </div>
       <div class="modal-body">
-        <div id="display-class">
-          <h4>Name: </h4> <p>{{class_details["title"]}}</p>
-          <h4>Department: </h4> <p>{{class_details["dept"]}}</p>
-          <h4>Course Number: </h4> <p>{{class_details["num"]}}</p>
-          <h4>Color: </h4> <p>{{class_details["color"]}}</p>
-        </div>
         {% include "components/edit-class.html" %}
+        <div id="display-class"></div>
       </div>
     </div>
   </div>
@@ -27,12 +22,40 @@ aria-labelledby="classDetailsModal" aria-hidden="true">
 
 <script>
   $(document).ready(function() {
-    $('#classDetailsModal').modal('toggle');
     $("#form_edit_class").hide();
     
-    $('#edit').click( function() {
+    $('#edit-class').click( function() {
       $( '#display-class' ).toggle();
       $( '#form_edit_class' ).toggle();
+    });
+
+    $('#classDetailsModal').on('hidden.bs.modal', function (e) {
+      $("#display-class").html("");
+      $("#display-class").show();
+      $("#form_edit_class").hide();
+    });
+
+    $(document).on("click", ".open-ClassDetails", function () {		
+      let classId = $(this).data('id');
+      $("#form_edit_class").attr("action", $("#form_edit_class").attr("action") + "?class_id=" + classId);
+      $.getJSON({url: "/class_details?class_id=" + classId , success: function(class_details) {
+        $("#display-class").append(
+          `<h4>Name: </h4> <p>${class_details["title"]}</p>
+          <h4>Department: </h4> <p>${class_details["dept"]}</p>
+          <h4>Course Number: </h4> <p>${class_details["num"]}</p>
+          <h4>Color: </h4> <p>${
+            class_details['color'].charAt(0).toUpperCase() + class_details['color'].slice(1)
+          }</p>`
+        );
+        $("#edit_class_title").attr("value", class_details['title']);
+        $("#edit_class_id").attr("value", class_details['id']);
+        $("#edit_dept").attr("value", class_details['dept']);
+        $("#edit_num").attr("value", class_details['num']);
+        $("#span-current-color").html(class_details['color']);
+        $("#class-color-value").attr("value", class_details['color']);
+        $("#class-color-value").html(
+          class_details['color'].charAt(0).toUpperCase() + class_details['color'].slice(1));
+      }});
     });
   });
 </script>

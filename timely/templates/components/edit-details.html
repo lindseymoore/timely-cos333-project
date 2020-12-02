@@ -1,88 +1,99 @@
-<form action="/edit_task_details" id="form_edit_details">
-    <div class="form-group">
-      <label for="title">Name</label>
-      <input type="text" class="form-control" name="iteration_title" id="edit_task_title" value="{{task_details['iteration_title']}}">
-      <input type="hidden" id="edit_task_id" name="task_id" value="{{task_details['id']}}">
-      <input type="hidden" id="edit_iteration" name="iteration" value="{{task_details['iteration']}}">
-    </div>
-    <div class="form-group">
-      <label for="class_id">Class</label>
-      <input type="text" class="form-control" name="class_id" id="edit_class_id" value="{{task_details['class']}}" disabled required>
-    </div>
-    <div class="form-group">
-      <label for="priority">Priority</label>
-      <select class="form-control" name="priority" id="edit_priority">
-        <option value="{{task_details['priority']}}">
-          Current: 
-            {%if task_details["priority"] == 0%}
-              Low
-            {%endif%}
-            {%if task_details["priority"] == 1%}
-              Medium
-            {%endif%}
-            {%if task_details["priority"] == 2%}
-              High
-            {%endif%}
-        </option>
-        <option value=0>
-          Low
-        </option>
-        <option value=1>
-          Medium
-        </option>
-        <option value=2>
-          High
-        </option>
-      </select>
-    </div>
-    <!-- <div class="form-group">
-      <label for="group_title">Group Title</label>
-      <input type="text" class="form-control" name="group_title" id="edit_group_title" value="{{task_details['group_title']}}">
-    </div> -->
-    <div class="form-group">
-      <label for="est_time">Estimated Completion Time</label>
-      <input type="text" class="form-control" name="est_time" id="edit_est_time" value="{{task_details['est_time']}}">
-    </div>
-    <div class="form-group">
-      <label for="link">Link</label>
-      <input type="text" class="form-control" name="link" id="edit_link" value="{{task_details['link']}}">
-    </div>
-    <div class="form-group">
-      <label for="due_date">Due Date</label>
-      <input type="text" class="form-control" name="due_date" id="edit_due_date" value="{{task_details['due_date']}}">
-    </div>
-    <div class="form-group">
-      <label for="repeat_freq">Repeat</label>
-      <select class="form-control" name="repeat_freq" id="edit_repeat_freq">
-        <option value="{{task_details['repeat_freq']}}">
-          Current: {{task_details['repeat_freq']}}
-        </option>
-        <option value="daily">
-          Daily
-        </option>
-        <option value="weekly">
-          Weekly
-        </option>
-        <option value="biweekly">
-          Bi-Weekly
-        </option>
-        <option value="monthly">
-          Monthly
-        </option>
-      </select>
-    </div>
-    <div class="form-group">
-      <label for="repeat_end">Recurrence End Date</label>
-      <input type="text" class="form-control" name="repeat_end" id="edit_repeat_end" value="{{task_details['repeat_end']}}">
-    </div>
-    <div class="form-group">
-      <label for="notes">Notes</label>
-      <input type="text" class="form-control" name="notes" id="edit_notes" value="{{task_details['notes']}}">
-    </div>
-    <div class="form-group d-flex flex-row-reverse">
-      <button type="button" class="btn btn-secondary ml-3" data-dismiss="modal">Cancel</button>
-      <button type="submit" class="btn btn-primary">Submit</button>
-    </div>
+<form action="/edit_task_details" method="post" id="form_edit_details">
+  <script>
+    $(document).ready(function() {
+      $("#form_edit_details").submit(function(event) {
+        /* stop form from submitting normally */
+        event.preventDefault();
+
+        /* get the action attribute from the <form action=""> element */
+        let $form = $(this),
+          url = $form.attr('action'),
+          data = $form.serialize();
+
+        /* Send the data using post with element id name and name2*/
+        let posting = $.post(url, data);
+
+        /* Alerts the results */
+        posting.done(function() {
+          location.reload(true);
+        });
+        posting.fail(function() {
+          console.log("failed");
+        });
+      });
+    });
+  </script>
+  <div class="form-group">
+    <label for="title">Name</label>
+    <input type="text" class="form-control" name="iteration_title" id="edit_task_title" value="...">
+    <input type="hidden" id="edit_task_id" name="task_id" value="...">
+    <input type="hidden" id="edit_iteration" name="iteration" value="...">
+  </div>
+  <div class="form-group">
+    <label for="class_id">Class</label>
+    <input type="text" class="form-control" name="class_id" id="edit_class_id" value="..." disabled required>
+  </div>
+  <div class="form-group">
+    <label for="priority">Priority</label>
+    <select class="form-control" name="priority" id="edit_priority">
+      <option id="task-current-priority" value="...">
+        Current: ...
+      </option>
+      <option value=0>
+        Low
+      </option>
+      <option value=1>
+        Medium
+      </option>
+      <option value=2>
+        High
+      </option>
+    </select>
+  </div>
+  <div class="form-group">
+    <label for="est_time">Estimated Completion Time</label>
+    <input type="text" class="form-control" name="est_time" id="edit_est_time" value="...">
+  </div>
+  <div class="form-group">
+    <label for="link">Link</label>
+    <input type="text" class="form-control" name="link" id="edit_link" value="...">
+  </div>
+  <div class="form-group">
+    <label for="due_date">Due Date</label>
+    <input type="text" class="form-control" name="due_date" id="edit_due_date">
+  </div>
+  <div class="form-group">
+    <label for="repeat_freq">Repeat</label>
+    <select class="form-control" name="repeat_freq" id="edit_repeat_freq">
+      <option id="task-current-freq" value="...">
+        Current: ...
+      </option>
+      <option value="daily">
+        Daily
+      </option>
+      <option value="weekly">
+        Weekly
+      </option>
+      <option value="biweekly">
+        Bi-Weekly
+      </option>
+      <option value="monthly">
+        Monthly
+      </option>
+    </select>
+  </div>
+  <div class="form-group">
+    <label for="repeat_end">Recurrence End Date</label>
+    <input type="text" class="form-control" name="repeat_end" id="edit_repeat_end">
+  </div>
+  <div class="form-group">
+    <label for="notes">Notes</label>
+    <input type="text" class="form-control" name="notes" id="edit_notes" value="...">
+  </div>
+  <div class="form-group d-flex flex-row-reverse">
+    <button type="button" class="btn btn-secondary ml-3" data-dismiss="modal">Cancel</button>
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </div>
 </form>
 
 <script>

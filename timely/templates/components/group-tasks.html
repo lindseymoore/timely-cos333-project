@@ -17,7 +17,31 @@ aria-labelledby="groupTasksModal" aria-hidden="true">
           <div class="pill-box"></div>
           <div id="class-loading-message">Loading Classes...</div>
         </div>
-        <form action="/group_task" method="post">
+        <form action="/group_task" method="post" id="group-task-form">
+          <script>
+            $(document).ready(function() {
+              $("#group-task-form").submit(function(event) {
+                /* stop form from submitting normally */
+                event.preventDefault();
+        
+                /* get the action attribute from the <form action=""> element */
+                let $form = $(this),
+                  url = $form.attr('action'),
+                  data = $form.serialize();
+        
+                /* Send the data using post with element id name and name2*/
+                let posting = $.post(url, data);
+        
+                /* Alerts the results */
+                posting.done(function() {
+                  location.reload(true);
+                });
+                posting.fail(function() {
+                  console.log("failed");
+                });
+              });
+            });
+          </script>
           <div id="task-selection" class="d-none">
             <div id="group">
               <h5>Tasks to Group</h5>

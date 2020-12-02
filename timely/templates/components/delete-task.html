@@ -14,6 +14,29 @@ aria-labelledby="deleteTaskModal" aria-hidden="true">
       </div>
       <div class="modal-footer justify-content-center">
         <button type="button" id="btn-deleteTask" class="btn btn-danger">Delete</button>
+        <script>
+          $(document).ready(function() {
+            $("#btn-deleteTask").click(function(event) {
+              /* stop form from submitting normally */
+              event.preventDefault();
+
+              /* get the action attribute from the <form action=""> element */
+              let $button = $(this),
+                url = $button.attr('href');
+
+              /* Send the data using post with element id name and name2*/
+              let posting = $.post(url);
+
+              /* Alerts the results */
+              posting.done(function() {
+                location.reload(true);
+              });
+              posting.fail(function() {
+                console.log("failed");
+              });
+            });
+          });
+        </script>
         <button type="button" class="btn btn-secondary ml-3" data-dismiss="modal">Cancel</button>
       </div>
     </div>
@@ -22,14 +45,8 @@ aria-labelledby="deleteTaskModal" aria-hidden="true">
     $(document).ready(function() {
       $(document).on("click", ".open-DeleteTask", function () {
         let taskId = $(this).data('id');
-        let loc = window.location.href; // returns the full URL
-        if(/calendar/.test(loc)) {
-          href = "/calendar/delete_task"
-        }else{
-          href = "/delete_task"
-        }
-        $(".modal-footer #btn-deleteTask").attr("onclick",
-        "location.href='" + href + "?task_id=" + taskId + "';");
+        $(".modal-footer #btn-deleteTask").attr("href",
+        "/delete_task" + "?task_id=" + taskId);
       });
     });
   </script>

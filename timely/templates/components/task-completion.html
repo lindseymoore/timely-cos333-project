@@ -9,16 +9,42 @@ aria-labelledby="taskCompletionModal" aria-hidden="true">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body">
-        <div class="form-group">
-          <label for="title">Time Taken</label>
-          <input type="text" class="form-control" name="time" id="time-taken">
+      <form action="this gets set by javascript below" method="post" id="complete-task-form">
+        <script>
+          $(document).ready(function() {
+            $("#complete-task-form").submit(function(event) {
+              /* stop form from submitting normally */
+              event.preventDefault();
+
+              /* get the action attribute from the <form action=""> element */
+              let $form = $(this),
+                url = $form.attr('action'),
+                data = $form.serialize();
+
+              /* Send the data using post with element id name and name2*/
+              let posting = $.post(url, data);
+
+              /* Alerts the results */
+              posting.done(function() {
+                location.reload(true);
+              });
+              posting.fail(function() {
+                console.log("failed");
+              });
+            });
+          });
+        </script>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="title">Time Taken</label>
+            <input type="text" class="form-control" name="time" id="time-taken">
+          </div>
         </div>
-      </div>
-      <div class="modal-footer justify-content-center">
-        <button type="button" id="btn-completeTask" class="btn btn-primary">Mark as Complete</button>
-        <button type="button" class="btn btn-secondary ml-3" data-dismiss="modal">Cancel</button>
-      </div>
+        <div class="modal-footer justify-content-center">
+          <button type="submit" id="btn-completeTask" class="btn btn-primary">Mark as Complete</button>
+          <button type="button" class="btn btn-secondary ml-3" data-dismiss="modal">Cancel</button>
+        </div>
+      </form>
     </div>
   </div>
   <script>
@@ -28,21 +54,8 @@ aria-labelledby="taskCompletionModal" aria-hidden="true">
         let iteration = $(this).data('iteration');
         let time = $("input#time-taken").val();
         
-        let loc = window.location.href; // returns the full URL
-        if(/calendar/.test(loc)) {
-          href = "/calendar/completion_form"
-        }else{
-          href = "/completion_form"
-        }
-        
-        $(".modal-footer #btn-completeTask").attr("onclick",
-        href + "?task_id=" + taskId + "&iteration=" + iteration);
-      });
-      $(document).on("click", "#btn-completeTask", function () {
-        let time = $("input#time-taken").val();
-        $(".modal-footer #btn-completeTask").attr("onclick",
-         $(this).attr("onclick") + "&time=" + time);
-         window.location.href=$(this).attr("onclick");
+        $(".modal-footer #complete-task-form").attr("action",
+        "/completion_form" + "?task_id=" + taskId + "&iteration=" + iteration);
       });
     });
   </script>
