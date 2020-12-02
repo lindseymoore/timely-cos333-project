@@ -141,7 +141,7 @@ def fetch_graph_times(task_id: int, iteration: int, username: str):
     actual_times = []       
     predicted_times = []
     labels = []
-    i = 1
+    i = 0
 
     for prev in prev_iterations:
         i += 1
@@ -159,6 +159,3 @@ def fetch_graph_times(task_id: int, iteration: int, username: str):
     times = {"actual_times": actual_times, "predicted_times": predicted_times, "labels": labels}
 
     return times
-
-
-
