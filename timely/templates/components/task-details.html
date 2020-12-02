@@ -41,7 +41,7 @@ aria-labelledby="taskDetailsModal" aria-hidden="true">
       $.getJSON({url: "/task_details" + taskId, success: function(task_details) {
         
         $("#display-details").append(
-          `<h4>Title: </h4> <p>${task_details["task_title"]}</p>
+          `<h4>Title: </h4> <p>${task_details["iteration_title"]}</p>
           <h4>Class: </h4> <p>${task_details["class"]}</p>
           <h4>Repeating: </h4> 
           <p>
