@@ -34,7 +34,6 @@ def task_handler(details: dict):
    tables respectively.
     """
     task = Task()
-    task_iteration = TaskIteration()
 
     # Insert into task table
     task.username = details["username"]
@@ -59,9 +58,8 @@ def task_handler(details: dict):
     iteration = get_next_task_iteration(task_id)
 
     # Create new task iteration if it is a repeating task
-    if task.repeat:
-        due_date = datetime.strptime(details["due_date"], '%Y-%m-%d').date()
-        create_all_iterations(task, iteration, due_date, details)
+    due_date = datetime.strptime(details["due_date"], '%Y-%m-%d').date()
+    create_all_iterations(task, iteration, due_date, details)
 
     
 def fetch_increment(frequency: str):
