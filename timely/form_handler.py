@@ -266,17 +266,39 @@ def insert_canvas_tasks(task_list: list, username: str):
 
 def create_new_group(task_ids: list, group_title: str, username: str):
     """Function to create new repeating task group based on task grouping modal."""
-    group_task_id = task_ids[0]
+    is_new_group = True
+    largest_group = task_ids[0]
+    max_iters = 1
     for task_id in task_ids:
-        try:
-            group_task_id = get_task_id(group_title, task_id)
-        except Exception:
-            continue
+        num_iters = db.session.query(TaskIteration).filter((TaskIteration.username == username) & \
+            (TaskIteration.task_id == task_id)).count()
+        if num_iters > max_iters:
+            max_iters = num_iters
+            largest_group = task_id
+            is_new_group = False
 
-    # task_group = {}
+    # group_task_id = task_ids[0]
     # for task_id in task_ids:
-    #     task_group[task_id] = fetch_task_due_date(task_id, username)
-    # task_group = sorted(task_group, key = task_group.get)
+    #     try:
+    #         group_task_id = get_task_id(group_title, task_id)
+    #     except Exception:
+    #         continue
+    task_group = {}
+    if is_new_group:
+        for task_id in task_ids:
+            task_group[task_id] = fetch_task_due_date(task_id, username)
+        task_group = sorted(task_group, key = task_group.get)
+
+        group_task_id = task_group[0]
+
+        task = db.session.query(Task).filter((Task.username == username) &
+            (Task.task_id == group_task_id)).first()
+
+        # Make first iteration of task repeating
+        task.repeat = True
+        task.title = group_title
+        db.session.commit()
+
     # group_task_id = task_group[0]
     task = db.session.query(Task).filter((Task.username == username) &
         (Task.task_id == group_task_id)).first()
@@ -286,11 +308,17 @@ def create_new_group(task_ids: list, group_title: str, username: str):
     task.title = group_title
     db.session.commit()
 
+    # Remove first iteration from the list of task_ids, sort the remainder by due_date
+    task_ids.pop(task_ids.index(group_task_id))
+    task_group = {}
+    for task_id in task_ids:
+        task_group[task_id] = fetch_task_due_date(task_id, username)
+    task_group = sorted(task_group, key = task_group.get)
+    print(task_group)
+
     # Update next iterations of task to be repeating tasks of first iteration. Delete their entries
     # in the Task table.
-
-    task_ids.pop(task_ids.index(group_task_id))
-    for old_task_id in task_ids:
+    for old_task_id in task_group:
         task_iteration = db.session.query(TaskIteration).filter((TaskIteration.username == username)
             & (TaskIteration.task_id == old_task_id)).first()
         
