@@ -149,9 +149,15 @@ def fetch_graph_times(task_id: int, iteration: int, username: str):
 
     for prev in prev_iterations:
         i += 1
-        if prev.actual_time is not None and prev.timely_pred is not None:
+        if prev.actual_time is not None: #and prev.timely_pred is not None:
             actual_times.append(prev.actual_time)
-            predicted_times.append(prev.timely_pred)
+            if prev.timely_pred is None:
+                if prev.est_time is not None:
+                    predicted_times.append(prev.est_time)
+                else:
+                    predicted_times.append(0)
+            else:
+                predicted_times.append(prev.timely_pred)
             labels.append(i)
     
     if curr_iteration.completed:
