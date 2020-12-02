@@ -136,12 +136,16 @@ def fetch_graph_times(task_id: int, iteration: int, username: str):
 
     actual_times = []       
     predicted_times = []
-
+    labels = []
+    i = 1
     for prev in prev_iterations:
-        actual_times.append(prev.actual_time)
-        predicted_times.append(prev.timely_pred)
+        if prev.actual_time is not None and prev.timely_pred is not None:
+            actual_times.append(prev.actual_time)
+            predicted_times.append(prev.timely_pred)
+            labels.append(i)
+            i += 1
 
-    times = {"actual_times": actual_times, "predicted_times": predicted_times}
+    times = {"actual_times": actual_times, "predicted_times": predicted_times, "labels": labels}
 
     return times
 
