@@ -134,7 +134,8 @@ h1, h2, h3, h4, h5 {
 
 .time-prediction {
     margin-bottom: 0;
-    width: 2.5em;
+    width: 3em;
+    font-size: 1.5rem;
 }
 
 .week-day {
@@ -228,5 +229,9 @@ hr {
 /* for form validation */
 .green-check {
     background-position: right .9rem center !important;
+}
+
+.massive {
+    size: 5em;
 }
 

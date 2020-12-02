@@ -16,24 +16,28 @@ aria-labelledby="groupTasksModal" aria-hidden="true">
           <h5>Select a Class</h5>
           <div class="pill-box"></div>
           <div id="class-loading-message">Loading Classes...</div>
-          <div class="modal-footer justify-content-center">
-            <button type="button" class="btn btn-secondary ml-3" data-dismiss="modal">Cancel</button>
-          </div>
         </div>
-        <div id="task-selection" class="d-none">
-          <form action="/group_task" method="post">
+        <form action="/group_task" method="post">
+          <div id="task-selection" class="d-none">
             <div id="group">
               <h5>Tasks to Group</h5>
               <div class="pill-box" id="group-list"></div>
               <div class="d-flex justify-content-center show-more-div"></div>
             </div>
             <div id="task-loading-message">Loading tasks...</div>
-            <div class="modal-footer justify-content-center">
-              <button type="submit" id="btn-groupTasks" class="btn btn-primary">Group</button>
-              <button type="button" class="btn btn-secondary ml-3" data-dismiss="modal">Cancel</button>
+          </div>
+          <div id="title-selection" class="d-none">
+            <div class="form-group">
+              <label for="group_title">New Group Title</label>
+              <input type="text" class="form-control" name="group_title" id="group-title">
             </div>
-          </form>
-        </div>
+          </div>
+          <div class="modal-footer justify-content-center">
+            <button type="button" id="btn-selectTasks" class="btn btn-primary d-none" disabled>Select</button>
+            <button type="submit" id="btn-groupTasks" class="btn btn-primary d-none">Group</button>
+            <button type="button" class="btn btn-secondary ml-3" data-dismiss="modal">Cancel</button>
+          </div>
+        </form>
       </div>
     </div>
   </div>
@@ -44,6 +48,24 @@ aria-labelledby="groupTasksModal" aria-hidden="true">
         $("#class-selection .pill-box").empty();
         $("#class-selection").show();
         $("#task-selection").addClass("d-none");
+        $("#title-selection").addClass("d-none");
+        $("#btn-selectTasks").addClass("d-none");
+        $("#task-loading-message").show();
+        $("#class-loading-message").show();
+      });
+
+      // Select tasks button action
+      $("#btn-selectTasks").on("click", function() {
+        $("#btn-groupTasks").removeClass("d-none");
+        $("#btn-selectTasks").addClass("d-none");
+        $("#task-selection").addClass("d-none");
+        $("#title-selection").removeClass("d-none");
+        let iterationCounts = [];
+        $(".pill-check:checkbox:checked").each(function () {
+          iterationCounts.push({title: $(this).data("title"), count: $(this).data("count")});
+        });
+        iterationCounts.sort((a, b) => (b.count > a.count));
+        $("#group-title").attr("value", iterationCounts[0].title);
       });
 
       $('#groupTasksModal').on('shown.bs.modal', function (e) {
@@ -69,10 +91,11 @@ aria-labelledby="groupTasksModal" aria-hidden="true">
           });
         }});
       });
-      
+
       function showTasks(id) {
         $("#class-selection").hide();
         $("#task-selection").removeClass("d-none");
+        $("#btn-selectTasks").removeClass("d-none");
         
         $.getJSON({url: `/get_tasks?class_id=${id}`, success: function(data) {
           // Hide Loading Message
@@ -83,7 +106,11 @@ aria-labelledby="groupTasksModal" aria-hidden="true">
           }
 
           // Add Tasks to DOM
+          // If title is none, show iteration_title
+          // If due_date is none, either leave blank or state "Group"
+          // Isn't properly fetching task with most iterations
           $.each(data, function(count, task) {
+            let repeating = task["repeat"]
             $("#group-list").append(
               `<div class="pill-row">
                 <div class="form-check d-flex align-items-center">
@@ -104,6 +131,8 @@ aria-labelledby="groupTasksModal" aria-hidden="true">
               </div>`
             );
             $(`#task${count}`).attr("value", task["task_id"]); 
+            $(`#task${count}`).data("num_iterations", task["num_iterations"]);
+            $(`#task${count}`).data("title", task["title"]); 
           });
 
           // Hide all tasks except the first 10
@@ -121,6 +150,13 @@ aria-labelledby="groupTasksModal" aria-hidden="true">
               }
             });
           }
+
+          // Disable select button if no tasks selected
+          let checkBoxes = $('.pill-check');
+          checkBoxes.change(function () {
+              $('#btn-selectTasks').prop('disabled', checkBoxes.filter(':checked').length < 1);
+          });
+          checkBoxes.change();
         }});
       }
     });

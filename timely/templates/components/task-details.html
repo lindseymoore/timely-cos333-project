@@ -4,8 +4,9 @@ aria-labelledby="taskDetailsModal" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h3 class="modal-title">{{task_details["title"]}}</h3>
-        <div>
+        <!-- Maybe an error here -->
+        <h3 class="modal-title">{{task_details["iteration_title"]}}</h3>
+        <div class="d-flex align-items-center">
           <i class="fa fa-edit ml-2" id="edit"></i>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
@@ -15,7 +16,17 @@ aria-labelledby="taskDetailsModal" aria-hidden="true">
       <div class="modal-body">
         <div id="display-details">
           <h4>Class: </h4> <p>{{task_details["class"]}}</p>
-          <h4>Repeating: </h4> <p>{{task_details["repeating"]}}</p>
+          <h4>Repeating: </h4> 
+          <p>
+            {% if task_details["repeating"] %}
+              Yes
+            {% else %}
+              No
+            {% endif %}
+          </p>
+          {% if task_details["repeating"] %}
+            <h4>Group: </h4> <p>{{task_details["group_title"]}}</p>
+          {% endif %}
           <h4>Due Date: </h4> <p>{{task_details["due_date"]}}</p>
           <h4>Priority: </h4>
           <p>
@@ -36,7 +47,7 @@ aria-labelledby="taskDetailsModal" aria-hidden="true">
             {% set link = "//" + task_details['link'] %}
           {% endif %}
           <h4>Link: </h4> <p><a target="_blank" href="{{link}}">{{task_details["link"]}}</a></p>
-          <h4>Estimated Time: </h4> <p>{{task_details["est_time"]}}</p>
+          <h4>Estimated Time: </h4> <p>{{task_details["est_time"]}} h</p>
           <h4>Notes: </h4> <p>{{task_details["notes"]}}</p>
           {% if task_details["repeating"] %}
             <h4>Time Analytics: </h4>

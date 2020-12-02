@@ -2,15 +2,23 @@
     <div class="pill" style="border-left-color: var(--hl-{{task['color']}})">
       <div class="d-flex justify-content-between">
         <div class="pill-left">
+          <!-- Maybe an error here -->
           <a href="/task_details_calendar_view?task_id={{task['task_id']}}&iteration={{task['iteration']}}" class="title-link">
-            {{task["title"]}}
+            {{task["iteration_title"]}}
           </a>
         </div>
         <div class="d-none d-sm-inline">
           {% if task["repeat"] %}
             <span class="fa fa-repeat mr-1"></span>
           {% endif %}
+          {% if task['iteration'] > 2 %}
+            <b id="timely-time-calendar" style="color: var(--hl-blue);" data-toggle="tooltip" data-placement="right"
+              title="Timely Predicted Time">
+          {% endif %}
           {{task["timely_pred"]}} h
+          {% if task['iteration'] > 2 %}
+            </b>
+          {% endif %}
         </div>
       </div>
       <div class="d-flex justify-content-between">
