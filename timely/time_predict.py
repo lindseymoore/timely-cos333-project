@@ -127,6 +127,7 @@ def update_timely_pred(task_id: int, iteration: int, username: str):
         next_iteration.timely_pred = find_avg_prediction(times)
         db.session.commit()
 
+
 def fetch_graph_times(task_id: int, iteration: int, username: str):
     curr_iteration = db.session.query(TaskIteration).filter( \
                     (TaskIteration.username == username) & \

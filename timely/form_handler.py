@@ -284,9 +284,6 @@ def create_new_group(task_ids: list, group_title: str, username: str):
     # Make first iteration of task repeating
     task.repeat = True
     task.title = group_title
-
-    #print(task.repeating)
-    #print(task.title)
     db.session.commit()
 
     # Update next iterations of task to be repeating tasks of first iteration. Delete their entries
@@ -299,23 +296,8 @@ def create_new_group(task_ids: list, group_title: str, username: str):
         
         task_iteration.iteration = get_next_task_iteration(group_task_id)
         task_iteration.task_id = group_task_id
-        #print(task_iteration)
 
         db.session.commit()
 
         db.session.query(Task).filter(Task.task_id == old_task_id).delete()
         db.session.commit()
-
-    # for iteration, old_task_id in enumerate(task_group[1:]):
-    #     # Update task_id and iteration of next task_iteration in the group
-    #     task_iteration = db.session.query(TaskIteration).filter((TaskIteration.username == username)
-    #         & (TaskIteration.task_id == old_task_id)).first()
-     
-    #     task_iteration.task_id = group_task_id
-    #     task_iteration.iteration = iteration + 2
-
-    #     db.session.commit()
-
-    #     # Delete entry in Task table from database - unnecessary because it's now repeating
-    #     db.session.query(Task).filter(Task.task_id == old_task_id).delete()
-    #     db.session.commit()
