@@ -9,17 +9,17 @@
         </button>
       </div>
       <div class="modal-body">
-        <p>
-          <span class="required">*</span> Required Field
-        </p>
-        <form action="/task_form" class="needs-validation" novalidate>
+          <p>
+            <span class="required">*</span> Required Field
+          </p>
+          <form action="/task_form" class="needs-validation" id="create-task-form" novalidate>
             <div class="form-group">
-              <label for="task_title">Name</label> <span class="required">*</span>
+              <label for="task_title">Name</label>  <span class="required">*</span>
               <input type="text" class="form-control" name="task_title" id="task_title" required>
             </div>
             <div class="form-group">
               <label for="class_id">Class</label>
-              <select class="form-control move-green-checks" name="class_id" id="class_id">
+              <select class="form-control green-check" name="class_id" id="class_id">
                 {% for class in class_list %}
                   <option value="{{class['class_id']}}">
                     {{ class["title"] }}
@@ -29,7 +29,7 @@
             </div>
             <div class="form-group">
               <label for="priority">Priority</label>
-              <select class="form-control move-green-checks" name="priority" id="priority">
+              <select class="form-control green-check" name="priority" id="priority">
                 <option value=0>
                   Low
                 </option>
@@ -41,13 +41,17 @@
                 </option>
               </select>
             </div>
+            <!-- <div class="form-group">
+              <label for="group_title">Group Title</label>
+              <input type="text" class="form-control" name="group_title" id="edit_group_title">
+            </div> -->
             <div class="form-group">
               <label for="est_time">Estimated Completion Time (hr.)</label> <span class="required">*</span>
-              <input type="number" step="0.1" class="form-control" name="est_time" id="est_time" required>
+              <input type="number" step="0.1" min="0" max="99.9" class="form-control" name="est_time" id="est_time" placeholder="e.g. 4.5" required>
             </div>
             <div class="form-group">
-              <label for="link">Link</label>
-              <input type="text" class="form-control" name="link" id="link">
+              <label for="link">Assignment Link</label>
+              <input type="url" class="form-control" name="link" id="link" placeholder="e.g. https://example.com">
             </div>
             <div class="form-group">
               <label for="due_date">Due Date</label> <span class="required">*</span>
@@ -55,7 +59,7 @@
             </div>
             <div class="form-group">
               <label for="repeat_freq">Repeat</label>
-              <select class="form-control move-green-checks" name="repeat_freq" id="repeat_freq">
+              <select class="form-control green-check" name="repeat_freq" id="repeat_freq">
                 <option value="">
                   Does Not Repeat
                 </option>
@@ -100,12 +104,33 @@
   });
 </script>
 
+<!-- <script>
+  maybe resets validator
+  $('#taskModal').bootstrapValidator({
+    excluded: ':disabled'
+});
+</script> -->
+
 <script>
   $(document).ready(function() {
-    $('#taskModal').on('hidden.bs.modal', function (e) {
-      $("#task_title").html("");
+    // $("#taskModal").on('hidden.bs.modal', function () {
+    //   $("#create-task-form")[0].reset(); 
+    //   $('#create-task-form').bootstrapValidator("destroy");
+    // });
+    $('#taskModal').on('hidden.bs.modal', function(){
+        $(this).find('#create-task-form')[0].reset(); // this line resets the input fields! the rest of the lines are trash
+        $("#create-task-form").each(function(){
+            $(this).validate().resetForm();
+        });
     });
-</script>
+  });
+//   maybe resets validator
+// $(document).ready(function() {
+//     $("#taskModal").on('shown.bs.modal', function () {
+//       $('#create-task-form').bootstrapValidator('resetForm', true);
+//     });
+//   });
+// </script>
 
 <script>
   // Disabling form submissions if there are invalid fields from Bootstrap site

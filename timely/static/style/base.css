@@ -226,7 +226,7 @@ hr {
   }
 
 /* for form validation */
-.form-control.is-valid, .was-validated .form-control:valid {
-    background-position-x: right calc(.7em +.1875em);
+.green-check {
+    background-position: right .9rem center !important;
 }
 

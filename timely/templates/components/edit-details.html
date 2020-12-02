@@ -14,7 +14,7 @@
     </div>
     <div class="form-group">
       <label for="priority">Priority</label>
-      <select class="form-control" name="priority" id="edit_priority">
+      <select class="form-control green-check" name="priority" id="edit_priority">
         <option value="{{task_details['priority']}}">
           Current: 
             {%if task_details["priority"] == 0%}
@@ -40,11 +40,11 @@
     </div>
     <div class="form-group">
       <label for="est_time">Estimated Completion Time</label> <span class="required">*</span>
-      <input type="text" class="form-control" name="est_time" id="edit_est_time" value="{{task_details['est_time']}}" required>
+      <input type="text" class="form-control" name="est_time" id="edit_est_time" value="{{task_details['est_time']}}" placeholder="e.g. 4.5" required>
     </div>
     <div class="form-group">
-      <label for="link">Link</label>
-      <input type="text" class="form-control" name="link" id="edit_link" value="{{task_details['link']}}">
+      <label for="link">Assignment Link</label>
+      <input type="url" class="form-control" name="link" id="edit_link" value="{{task_details['link']}}" placeholder="e.g. https://example.com">
     </div>
     <div class="form-group">
       <label for="due_date">Due Date</label> <span class="required">*</span>
@@ -52,7 +52,7 @@
     </div>
     <div class="form-group">
       <label for="repeat_freq">Repeat</label>
-      <select class="form-control" name="repeat_freq" id="edit_repeat_freq">
+      <select class="form-control green-check" name="repeat_freq" id="edit_repeat_freq">
         <option value="{{task_details['repeat_freq']}}">
           Current: {{task_details['repeat_freq']}}
         </option>
