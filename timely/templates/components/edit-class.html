@@ -9,7 +9,6 @@
         let $form = $(this),
           url = $form.attr('action'),
           data = $form.serialize();
-        console.log("Data", data);
 
         /* Send the data using post with element id name and name2*/
         let posting = $.post(url, data);
