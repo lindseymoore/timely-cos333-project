@@ -10,18 +10,18 @@ aria-labelledby="classModal" aria-hidden="true">
         </button>
       </div>
       <div class="modal-body">
-        <form action="/class_form">
+        <form action="/class_form" class="needs-validation" novalidate>
             <div class="form-group">
               <label for="title">Name</label>
               <input type="text" class="form-control" name="title" id="title" required>
             </div>
             <div class="form-group">
               <label for="dept">Department</label>
-              <input type="text" class="form-control" name="dept" id="dept">
+              <input type="text" maxlength="3" class="form-control" name="dept" id="dept" placeholder="No more than 3 characters" required>
             </div>
             <div class="form-group">
               <label for="num">Course Number</label>
-              <input type="text" class="form-control" name="num" id="num">
+              <input type="number" min="0" max="999" class="form-control" name="num" id="num" placeholder="No more than 3 digits" required>
             </div>
             <div class="form-group">
               <label for="color">Color</label>
@@ -63,3 +63,24 @@ aria-labelledby="classModal" aria-hidden="true">
     </div>
   </div>
 </div>
+
+<script>
+  // Disabling form submissions if there are invalid fields from Bootstrap site
+  (function() {
+    'use strict';
+    window.addEventListener('load', function() {
+      // Fetch all the forms we want to apply custom Bootstrap validation styles to
+      var forms = document.getElementsByClassName('needs-validation');
+      // Loop over them and prevent submission
+      var validation = Array.prototype.filter.call(forms, function(form) {
+        form.addEventListener('submit', function(event) {
+          if (form.checkValidity() === false) {
+            event.preventDefault();
+            event.stopPropagation();
+          }
+          form.classList.add('was-validated');
+        }, false);
+      });
+    }, false);
+  })();
+  </script>
