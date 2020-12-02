@@ -1,6 +1,7 @@
 """Functions to fetch class and task information."""
 
-from datetime import timedelta, date, datetime
+from datetime import date, datetime, timedelta
+from operator import itemgetter
 from typing import List
 
 from sqlalchemy import desc
@@ -28,7 +29,9 @@ def fetch_class_list(username: str) -> List[dict]:
                     "num": course.num, "color": course.color}
         classes.append(class_obj)
 
+    classes = sorted(classes, key=itemgetter('dept', 'num'))
     return classes
+
 
 def fetch_task_list_view(username: str, sort: str = "due_date") -> List[dict]:
     task_list = [] 
