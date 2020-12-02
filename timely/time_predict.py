@@ -128,22 +128,33 @@ def update_timely_pred(task_id: int, iteration: int, username: str):
         db.session.commit()
 
 def fetch_graph_times(task_id: int, iteration: int, username: str):
+    curr_iteration = db.session.query(TaskIteration).filter( \
+                    (TaskIteration.username == username) & \
+                    (TaskIteration.task_id == task_id) & \
+                    (TaskIteration.iteration == int(iteration))).first()
     prev_iterations = db.session.query(TaskIteration).filter( \
-                (TaskIteration.username == username) & \
-                (TaskIteration.task_id == task_id) & \
-                (TaskIteration.completed == True) & \
-                (TaskIteration.iteration < int(iteration))).order_by(TaskIteration.iteration).all()
+                    (TaskIteration.username == username) & \
+                    (TaskIteration.task_id == task_id) & \
+                    (TaskIteration.completed == True) & \
+                    (TaskIteration.iteration < int(iteration))).order_by(TaskIteration.iteration).all()
 
     actual_times = []       
     predicted_times = []
     labels = []
     i = 1
+
     for prev in prev_iterations:
+        i += 1
         if prev.actual_time is not None and prev.timely_pred is not None:
             actual_times.append(prev.actual_time)
             predicted_times.append(prev.timely_pred)
             labels.append(i)
-            i += 1
+    
+    if curr_iteration.completed:
+        i+=1
+        actual_times.append(curr_iteration.actual_time)
+        predicted_times.append(curr_iteration.timely_pred)
+        labels.append(i)
 
     times = {"actual_times": actual_times, "predicted_times": predicted_times, "labels": labels}
 

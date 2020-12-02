@@ -287,7 +287,7 @@ def task_details_modal():
         curr_iteration = task_details["iteration"]
         #print(curr_iteration)
         times = fetch_graph_times(task_id, curr_iteration, username)
-        labels = times["labels"]#list(range(1, curr_iteration))
+        labels = times["labels"] #list(range(1, curr_iteration))
         actual_values = times["actual_times"]
         predicted_values = times["predicted_times"]
         # actual_values = [val for val in actual_values if val]
