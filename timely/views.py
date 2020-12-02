@@ -290,8 +290,8 @@ def task_details_modal():
         labels = list(range(1, curr_iteration))
         actual_values = times["actual_times"]
         predicted_values = times["predicted_times"]
-        print(labels)
-        print(times)
+        # actual_values = [val for val in actual_values if val]
+        # predicted_values = [val for val in predicted_values if val]
         
         return render_template(template,
                 class_list=classes,
