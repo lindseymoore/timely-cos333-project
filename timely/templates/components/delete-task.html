@@ -27,6 +27,9 @@ aria-labelledby="deleteTaskModal" aria-hidden="true">
               /* Send the data using post with element id name and name2*/
               let posting = $.post(url);
 
+              $(this).prop("disabled", true);
+              $(this).text("Loading...");
+
               /* Alerts the results */
               posting.done(function() {
                 location.reload(true);

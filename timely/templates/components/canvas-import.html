@@ -23,6 +23,9 @@ aria-labelledby="canvasImportModal" aria-hidden="true">
                 let $form = $(this),
                   url = $form.attr('action'),
                   data = $form.serialize();
+                
+                $("#" + $(this).attr("id") + " :submit").prop("disabled", true);
+                $("#" + $(this).attr("id") + " :submit").text("Loading...");
 
                 /* Send the data using post with element id name and name2*/
                 let posting = $.post(url, data);
