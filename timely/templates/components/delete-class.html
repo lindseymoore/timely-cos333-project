@@ -12,7 +12,33 @@
         Are you sure you want to delete this class and all tasks associated with it?		
       </div>		
       <div class="modal-footer justify-content-center">		
-        <button type="button" id="btn-deleteClass" class="btn btn-danger">Delete</button>		
+        <button type="button" id="btn-deleteClass" class="btn btn-danger">Delete</button>
+        <script>
+          $(document).ready(function() {
+            $("#btn-deleteClass").click(function(event) {
+              /* stop form from submitting normally */
+              event.preventDefault();
+
+              /* get the action attribute from the <form action=""> element */
+              let $button = $(this),
+                url = $button.attr('href');
+
+              /* Send the data using post with element id name and name2*/
+              let posting = $.post(url);
+
+              $(this).prop("disabled", true);
+              $(this).text("Loading...");
+
+              /* Alerts the results */
+              posting.done(function() {
+                location.reload(true);
+              });
+              posting.fail(function() {
+                console.log("failed");
+              });
+            });
+          });
+        </script>
         <button type="button" class="btn btn-secondary ml-3" data-dismiss="modal">Cancel</button>		
       </div>		
     </div>		
@@ -21,7 +47,7 @@
     $(document).ready(function() {		
       $(document).on("click", ".open-DeleteClass", function () {		
         let classId = $(this).data('id');		
-        $(".modal-footer #btn-deleteClass").attr("onclick", "location.href='/delete_class?class_id=" + classId + "';");		
+        $(".modal-footer #btn-deleteClass").attr("href", "/delete_class?class_id=" + classId);		
       });		
     });		
   </script>		

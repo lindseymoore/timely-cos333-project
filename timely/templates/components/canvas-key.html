@@ -10,7 +10,7 @@ aria-labelledby="canvasKeyModal" aria-hidden="true">
             <i class="fa fa-info-circle ml-3 info-icon" id="key-tooltip" data-toggle="tooltip" data-placement="right"
               title="Your personal API Key is necessary to automatically import classes and tasks
               from Canvas. <br><br>
-              Click the <b>info icon</b> for more information on how to do this.">
+              Click this <b>info icon</b> for more information on how to do this.">
             </i>
           </a>
         </div>
@@ -23,7 +23,34 @@ aria-labelledby="canvasKeyModal" aria-hidden="true">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <form action="/canvas_key">
+      <form action="/canvas_key" id="canvas-key-form">
+        <script>
+          $(document).ready(function() {
+            $("#canvas-key-form").submit(function(event) {
+              /* stop form from submitting normally */
+              event.preventDefault();
+
+              /* get the action attribute from the <form action=""> element */
+              let $form = $(this),
+                url = $form.attr('action'),
+                data = $form.serialize();
+
+              /* Send the data using post with element id name and name2*/
+              let posting = $.post(url, data);
+
+              $("#" + $(this).attr("id") + " :submit").prop("disabled", true);
+              $("#" + $(this).attr("id") + " :submit").text("Loading...");
+
+              /* Alerts the results */
+              posting.done(function() {
+                $("#canvasKeyModal").modal("hide");
+              });
+              posting.fail(function() {
+                console.log("failed");
+              });
+            });
+          });
+        </script>
         <div class="modal-body">
           <div class="form-group">
             <label for="title">API Key</label>

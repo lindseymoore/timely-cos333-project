@@ -27,11 +27,6 @@ def fetch_task_times(task_id: str, username: str) -> List[dict]:
                 "est_time": iteration.est_time, "actual_time": iteration.actual_time,
                 "timely_pred": iteration.timely_pred, "completed": iteration.completed})
 
-    # Logging output
-    print("Fetched iterations for TASK_ID=" + task_id + " & USERNAME=" + username[:-1] + ":")
-    for iteration in times:
-        print(iteration)
-
     return times
 
 
@@ -56,44 +51,39 @@ def find_avg_prediction(iteration_times: List[dict]) -> float:
 
     num_iterations_compl = len(iteration_times) - 1
     weighted_start = num_iterations_compl - weighted + 1
-    print(num_iterations_compl)
 
+    # Will probably be errors here
     for iteration in iteration_times:
         if num_iterations_compl > weighted:
             if iteration["completed"] & (iteration["iteration"] < weighted_start):
-                print("not weighted:", iteration["actual_time"])
                 older_time += iteration["actual_time"]
                 older_num_completed += 1
             if iteration["completed"] & (iteration["iteration"] >= weighted_start):
-                print("weighted:", iteration["actual_time"])
                 recent_time += iteration["actual_time"]
                 recent_num_completed += 1
 
         # if there is not enough iterations for weighting to start
         else:
             if iteration["completed"]:
-                recent_time += iteration["actual_time"]
-                num_completed += 1
-
-    print("numcompleted", num_completed)
+                if iteration["actual_time"] is not None:
+                    recent_time += iteration["actual_time"]
+                    num_completed += 1
 
     if num_iterations_compl > weighted:
-        print(num_iterations_compl)
         older_avg_time = older_time / older_num_completed
-        print("older avg", older_avg_time)
         recent_avg_time = recent_time / recent_num_completed
-        print("recent avg", recent_avg_time)
         weighted_time = older_avg_time * older_task_weight + recent_avg_time * recent_task_weight
         return round(weighted_time * 2)/ 2
 
     if num_iterations_compl <= weighted:
-        weighted_time = recent_time/num_completed
-        print("regular", weighted_time)
+        if num_completed == 0:
+            weighted_time = 0
+        else:
+            weighted_time = recent_time/num_completed
         return round(weighted_time * 2)/ 2
 
     # if there are no iterations for the task
     return iteration_times[0]["est_time"]
-
 
 
 def update_completion_time(task_id: int, iteration: int, username: str, actual_time: float):
@@ -126,23 +116,42 @@ def update_timely_pred(task_id: int, iteration: int, username: str):
         next_iteration.timely_pred = find_avg_prediction(times)
         db.session.commit()
 
+
 def fetch_graph_times(task_id: int, iteration: int, username: str):
+    curr_iteration = db.session.query(TaskIteration).filter( \
+                    (TaskIteration.username == username) & \
+                    (TaskIteration.task_id == task_id) & \
+                    (TaskIteration.iteration == int(iteration))).first()
     prev_iterations = db.session.query(TaskIteration).filter( \
-                (TaskIteration.username == username) & \
-                (TaskIteration.task_id == task_id) & \
-                (TaskIteration.completed == True) & \
-                (TaskIteration.iteration < int(iteration))).order_by(TaskIteration.iteration).all()
+                    (TaskIteration.username == username) & \
+                    (TaskIteration.task_id == task_id) & \
+                    (TaskIteration.completed == True) & \
+                    (TaskIteration.iteration < int(iteration))).order_by(TaskIteration.iteration).all()
 
     actual_times = []       
     predicted_times = []
+    labels = []
+    i = 0
 
     for prev in prev_iterations:
-        actual_times.append(prev.actual_time)
-        predicted_times.append(prev.timely_pred)
+        i += 1
+        if prev.actual_time is not None: #and prev.timely_pred is not None:
+            actual_times.append(prev.actual_time)
+            if prev.timely_pred is None:
+                if prev.est_time is not None:
+                    predicted_times.append(prev.est_time)
+                else:
+                    predicted_times.append(0)
+            else:
+                predicted_times.append(prev.timely_pred)
+            labels.append(i)
+    
+    if curr_iteration.completed:
+        i+=1
+        actual_times.append(curr_iteration.actual_time)
+        predicted_times.append(curr_iteration.timely_pred)
+        labels.append(i)
 
-    times = {"actual_times": actual_times, "predicted_times": predicted_times}
+    times = {"actual_times": actual_times, "predicted_times": predicted_times, "labels": labels}
 
     return times
-
-
-

@@ -2,7 +2,11 @@
 
 {% block content %}
   <div class="container full-height pb-5" style="max-width: 900px">
-    {% include "components/navbar.html" %}
+    {% if public %}
+      {% include "components/navbar-public.html" %}
+    {% else %}
+      {% include "components/navbar.html" %}
+    {% endif %}
 
     <h1 class="mx-auto"><b>Feedback</b></h1>
     <br>

@@ -7,7 +7,7 @@
 {% endblock %}
 
 {% block content %}
-  <div class="container full-height pb-5" style="max-width: 900px">
+  <div class="container full-height pb-4" style="max-width: 900px">
     {% include "components/navbar.html" %}
 
     <!-- TODO: Remove lazy styling helper classes -->
@@ -18,14 +18,37 @@
           <div class="d-flex align-items-center">
             {% if user_info %}
               <img src="{{ url_for('static', filename='image/canvas-logo.png') }}"
-              height="24px" onclick="location.href='/canvas_class?'">
+              height="24px" id="canvas-class-button" href='/canvas_class'>
+              <script>
+                $(document).ready(function() {
+                  $("#canvas-class-button").click(function(event) {
+                    /* stop form from submitting normally */
+                    event.preventDefault();
+      
+                    /* get the action attribute from the <form action=""> element */
+                    let $button = $(this),
+                      url = $button.attr('href');
+      
+                    /* Send the data using post with element id name and name2*/
+                    let posting = $.post(url);
+      
+                    /* Alerts the results */
+                    posting.done(function() {
+                      location.reload();
+                    });
+                    posting.fail(function() {
+                      console.log("failed");
+                    });
+                  });
+                });
+              </script>
             {% endif %}
             {% if user_info == false %}
-              <button data-toggle="modal" data-target="#canvasKeyModal" class="btn btn-secondary mr-2">
+              <button data-toggle="modal" data-toggle="tooltip" data-target="#canvasKeyModal" class="btn btn-secondary mr-2" title="Add Canvas Key">
                 Canvas Key
               </button>
             {% endif %}
-            <i class="fa fa-plus add ml-2" data-toggle="modal" data-target="#classModal"></i>
+            <i class="fa fa-plus add ml-2" data-toggle="modal" data-toggle="tooltip" data-target="#classModal" title="Add Class"></i>
           </div>
         </div>
 
@@ -34,7 +57,8 @@
           {% for class in class_list: %}
             <div class="pill-row">
               <div class="pill" style="border-left-color: var(--hl-{{class['color']}})">
-                <a href="/class_details?class_id={{class['class_id']}}" class="title-link">
+                <a data-toggle="modal" data-target="#classDetailsModal"
+                data-id="{{class['class_id']}}" class="title-link open-ClassDetails">
                   {{class["title"]}}
                 </a><br>
                 <div class="d-flex justify-content-between">
@@ -53,19 +77,15 @@
         <div class="d-flex justify-content-between align-items-center pb-3">
           <div class="d-flex align-items-center">
             <h3 class="mb-0 mr-3">Tasks</h3>
-            <div class="d-none d-sm-block">
-              <a href="/?sort=due_date"><button class="btn btn-small btn-custom mr-1">Date</button></a>
-              <a href="/?sort=class"><button class="btn btn-small btn-custom mr-1">Class</button></a>
-              <a href="/?sort=priority"><button class="btn btn-small btn-custom">Priority</button></a>
-            </div>
-            <div class="dropdown d-block d-sm-none">
+            <div class="dropdown">
               <button class="dropdown-toggle btn btn-small btn-custom" href="#" id="sortingDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 Sort
               </button>
               <div class="dropdown-menu">
-                <a class="dropdown-item" href="/?sort=due_date">Date</a>
-                <a class="dropdown-item" href="/?sort=class">Class</a>
-                <a class="dropdown-item" href="/?sort=priority">Priority</a>
+                <a class="dropdown-item" href="/list?sort=due_date">Date</a>
+                <a class="dropdown-item" href="/list?sort=class">Class</a>
+                <a class="dropdown-item" href="/list?sort=priority">Priority</a>
+                <a class="dropdown-item" href="/list?sort=title">Title</a>
               </div>
             </div>
           </div>
@@ -80,7 +100,7 @@
                 height="24px">
               </a>
             {% endif %}
-            <i class="fa fa-plus add ml-2" data-toggle="modal" data-target="#taskModal"></i>
+            <i class="fa fa-plus add ml-2" data-toggle="modal" data-toggle="tooltip" data-target="#taskModal" title="Add Task"></i>
           </div>
         </div>
         <!-- Retrieves the task list and displays the task details -->
@@ -92,8 +112,10 @@
                   <div class="pill" style="border-left-color: var(--hl-{{task['color']}})">
                     <div class="d-flex justify-content-between">
                       <div class="pill-left">
-                        <a href="/task_details_list_view?task_id={{task['task_id']}}&iteration={{task['iteration']}}" class="title-link">
-                          {{task["title"]}}
+                        <!-- Maybe an error here.-->
+                        <a data-toggle="modal" data-target="#taskDetailsModal"
+                        data-id="?task_id={{task['task_id']}}&iteration={{task['iteration']}}" class="title-link open-TaskDetails">
+                          {{task["iteration_title"]}}
                         </a>
                       </div>
                       <div>
@@ -117,7 +139,16 @@
                     </div>
                   </div>
                   <div class="text-right">
-                    <h2 class="time-prediction">{{task["timely_pred"]}} h</h2>
+                    <h2 class="time-prediction">
+                      {% if task['iteration'] > 2 %}
+                        <b id="timely-time-info" data-toggle="tooltip" data-placement="right"
+                          title="Timely Predicted Time">
+                      {% endif %}
+                      {{task["timely_pred"]}} h
+                      {% if task['iteration'] > 2 %}
+                        </b>
+                      {% endif %}
+                    </h2>
                   </div>
                 </div>
               {% endif %}
@@ -125,18 +156,53 @@
           </div>
         </form>
         <br>
-        <h5>Completed Tasks</h5>
-        <div class="pill-box">
+        <div class="d-flex align-items-center justify-content-between">
+          <h5 class="mb-0">Completed Tasks</h5>
+          <button class="btn btn-sm btn-custom"
+          data-toggle="collapse" data-target="#completed-tasks-collapse">Show/Hide</button>
+        </div>
+        <br>
+        <div class="pill-box" class="collapse" id="completed-tasks-collapse">
           {% for task in task_list: %}
             {% if task["completed"] == true %}
               <div class="pill-row">
                 <div class="pill" style="border-left-color: var(--hl-{{task['color']}})">
                   <div class="d-flex justify-content-between">
-                    <div class="pill-left">
-                      <del>{{task["title"]}}</del>
-                      <i class="fa fa-trash ml-1 open-DeleteTask" data-toggle="modal"
-                          data-target="#deleteTaskModal" data-id="{{task['task_id']}}">
-                      </i>
+                    <div class="pill-left d-flex">
+                      <div style="overflow: hidden; text-overflow: ellipsis;">
+                        <a data-toggle="modal" data-target="#taskDetailsModal" data-id="?task_id={{task['task_id']}}&iteration={{task['iteration']}}" class="title-link open-TaskDetails">
+                          <del>{{task["iteration_title"]}}</del>
+                        </a>
+                      </div>
+                      <div>
+                        <i href="/uncomplete?task_id={{task['task_id']}}&iteration={{task['iteration']}}" id="uncomplete-{{task['task_id']}}-{{task['iteration']}}" class="fa fa-check-square ml-1"></i>
+                        <script>
+                          $(document).ready(function() {
+                            $("#uncomplete-{{task['task_id']}}-{{task['iteration']}}").click(function(event) {
+                              /* stop form from submitting normally */
+                              event.preventDefault();
+                
+                              /* get the action attribute from the <form action=""> element */
+                              let $button = $(this),
+                                url = $button.attr('href');
+                
+                              /* Send the data using post with element id name and name2*/
+                              let posting = $.post(url);
+                
+                              /* Alerts the results */
+                              posting.done(function() {
+                                location.reload(true);
+                              });
+                              posting.fail(function() {
+                                console.log("failed");
+                              });
+                            });
+                          });
+                        </script>
+                        <i class="fa fa-trash ml-1 open-DeleteTask" data-toggle="modal"
+                            data-target="#deleteTaskModal" data-id="{{task['task_id']}}">
+                        </i>
+                      </div>
                     </div>
                     <div>{{task["due_date"]}}</div>
                   </div>
@@ -152,25 +218,25 @@
       </div>
     </div>
   </div>
-	
+  
+  <script>
+    $(document).ready(function() {
+      $("#completed-tasks-collapse").collapse("show");
+    });
+  </script>
 
   {% include "components/create-task.html" %}
   {% include "components/create-class.html" %}
 
-  {% if "task_details" in request.url_rule.rule%}
-    {% include "components/task-details.html" %}
-  {% endif %}
+  {% include "components/task-details.html" %}
 
-  {% if "class_details" in request.url_rule.rule%}
-    {% include "components/class-details.html" %}
-  {% endif %}
+  {% include "components/class-details.html" %}
 
   {% include "components/delete-class.html" %}
   {% include "components/delete-task.html" %}
 
   {% include "components/task-completion.html" %}
 
-  {% include "components/canvas-key.html" %}
   {% include "components/canvas-import.html" %}
 
   {% include "components/group-tasks.html" %}

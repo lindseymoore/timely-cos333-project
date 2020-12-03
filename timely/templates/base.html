@@ -23,6 +23,18 @@
     <!-- Date Picker from Flatpickr.js -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <!-- FlatPickr Validation Hack from https://www.vic-l.com/how-to-use-html-validation-on-flatpickr/-->
+    <script>
+      flatpickr("[data-behavior='flatpickr']", {
+        onOpen: function(selectedDates, dateStr, instance) {
+          $(instance.altInput).prop('readonly', true);
+        },
+        onClose: function(selectedDates, dateStr, instance) {
+          $(instance.altInput).prop('readonly', false);
+          $(instance.altInput).blur();
+        }
+      });
+    </script>
 
     <title>Timely</title>
     {% endblock %}
@@ -32,4 +44,9 @@
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
   </body>
+  <footer>
+    <div class="container text-center" style="max-width: 900px">
+      <p>Made with 💜  by Mariah Crawford, David Lipman, Lindsey Moore, and Jorge Zreik.</p>
+    </div>
+  </footer>
 </html>
