@@ -72,3 +72,16 @@ aria-labelledby="classModal" aria-hidden="true">
     </div>
   </div>
 </div>
+
+<script>
+  $(document).ready(function() {
+    $('#classModal').on('hidden.bs.modal', function(){
+        $('#create-class-form').trigger("reset");
+        $('#create-class-form').removeClass("was-validated");
+        $("#create-class-form").each(function(){
+          $(this).validate().resetForm();
+      });
+    });
+  });
+</script>
+

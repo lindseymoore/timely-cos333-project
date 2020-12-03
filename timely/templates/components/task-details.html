@@ -138,6 +138,7 @@ aria-labelledby="taskDetailsModal" aria-hidden="true">
       $("#display-details").show();
       $("#form_edit_details").hide();
       $("#form_edit_details").trigger("reset");
+      $('#form_edit_details').removeClass("was-validated");
     });
 
     $(document).on("click", ".open-TaskDetails", function () {		

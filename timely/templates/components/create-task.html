@@ -138,10 +138,11 @@
 <script>
   $(document).ready(function() {
     $('#taskModal').on('hidden.bs.modal', function(){
-        $(this).find('#create-task-form')[0].reset(); // this line resets the input fields! the rest of the lines are trash
+        $('#create-task-form').trigger("reset");
+        $('#create-task-form').removeClass("was-validated");
         $("#create-task-form").each(function(){
-            $(this).validate().resetForm();
-        });
+          $(this).validate().resetForm();
+      });
     });
   });
 </script>
