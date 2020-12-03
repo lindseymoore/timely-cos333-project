@@ -276,9 +276,9 @@ def task_details_modal():
     week_dates = fetch_curr_week()
 
     # If task_details is None (which will occur if user manually inputs task_id they do not have 
-    # access to) then raise a 500 error
+    # access to) then raise a 403 error
     if task_details is None:
-        return render_template("500.html"), 404
+        return render_template("403.html"), 403
 
     if request.path == "/task_details_calendar_view":
         template = "calendar.html"
@@ -366,9 +366,9 @@ def class_details_modal():
     username = CASClient().authenticate()
     class_details = fetch_class_details(request.args["class_id"], username)
 
-    # If user does not have access to given class, return 500 error
+    # If user does not have access to given class, return 403 error
     if class_details is None:
-        return render_template("500.html"), 404
+        return render_template("403.html"), 403
 
     classes = fetch_class_list(username)
     tasks = fetch_task_list_view(username)
