@@ -184,8 +184,11 @@ aria-labelledby="taskDetailsModal" aria-hidden="true">
         $("#edit_link").attr("value", task_details['link']);
         $("#edit_due_date").attr("value", task_details['due_date']);
         $("#task-current-freq").attr("value", task_details['repeat_freq']);
-        $("#task-current-freq").html("Current: " + 
-          task_details['repeat_freq'].charAt(0).toUpperCase() + task_details["repeat_freq"].slice(1));
+        if (task_details['repeat_freq'] != null)
+          $("#task-current-freq").html("Current: " + 
+            task_details['repeat_freq'].charAt(0).toUpperCase() + task_details["repeat_freq"].slice(1));
+        else
+        $("#task-current-freq").html("Current: None");
         $("#edit_repeat_end").attr("value", task_details['repeat_end']);
         $("#edit_notes").attr("value", task_details['notes']);
 
