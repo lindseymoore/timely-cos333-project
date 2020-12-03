@@ -44,11 +44,11 @@
               </script>
             {% endif %}
             {% if user_info == false %}
-              <button data-toggle="modal" data-target="#canvasKeyModal" class="btn btn-secondary mr-2">
+              <button data-toggle="modal" data-toggle="tooltip" data-target="#canvasKeyModal" class="btn btn-secondary mr-2" title="Add Canvas Key">
                 Canvas Key
               </button>
             {% endif %}
-            <i class="fa fa-plus add ml-2" data-toggle="modal" data-target="#classModal"></i>
+            <i class="fa fa-plus add ml-2" data-toggle="modal" data-toggle="tooltip" data-target="#classModal" title="Add Class"></i>
           </div>
         </div>
 
@@ -100,7 +100,7 @@
                 height="24px">
               </a>
             {% endif %}
-            <i class="fa fa-plus add ml-2" data-toggle="modal" data-target="#taskModal"></i>
+            <i class="fa fa-plus add ml-2" data-toggle="modal" data-toggle="tooltip" data-target="#taskModal" title="Add Task"></i>
           </div>
         </div>
         <!-- Retrieves the task list and displays the task details -->

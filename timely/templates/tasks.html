@@ -25,12 +25,12 @@
       <div class="d-flex justify-content-between">
         <div class="subtle pill-left">{{task["class"]}}</div>
         <div>
-          <i class="fa fa-check-square open-CompleteTask d-none d-sm-inline" data-toggle="modal"
+          <i class="fa fa-check-square open-CompleteTask d-none d-sm-inline" data-toggle="modal" data-toggle="tooltip"
           data-target="#taskCompletionModal" data-id="{{task['task_id']}}" 
-          data-iteration="{{task['iteration']}}">
+          data-iteration="{{task['iteration']}}" title="Complete Task">
           </i>
-          <i class="fa fa-trash ml-1 open-DeleteTask d-none d-sm-inline" data-toggle="modal"
-          data-target="#deleteTaskModal" data-id="{{task['task_id']}}">
+          <i class="fa fa-trash ml-1 open-DeleteTask d-none d-sm-inline" data-toggle="modal" data-toggle="tooltip"
+          data-target="#deleteTaskModal" data-id="{{task['task_id']}}" title="Delete Task">
           </i>
         </div>
       </div>
