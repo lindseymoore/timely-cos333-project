@@ -38,6 +38,9 @@ aria-labelledby="canvasKeyModal" aria-hidden="true">
               /* Send the data using post with element id name and name2*/
               let posting = $.post(url, data);
 
+              $("#" + $(this).attr("id") + " :submit").prop("disabled", true);
+              $("#" + $(this).attr("id") + " :submit").text("Loading...");
+
               /* Alerts the results */
               posting.done(function() {
                 $("#canvasKeyModal").modal("hide");
