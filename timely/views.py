@@ -111,7 +111,11 @@ def about():
 @app.route("/feedback")
 def feedback():
     """Display the feedback page."""
-    return render_template("feedback.html", public=True)
+    if "public" in request.args.keys():
+        public = True
+    else:
+        public = False
+    return render_template("feedback.html", public=public)
 
 
 @app.route("/task_form", methods=["POST"])

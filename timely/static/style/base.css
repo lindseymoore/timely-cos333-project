@@ -247,3 +247,6 @@ hr {
     size: 5em;
 }
 
+.full-page-content {
+    max-height: 75vh;
+}
