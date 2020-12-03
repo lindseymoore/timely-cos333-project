@@ -48,7 +48,11 @@ footer {
     border-radius: 7px;
 }
 
-.weekly-header{
+.btn-custom:hover {
+    color: var(--dark-2);
+}
+
+.weekly-header {
     margin-bottom: 3px;
     border-radius: 25px;
 }
