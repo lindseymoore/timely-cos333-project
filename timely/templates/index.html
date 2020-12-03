@@ -168,37 +168,41 @@
               <div class="pill-row">
                 <div class="pill" style="border-left-color: var(--hl-{{task['color']}})">
                   <div class="d-flex justify-content-between">
-                    <div class="pill-left">
-                      <a data-toggle="modal" data-target="#taskDetailsModal" data-id="?task_id={{task['task_id']}}&iteration={{task['iteration']}}" class="title-link open-TaskDetails">
-                        <del>{{task["iteration_title"]}}</del>
-                      </a>
-                      <i href="/uncomplete?task_id={{task['task_id']}}&iteration={{task['iteration']}}" id="uncomplete-{{task['task_id']}}-{{task['iteration']}}" class="fa fa-check-square ml-1"></i>
-                      <script>
-                        $(document).ready(function() {
-                          $("#uncomplete-{{task['task_id']}}-{{task['iteration']}}").click(function(event) {
-                            /* stop form from submitting normally */
-                            event.preventDefault();
-              
-                            /* get the action attribute from the <form action=""> element */
-                            let $button = $(this),
-                              url = $button.attr('href');
-              
-                            /* Send the data using post with element id name and name2*/
-                            let posting = $.post(url);
-              
-                            /* Alerts the results */
-                            posting.done(function() {
-                              location.reload(true);
-                            });
-                            posting.fail(function() {
-                              console.log("failed");
+                    <div class="pill-left d-flex">
+                      <div style="overflow: hidden; text-overflow: ellipsis;">
+                        <a data-toggle="modal" data-target="#taskDetailsModal" data-id="?task_id={{task['task_id']}}&iteration={{task['iteration']}}" class="title-link open-TaskDetails">
+                          <del>{{task["iteration_title"]}}</del>
+                        </a>
+                      </div>
+                      <div>
+                        <i href="/uncomplete?task_id={{task['task_id']}}&iteration={{task['iteration']}}" id="uncomplete-{{task['task_id']}}-{{task['iteration']}}" class="fa fa-check-square ml-1"></i>
+                        <script>
+                          $(document).ready(function() {
+                            $("#uncomplete-{{task['task_id']}}-{{task['iteration']}}").click(function(event) {
+                              /* stop form from submitting normally */
+                              event.preventDefault();
+                
+                              /* get the action attribute from the <form action=""> element */
+                              let $button = $(this),
+                                url = $button.attr('href');
+                
+                              /* Send the data using post with element id name and name2*/
+                              let posting = $.post(url);
+                
+                              /* Alerts the results */
+                              posting.done(function() {
+                                location.reload(true);
+                              });
+                              posting.fail(function() {
+                                console.log("failed");
+                              });
                             });
                           });
-                        });
-                      </script>
-                      <i class="fa fa-trash ml-1 open-DeleteTask" data-toggle="modal"
-                          data-target="#deleteTaskModal" data-id="{{task['task_id']}}">
-                      </i>
+                        </script>
+                        <i class="fa fa-trash ml-1 open-DeleteTask" data-toggle="modal"
+                            data-target="#deleteTaskModal" data-id="{{task['task_id']}}">
+                        </i>
+                      </div>
                     </div>
                     <div>{{task["due_date"]}}</div>
                   </div>

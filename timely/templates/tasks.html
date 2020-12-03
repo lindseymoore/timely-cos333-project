@@ -8,6 +8,10 @@
             {{task["iteration_title"]}}
           </a>
         </div>
+        <i class="fa fa-check-square open-CompleteTask d-inline d-sm-none" data-toggle="modal" data-toggle="tooltip"
+          data-target="#taskCompletionModal" data-id="{{task['task_id']}}" 
+          data-iteration="{{task['iteration']}}" title="Complete Task">
+        </i>
         <div class="d-none d-sm-inline">
           {% if task["repeat"] %}
             <span class="fa fa-repeat mr-1"></span>
@@ -29,7 +33,7 @@
           data-target="#taskCompletionModal" data-id="{{task['task_id']}}" 
           data-iteration="{{task['iteration']}}" title="Complete Task">
           </i>
-          <i class="fa fa-trash ml-1 open-DeleteTask d-none d-sm-inline" data-toggle="modal" data-toggle="tooltip"
+          <i class="fa fa-trash ml-1 open-DeleteTask" data-toggle="modal" data-toggle="tooltip"
           data-target="#deleteTaskModal" data-id="{{task['task_id']}}" title="Delete Task">
           </i>
         </div>

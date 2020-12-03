@@ -119,6 +119,9 @@
                           <div class="d-flex justify-content-between">
                             <div class="subtle pill-left">{{task["class"]}}</div>
                             <div class="subtle d-none d-sm-block"> {{task["actual_time"]}} h</div>
+                            <i class="fa fa-trash ml-1 open-DeleteTask d-inline d-sm-none" data-toggle="modal"
+                                  data-target="#deleteTaskModal" data-id="{{task['task_id']}}">
+                              </i>
                           </div>
                         </div>
                       </div>
