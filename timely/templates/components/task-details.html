@@ -142,8 +142,9 @@ aria-labelledby="taskDetailsModal" aria-hidden="true">
 
     $(document).on("click", ".open-TaskDetails", function () {		
       let taskId = $(this).data('id');
-      $.getJSON({url: "/task_details" + taskId, success: function(task_details) {
-        
+      $.ajax({url: "/task_details" + taskId, dataType: 'json', 
+      error: function( data ) { window.location.replace("/403"); },
+      success: function(task_details) {
         $("#display-details").append(
           `<h4>Title: </h4> <p>${task_details["iteration_title"]}</p>
           <h4>Class: </h4> <p>${task_details["class"]}</p>
