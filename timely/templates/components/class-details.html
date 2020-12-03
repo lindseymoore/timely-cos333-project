@@ -33,6 +33,7 @@ aria-labelledby="classDetailsModal" aria-hidden="true">
       $("#display-class").html("");
       $("#display-class").show();
       $("#form_edit_class").hide();
+      $("#form_edit_class").trigger("reset");
     });
 
     $(document).on("click", ".open-ClassDetails", function () {		
