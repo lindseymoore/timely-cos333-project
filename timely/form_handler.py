@@ -138,7 +138,7 @@ def update_task_details(task_details: dict):
 
     # print(task)
     # print(task_iteration)
-    task.title = task_details['group_title']
+    #task.title = task_details['group_title']
 
     if task_details["repeat_freq"] != "None" and task_details["repeat_freq"] is not None:
         task.repeat = True
@@ -164,9 +164,11 @@ def update_task_details(task_details: dict):
         task_iteration.priority = task_details['priority']
     task_iteration.link = task_details['link']
     task_iteration.due_date = task_details['due_date']
-    task_iteration.due_time = task_details['due_time']
     task_iteration.notes = task_details['notes']
     task_iteration.est_time = task_details['est_time']
+    if iteration == 1:
+        print(iteration)
+        task_iteration.timely_pred = task_details['est_time']
     task_iteration.iteration_title = task_details['iteration_title']
 
     db.session.commit()
@@ -302,6 +304,7 @@ def create_new_group(task_ids: list, group_title: str, username: str):
     task = db.session.query(Task).filter((Task.username == username) &
         (Task.task_id == group_task_id)).first()
     task.repeat = True
+    task.repeat_freq = "irregular"
     task.title = group_title
     db.session.commit()
 

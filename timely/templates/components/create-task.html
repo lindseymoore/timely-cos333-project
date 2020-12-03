@@ -19,6 +19,10 @@
                 /* stop form from submitting normally */
                 event.preventDefault();
 
+                $(this).addClass('was-validated');
+                if ($(this)[0].checkValidity() === false)
+                  return;
+
                 /* get the action attribute from the <form action=""> element */
                 let $form = $(this),
                   url = $form.attr('action'),
@@ -99,6 +103,9 @@
               <option value="monthly">
                 Monthly
               </option>
+              <option value="irregular">
+                Irregular
+              </option>
             </select>
           </div>
           <div class="form-group">
@@ -128,19 +135,8 @@
   });
 </script>
 
-<!-- <script>
-  maybe resets validator
-  $('#taskModal').bootstrapValidator({
-    excluded: ':disabled'
-});
-</script> -->
-
 <script>
   $(document).ready(function() {
-    // $("#taskModal").on('hidden.bs.modal', function () {
-    //   $("#create-task-form")[0].reset(); 
-    //   $('#create-task-form').bootstrapValidator("destroy");
-    // });
     $('#taskModal').on('hidden.bs.modal', function(){
         $(this).find('#create-task-form')[0].reset(); // this line resets the input fields! the rest of the lines are trash
         $("#create-task-form").each(function(){
@@ -148,31 +144,4 @@
         });
     });
   });
-//   maybe resets validator
-// $(document).ready(function() {
-//     $("#taskModal").on('shown.bs.modal', function () {
-//       $('#create-task-form').bootstrapValidator('resetForm', true);
-//     });
-//   });
-// </script>
-
-<script>
-  // Disabling form submissions if there are invalid fields from Bootstrap site
-  (function() {
-    'use strict';
-    window.addEventListener('load', function() {
-      // Fetch all the forms we want to apply custom Bootstrap validation styles to
-      var forms = document.getElementsByClassName('needs-validation');
-      // Loop over them and prevent submission
-      var validation = Array.prototype.filter.call(forms, function(form) {
-        form.addEventListener('submit', function(event) {
-          if (form.checkValidity() === false) {
-            event.preventDefault();
-            event.stopPropagation();
-          }
-          form.classList.add('was-validated');
-        }, false);
-      });
-    }, false);
-  })();
-  </script>
+</script>

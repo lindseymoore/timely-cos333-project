@@ -265,13 +265,19 @@ def edit_task_details():
     """Edit task details modal."""
     username = CASClient().authenticate()
     # Potentially change class_id to class
-    task_details = {"group_title": None, "task_id": None,"class_id": None, "repeat": None, "iteration": None,
-                "priority": None, "link": None, "due_date": None, "notes": None, 
-                "est_time": None, "repeat_freq": None, "repeat_end": None, "due_time": None, 
-                "username": username, "iteration_title": None, "iteration": None}
+    task_details = {"task_id": None, "class_id": None, "iteration": None,
+                "priority": None, "link": None, "due_date": None, "notes": None,
+                "est_time": None, "repeat_freq": None, "repeat_end": None,
+                "username": username, "iteration_title": None}
 
     for key, item in request.form.items():
         task_details[key] = item
+
+    if task_details["repeat_end"] == "":
+        task_details["repeat_end"] = None
+
+    task_details["task_id"] = int(request.args["task_id"])
+    task_details["iteration"] = int(request.args["iteration"])
 
     update_task_details(task_details)
 

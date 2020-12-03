@@ -2,12 +2,12 @@
   <script>
     $(document).ready(function() {
       $("#form_edit_class").submit(function(event) {
-        form.classList.add('was-validated');
-        if (form.checkValidity() === false)
-          return;
-        
         /* stop form from submitting normally */
         event.preventDefault();
+
+        $(this).addClass('was-validated');
+        if ($(this)[0].checkValidity() === false)
+          return;
 
         /* get the action attribute from the <form action=""> element */
         let $form = $(this),
