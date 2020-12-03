@@ -12,7 +12,31 @@ aria-labelledby="canvasImportModal" aria-hidden="true">
         </button>
       </div>
       <div class="modal-body px-3">
-        <form action="/canvas_import" method="post">
+        <form action="/canvas_import" method="post" id="canvas-import-form">
+          <script>
+            $(document).ready(function() {
+              $("#canvas-import-form").submit(function(event) {
+                /* stop form from submitting normally */
+                event.preventDefault();
+
+                /* get the action attribute from the <form action=""> element */
+                let $form = $(this),
+                  url = $form.attr('action'),
+                  data = $form.serialize();
+
+                /* Send the data using post with element id name and name2*/
+                let posting = $.post(url, data);
+
+                /* Alerts the results */
+                posting.done(function() {
+                  location.reload(true);
+                });
+                posting.fail(function() {
+                  console.log("failed");
+                });
+              });
+            });
+          </script>
           <ul class="nav nav-tabs dark-nav" role="tablist">
             <li class="nav-item">
               <a class="nav-link active" id="new-tab" data-toggle="tab" href="#new" role="tab" aria-controls="home" aria-selected="true">

@@ -14,7 +14,7 @@ from timely.db_queries import (delete_class, delete_task,
                                fetch_task_list_view, fetch_tasks_from_class,
                                fetch_user, fetch_week, mark_task_complete,
                                uncomplete_task)
-# , update_class_details
+
 from timely.form_handler import (class_handler, create_new_group,
                                  insert_canvas_tasks, task_handler,
                                  update_class_details, update_task_details)
@@ -114,7 +114,7 @@ def feedback():
     return render_template("feedback.html", public=True)
 
 
-@app.route("/task_form")
+@app.route("/task_form", methods=["POST"])
 def task_form():
     """
     Retrieve information from the task form and insert new table entries into the database.
@@ -125,17 +125,16 @@ def task_form():
     'priority': None, 'est_time': None, 'link': None, 'notes': None, 'due_date': None,
     'due_time': None, 'repeat_freq': None, 'repeat_end': None, 'username': username}
 
-    for key, item in request.args.items():
+    for key, item in request.form.items():
         details[key] = item
 
     details['group_title'] = details['task_title']
 
     task_handler(details)
+    return json.dumps({"success":True})
 
-    return redirect("/list")
 
-
-@app.route("/class_form")
+@app.route("/class_form", methods=["POST"])
 def class_form():
     """
     Retrieve information from the class form and insert new table entries into the database.
@@ -145,15 +144,15 @@ def class_form():
 
     class_details = {'title': None, 'dept': None, 'num': None, 'color': None, 'username': username}
 
-    for key, item in request.args.items():
+    for key, item in request.form.items():
         class_details[key] = item
 
     class_handler(class_details)
 
-    return redirect("/list")
+    return json.dumps({"success":True})
 
-@app.route("/calendar/completion_form")
-@app.route("/completion_form")
+
+@app.route("/completion_form", methods=["POST"])
 def completion_form():
     """
     Retrieve the status of tasks that are marked complete
@@ -162,20 +161,17 @@ def completion_form():
     username = CASClient().authenticate()
     task_id = request.args["task_id"]
     iteration = request.args["iteration"]
-    time = request.args["time"]
+    time = request.form["time"]
 
     mark_task_complete(int(task_id), int(iteration), username)
 
     update_completion_time(task_id, iteration, username, time)
     update_timely_pred(task_id, iteration, username)
     
-    if request.path == "/calendar/completion_form":
-        return redirect("/calendar")
-    else:
-        return redirect("/list")
+    return json.dumps({"success":True})
 
-@app.route("/calendar/uncomplete")
-@app.route("/uncomplete")
+
+@app.route("/uncomplete", methods=["POST"])
 def uncomplete():
     """
     Retrieve the status of tasks that are marked complete
@@ -191,28 +187,23 @@ def uncomplete():
     update_completion_time(task_id, iteration, username, time)
     if int(iteration) > 1:
         update_timely_pred(task_id, iteration, username)
-    
-    if request.path == "/calendar/uncomplete":
-        return redirect("/calendar")
-    else:
-        return redirect("/")
 
-@app.route("/delete_class")
+    return json.dumps({"success":True})
+
+
+@app.route("/delete_class", methods=["POST"])
 def delete_class_endpoint():
     """
     Delete the class given by the request argument class_id and all of the tasks related to it."""
     delete_class(request.args["class_id"])
-    return redirect("/list")
+    return json.dumps({"success":True})
 
-@app.route("/calendar/delete_task")
-@app.route("/delete_task")
+
+@app.route("/delete_task", methods=["POST"])
 def delete_task_endpoint():
     """Delete the task given by the request argument task_id."""
     delete_task(request.args["task_id"])
-    if request.path == "/calendar/delete_task":
-        return redirect("/calendar")
-    else:
-        return redirect("/list")
+    return json.dumps({"success":True})
 
 
 @app.route('/logout', methods=['GET'])
@@ -223,13 +214,13 @@ def logout():
     cas_client.logout()
 
 
-@app.route("/canvas_key")
+@app.route("/canvas_key", methods=["POST"])
 def canvas_key():
     """
     Inserts the Canvas API Key for a particular user
     """
     username = CASClient().authenticate()
-    api_key = request.args["api_key"]
+    api_key = request.form["api_key"]
 
     user = db.session.query(User).filter(User.username == username).first()
     if user is None:
@@ -239,84 +230,34 @@ def canvas_key():
     else:
         user.api_key = api_key
         db.session.commit()
-        
-    return redirect("/list")
+
+    return json.dumps({"success":True})
 
 
-@app.route("/canvas_class")
+@app.route("/canvas_class", methods=["POST"])
 def canvas_class():
     """
     Fetches the classes from canvas for a particular user
     """
     username = CASClient().authenticate()
     fetch_canvas_courses("F2020", username)
-    return redirect("/list")
+    return json.dumps({"success":True})
 
 
-@app.route("/canvas_task")
-def canvas_task():
-    """
-    Fetches the tasks from canvas for a particular user
-    """
-    username = CASClient().authenticate()
-    fetch_canvas_tasks("F2020", username)
-    return redirect("/list")
-
-
-@app.route("/task_details_calendar_view")
-@app.route("/task_details_list_view")
+@app.route("/task_details")
 def task_details_modal():
-    """Show the task details modal."""    
+    """Show the task details modal."""
     username = CASClient().authenticate()
     task_id = request.args["task_id"]
     iteration = request.args["iteration"]
     task_details = fetch_task_details(task_id, iteration, username)
-    #print(task_details)
-    classes = fetch_class_list(username)
-    week_dates = fetch_curr_week()
 
-    # If task_details is None (which will occur if user manually inputs task_id they do not have 
-    # access to) then raise a 403 error
-    if task_details is None:
-        return render_template("403.html"), 403
+    return json.dumps(task_details, default=str)
 
-    if request.path == "/task_details_calendar_view":
-        template = "calendar.html"
-        tasks = fetch_task_calendar_view(username)
-    else:
-        template = "index.html"
-        tasks = fetch_task_list_view(username)
 
-    # For tasks that have iteration time data
-    if task_details["repeating"] is True:
-        curr_iteration = task_details["iteration"]
-        #print(curr_iteration)
-        times = fetch_graph_times(task_id, curr_iteration, username)
-        labels = times["labels"] #list(range(1, curr_iteration))
-        actual_values = times["actual_times"]
-        predicted_values = times["predicted_times"]
-        # actual_values = [val for val in actual_values if val]
-        # predicted_values = [val for val in predicted_values if val]
-        
-        return render_template(template,
-                class_list=classes,
-                task_list=tasks,
-                task_details=task_details,
-                week_dates=week_dates,
-                actual_values=actual_values,
-                predicted_values=predicted_values, 
-                labels=labels)
-
-    return render_template(template,
-                class_list=classes,
-                task_list=tasks,
-                task_details=task_details,
-                week_dates=week_dates)
-
-                           
-@app.route("/edit_task_details")
+@app.route("/edit_task_details", methods=["POST"])
 def edit_task_details():
-    """Edit task details modal endpoint."""
+    """Edit task details modal."""
     username = CASClient().authenticate()
     # Potentially change class_id to class
     task_details = {"group_title": None, "task_id": None,"class_id": None, "repeat": None, "iteration": None,
@@ -324,27 +265,39 @@ def edit_task_details():
                 "est_time": None, "repeat_freq": None, "repeat_end": None, "due_time": None, 
                 "username": username, "iteration_title": None, "iteration": None}
 
-    for key, item in request.args.items():
+    for key, item in request.form.items():
         task_details[key] = item
 
     update_task_details(task_details)
-   
-    return redirect("/")
+
+    return json.dumps({"success":True})
 
 
-@app.route("/edit_class_details")
+@app.route("/get_graph_data", methods=["GET"])
+def get_graph_data():
+    username = CASClient().authenticate()
+    task_id = request.args["task_id"]
+    iteration = request.args["iteration"]
+    # Contains labels, actual_times, and predicted_times
+    times = fetch_graph_times(task_id, iteration, username)
+
+    return json.dumps(times, default=dict)# dumps is for str formatting dict
+
+
+@app.route("/edit_class_details", methods=["POST"])
 def edit_class_details():
-    """Edit the class details modal."""
+    """Edit class details modal."""
     username = CASClient().authenticate()
     class_details = {"title": None, "class_id": None, "dept": None, "num": None,
                 "color": None, "active_status": None, "username": username}
 
-    for key, item in request.args.items():
+    class_details["class_id"] = request.args["class_id"]
+    for key, item in request.form.items():
         class_details[key] = item
 
     update_class_details(class_details)
 
-    return redirect("/list")
+    return json.dumps({"success":True})
 
 
 @app.route("/canvas_import", methods=["POST"])
@@ -355,29 +308,19 @@ def canvas_import():
     for value in request.form.values():
         # json.loads returns dictionary, first key is status (new or updated), second is task itself
         task_list.append(json.loads(value))
-    
+
     insert_canvas_tasks(task_list, username)
-    return redirect("/list")
+    return json.dumps({"success":True})
 
 
 @app.route("/class_details")
-def class_details_modal():
-    """Show the class details modal."""
+def class_details_json():
+    """Return class details as JSON for the class details modal."""
     username = CASClient().authenticate()
     class_details = fetch_class_details(request.args["class_id"], username)
 
-    # If user does not have access to given class, return 403 error
-    if class_details is None:
-        return render_template("403.html"), 403
+    return json.dumps(class_details, default=str)
 
-    classes = fetch_class_list(username)
-    tasks = fetch_task_list_view(username)
-    colors = fetch_available_colors(username)
-    return render_template("index.html",
-                class_list=classes,
-                task_list=tasks,
-                class_details=class_details,
-                colors = colors)
 
 @app.route("/get_canvas_tasks")
 def get_canvas_tasks():
@@ -390,7 +333,7 @@ def get_canvas_tasks():
 def get_classes():
     """Return all classes."""
     classes = fetch_class_list(CASClient().authenticate())
-    return json.dumps(classes)
+    return json.dumps(classes, default=str)
 
 
 @app.route("/group_task", methods=["POST"])
@@ -409,8 +352,8 @@ def group_tasks():
 
     #print("TASK_IDS", task_ids)
     create_new_group(task_ids, group_title, username)
-    return redirect("/list")
-   
+    return json.dumps({"success":True})
+
 
 @app.route("/get_tasks")
 def get_tasks():
@@ -434,9 +377,11 @@ def get_tasks():
 
 @app.errorhandler(404)
 def page_not_found(e):
+    """Render the 404 page."""
     return render_template("404.html"), 404
 
 
 @app.errorhandler(500)
 def server_error(e):
+    """Render the 500 page."""
     return render_template("500.html"), 404

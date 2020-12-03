@@ -3,7 +3,8 @@
       <div class="d-flex justify-content-between">
         <div class="pill-left">
           <!-- Maybe an error here -->
-          <a href="/task_details_calendar_view?task_id={{task['task_id']}}&iteration={{task['iteration']}}" class="title-link">
+          <a data-toggle="modal" data-target="#taskDetailsModal"
+          data-id="?task_id={{task['task_id']}}&iteration={{task['iteration']}}" class="title-link open-TaskDetails">
             {{task["iteration_title"]}}
           </a>
         </div>
