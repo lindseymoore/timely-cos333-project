@@ -27,11 +27,6 @@ def fetch_task_times(task_id: str, username: str) -> List[dict]:
                 "est_time": iteration.est_time, "actual_time": iteration.actual_time,
                 "timely_pred": iteration.timely_pred, "completed": iteration.completed})
 
-    # Logging output
-    print("Fetched iterations for TASK_ID=" + task_id + " & USERNAME=" + username[:-1] + ":")
-    for iteration in times:
-        print(iteration)
-
     return times
 
 
@@ -56,17 +51,14 @@ def find_avg_prediction(iteration_times: List[dict]) -> float:
 
     num_iterations_compl = len(iteration_times) - 1
     weighted_start = num_iterations_compl - weighted + 1
-    print(num_iterations_compl)
 
     # Will probably be errors here
     for iteration in iteration_times:
         if num_iterations_compl > weighted:
             if iteration["completed"] & (iteration["iteration"] < weighted_start):
-                print("not weighted:", iteration["actual_time"])
                 older_time += iteration["actual_time"]
                 older_num_completed += 1
             if iteration["completed"] & (iteration["iteration"] >= weighted_start):
-                print("weighted:", iteration["actual_time"])
                 recent_time += iteration["actual_time"]
                 recent_num_completed += 1
 
@@ -77,14 +69,9 @@ def find_avg_prediction(iteration_times: List[dict]) -> float:
                     recent_time += iteration["actual_time"]
                     num_completed += 1
 
-    print("numcompleted", num_completed)
-
     if num_iterations_compl > weighted:
-        print(num_iterations_compl)
         older_avg_time = older_time / older_num_completed
-        print("older avg", older_avg_time)
         recent_avg_time = recent_time / recent_num_completed
-        print("recent avg", recent_avg_time)
         weighted_time = older_avg_time * older_task_weight + recent_avg_time * recent_task_weight
         return round(weighted_time * 2)/ 2
 
@@ -93,7 +80,6 @@ def find_avg_prediction(iteration_times: List[dict]) -> float:
             weighted_time = 0
         else:
             weighted_time = recent_time/num_completed
-            print("regular", weighted_time)
         return round(weighted_time * 2)/ 2
 
     # if there are no iterations for the task

@@ -252,6 +252,11 @@ def task_details_modal():
     iteration = request.args["iteration"]
     task_details = fetch_task_details(task_id, iteration, username)
 
+    # If task_details is None (which will occur if user manually inputs task_id they do not have 
+    # access to) then raise a 403 error
+    if task_details is None:
+        return json.dumps({"success": False}), 403
+
     return json.dumps(task_details, default=str)
 
 
@@ -319,6 +324,11 @@ def class_details_json():
     username = CASClient().authenticate()
     class_details = fetch_class_details(request.args["class_id"], username)
 
+    # If task_details is None (which will occur if user manually inputs task_id they do not have 
+    # access to) then raise a 403 error
+    if class_details is None:
+        return json.dumps({"success": False}), 403
+
     return json.dumps(class_details, default=str)
 
 
@@ -373,6 +383,13 @@ def get_tasks():
             task["title"] = task["iteration_title"]
 
     return json.dumps(tasks, default=str)
+
+
+@app.errorhandler(403)
+@app.route("/403")
+def forbidden():
+    """Render the 403 page."""
+    return render_template("403.html"), 403
 
 
 @app.errorhandler(404)
