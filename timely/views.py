@@ -318,7 +318,9 @@ def class_details_json():
     """Return class details as JSON for the class details modal."""
     username = CASClient().authenticate()
     class_details = fetch_class_details(request.args["class_id"], username)
+
     return json.dumps(class_details, default=str)
+
 
 @app.route("/get_canvas_tasks")
 def get_canvas_tasks():

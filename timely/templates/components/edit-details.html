@@ -1,4 +1,4 @@
-<form action="/edit_task_details" method="post" id="form_edit_details">
+<form action="/edit_task_details" method="post" id="form_edit_details" class="needs-validation" novalidate>
   <script>
     $(document).ready(function() {
       $("#form_edit_details").submit(function(event) {
@@ -24,10 +24,8 @@
     });
   </script>
   <div class="form-group">
-    <label for="title">Name</label>
-    <input type="text" class="form-control" name="iteration_title" id="edit_task_title" value="...">
-    <input type="hidden" id="edit_task_id" name="task_id" value="...">
-    <input type="hidden" id="edit_iteration" name="iteration" value="...">
+    <label for="title">Name</label> <span class="required">*</span>
+    <input type="text" class="form-control" name="iteration_title" id="edit_task_title" value="..." required>
   </div>
   <div class="form-group">
     <label for="class_id">Class</label>
@@ -35,7 +33,7 @@
   </div>
   <div class="form-group">
     <label for="priority">Priority</label>
-    <select class="form-control" name="priority" id="edit_priority">
+    <select class="form-control green-check" name="priority" id="edit_priority">
       <option id="task-current-priority" value="...">
         Current: ...
       </option>
@@ -51,20 +49,20 @@
     </select>
   </div>
   <div class="form-group">
-    <label for="est_time">Estimated Completion Time</label>
-    <input type="text" class="form-control" name="est_time" id="edit_est_time" value="...">
+    <label for="est_time">Estimated Completion Time</label> <span class="required">*</span>
+    <input type="number" step="0.1" min="0" max="99.9" class="form-control" name="est_time" id="edit_est_time" value="..." placeholder="e.g. 4.5" required>
   </div>
   <div class="form-group">
     <label for="link">Link</label>
-    <input type="text" class="form-control" name="link" id="edit_link" value="...">
+    <input type="url" class="form-control" name="link" id="edit_link" value="..." placeholder="e.g. https://example.com">
   </div>
   <div class="form-group">
-    <label for="due_date">Due Date</label>
-    <input type="text" class="form-control" name="due_date" id="edit_due_date">
+    <label for="due_date">Due Date</label> <span class="required">*</span>
+    <input type="text" class="form-control" name="due_date" id="edit_due_date" required>
   </div>
   <div class="form-group">
     <label for="repeat_freq">Repeat</label>
-    <select class="form-control" name="repeat_freq" id="edit_repeat_freq">
+    <select class="form-control green-check" name="repeat_freq" id="edit_repeat_freq">
       <option id="task-current-freq" value="...">
         Current: ...
       </option>
@@ -102,4 +100,25 @@
     $("#edit_repeat_end").flatpickr();
   });
 </script>
+
+<script>
+  // Disabling form submissions if there are invalid fields from Bootstrap site
+  (function() {
+    'use strict';
+    window.addEventListener('load', function() {
+      // Fetch all the forms we want to apply custom Bootstrap validation styles to
+      var forms = document.getElementsByClassName('needs-validation');
+      // Loop over them and prevent submission
+      var validation = Array.prototype.filter.call(forms, function(form) {
+        form.addEventListener('submit', function(event) {
+          if (form.checkValidity() === false) {
+            event.preventDefault();
+            event.stopPropagation();
+          }
+          form.classList.add('was-validated');
+        }, false);
+      });
+    }, false);
+  })();
+  </script>
    

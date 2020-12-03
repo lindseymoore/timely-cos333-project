@@ -1,6 +1,7 @@
 """Functions to fetch class and task information."""
 
-from datetime import timedelta, date, datetime
+from datetime import date, datetime, timedelta
+from operator import itemgetter
 from typing import List
 
 from sqlalchemy import desc
@@ -28,7 +29,9 @@ def fetch_class_list(username: str) -> List[dict]:
                     "num": course.num, "color": course.color}
         classes.append(class_obj)
 
+    classes = sorted(classes, key=itemgetter('dept', 'num'))
     return classes
+
 
 def fetch_task_list_view(username: str, sort: str = "due_date") -> List[dict]:
     task_list = [] 
@@ -163,6 +166,12 @@ def fetch_task_details(task_id: int, iteration: int, username: str):
     """
     task_details_obj = {}
 
+    # First check if user has access to associated task_id, and if not, return None
+    user_access = db.session.query(Task).filter((Task.username == username) & \
+        (Task.task_id == task_id)).first()
+    if user_access is None:
+        return None
+
     task, task_iteration = db.session.query(Task, TaskIteration).filter((Task.username == username) &
             (Task.task_id == task_id)).join(TaskIteration, (TaskIteration.username == Task.username)
             & (TaskIteration.task_id == Task.task_id) & (TaskIteration.iteration == iteration)).first()
@@ -187,6 +196,12 @@ def fetch_class_details(class_id: int, username: str):
     Fetches title, dept, num, color.
     """
     class_details_obj = {}
+
+    # First check if user has access to associated task_id, and if not, return None
+    user_access = db.session.query(Class).filter((Class.username == username) & \
+        (Class.class_id == class_id)).first()
+    if user_access is None:
+        return None
 
     class_details = db.session.query(Class).filter((Class.username == username) &
             (Class.class_id == class_id)).first()
@@ -272,6 +287,8 @@ def get_class_id(class_title: str) -> int:
 def get_class_title(class_id: int) -> str:
     """Return class_title for a given class_id."""
     class_info = db.session.query(Class).filter(Class.class_id == class_id).first()
+    if class_info is None:
+        return None
     return class_info.title
 
 
@@ -331,6 +348,10 @@ def get_class_id_canvas(canvas_id: int, username: str):
     """Returns the class_id of a class with a given canvas_id set by Canvas."""
     class_id = db.session.query(Class).filter((Class.canvas_id == canvas_id) & 
         (Class.username == username)).first()
+    
+    if class_id is None:
+        return None
+
     return class_id.class_id
 
 
@@ -357,6 +378,8 @@ def canvas_task_in_db(canvas_id: int, username: str):
 def get_class_color(class_id: int):
     """Returns the color of a class with a given class_id"""
     color = db.session.query(Class).filter(Class.class_id == class_id).first()
+    if color is None:
+        return None
     return color.color
 
 

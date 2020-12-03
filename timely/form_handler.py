@@ -79,18 +79,21 @@ def fetch_increment(frequency: str):
 def create_all_iterations(task, iteration: int, due_date, details: dict):
     """Creates all iterations of a given repeating task."""
     # Create new task iteration if it is a repeating task
+    increment = timedelta(weeks=10) # for non-repeating task
     if task.repeat:
         increment = fetch_increment(task.repeat_freq)
         end_date = task.repeat_end
     elif task.repeat_end is None:
         increment = timedelta(days=1)
         end_date = due_date
+        # end_date = datetime.strptime(end_date, '%Y-%m-%d').date()
+
+
     # Creates the next iteration of a task upon completion if the repeat end is not specified
     # or next due date is before the repeat end date
     new_date = due_date
-
-    print(new_date, end_date)
-    while (new_date <= end_date):
+    
+    while new_date <= end_date:
         task_iteration = TaskIteration()
         # Insert into TaskIteration table
         task_iteration.username = details["username"]
@@ -115,6 +118,7 @@ def create_all_iterations(task, iteration: int, due_date, details: dict):
         db.session.add(task_iteration)
         db.session.commit()
         iteration += 1
+
         new_date += increment
 
 
@@ -266,31 +270,47 @@ def insert_canvas_tasks(task_list: list, username: str):
 
 def create_new_group(task_ids: list, group_title: str, username: str):
     """Function to create new repeating task group based on task grouping modal."""
-    group_task_id = task_ids[0]
-    for task_id in task_ids:
-        try:
-            group_task_id = get_task_id(group_title, task_id)
-        except Exception:
-            continue
+    is_new_group = True
+    largest_group = task_ids[0]
+    max_iters = 1
 
-    # task_group = {}
-    # for task_id in task_ids:
-    #     task_group[task_id] = fetch_task_due_date(task_id, username)
-    # task_group = sorted(task_group, key = task_group.get)
-    # group_task_id = task_group[0]
+    # Check if we're adding to an existing group or creating a new group
+    # If we're adding to an existing group, save largest_group as task_id of group with most iterations
+    for task_id in task_ids:
+        num_iters = db.session.query(TaskIteration).filter((TaskIteration.username == username) & \
+            (TaskIteration.task_id == task_id)).count()
+        if num_iters > max_iters:
+            max_iters = num_iters
+            largest_group = task_id
+            is_new_group = False
+
+    # task_group is list of task_ids sorted by due_date
+    task_group = {}
+    for task_id in task_ids:
+        task_group[task_id] = fetch_task_due_date(task_id, username)
+    task_group = sorted(task_group, key = task_group.get)
+
+    # if we're creating a new group, make the first iteration the one with the earliest due_date
+    group_task_id = 0
+    if is_new_group:
+        group_task_id = task_group[0]
+    else:
+        # if we're adding to an existing group, make the task_id the one of the largest existing group
+        group_task_id = largest_group
+    
+    # Make first iteration of task repeating, change group title
     task = db.session.query(Task).filter((Task.username == username) &
         (Task.task_id == group_task_id)).first()
-
-    # Make first iteration of task repeating
     task.repeat = True
     task.title = group_title
     db.session.commit()
 
+    # Remove first iteration from the list of task_ids sorted by due_date
+    task_group.pop(task_group.index(group_task_id))
+
     # Update next iterations of task to be repeating tasks of first iteration. Delete their entries
     # in the Task table.
-
-    task_ids.pop(task_ids.index(group_task_id))
-    for old_task_id in task_ids:
+    for old_task_id in task_group:
         task_iteration = db.session.query(TaskIteration).filter((TaskIteration.username == username)
             & (TaskIteration.task_id == old_task_id)).first()
         
