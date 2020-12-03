@@ -156,8 +156,13 @@
           </div>
         </form>
         <br>
-        <h5>Completed Tasks</h5>
-        <div class="pill-box">
+        <div class="d-flex align-items-center justify-content-between">
+          <h5 class="mb-0">Completed Tasks</h5>
+          <button class="btn btn-sm btn-custom"
+          data-toggle="collapse" data-target="#completed-tasks-collapse">Show/Hide</button>
+        </div>
+        <br>
+        <div class="pill-box" class="collapse" id="completed-tasks-collapse">
           {% for task in task_list: %}
             {% if task["completed"] == true %}
               <div class="pill-row">
@@ -209,7 +214,12 @@
       </div>
     </div>
   </div>
-	
+  
+  <script>
+    $(document).ready(function() {
+      $("#completed-tasks-collapse").collapse("show");
+    });
+  </script>
 
   {% include "components/create-task.html" %}
   {% include "components/create-class.html" %}
