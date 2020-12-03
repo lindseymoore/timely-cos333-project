@@ -249,4 +249,5 @@ hr {
 
 .full-page-content {
     max-height: 75vh;
+    min-height: 75vh;
 }

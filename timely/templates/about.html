@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <div class="container full-height pb-5" style="max-width: 900px">
+  <div class="container full-height" style="max-width: 900px">
     {% if public %}
       {% include "components/navbar-public.html" %}
     {% else %}
@@ -45,7 +45,7 @@
         </div>
       </div>
       <div class="card mb-3" style="width: 11rem;">
-        <img class="card-img-top" src="{{ url_for('static', filename='image/orange.jpg') }}" alt="Jorge's Picture">
+        <img class="card-img-top" src="{{ url_for('static', filename='image/jorge.jpg') }}" alt="Jorge's Picture">
         <div class="card-body text-center">
           <b class="card-title"> Jorge Zreik</b>
         </div>
