@@ -65,7 +65,7 @@
             <div class="row flex-grow-1 overflow-auto border-left-2" style="background: var(--dark-4);">
               {% for count in range (0,7) %}
                 <div class="col week-day px-1 py-3 vertical-align-center">
-                  <div class="pill-box mb-1">
+                  <div class="pill-box calendar-uncompleted">
                     {% for task in task_list: %}
                       {% if task["completed"] == false and task["due_date"] == week_dates[count]%}
                         {% include "tasks.html" %}
@@ -117,7 +117,7 @@
                                 </i>
                               </div>
                             </div>
-                            <div class="d-flex justify-content-between">
+                            <div class="d-flex justify-content-between" style="min-height: 15px;">
                               <div class="subtle pill-left">{{task["class"]}}</div>
                               <div class="subtle d-none d-sm-block"> {{task["actual_time"]}} h</div>
                               <i class="fa fa-trash ml-1 open-DeleteTask d-inline d-sm-none" data-toggle="modal"
