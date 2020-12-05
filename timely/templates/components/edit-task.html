@@ -1,4 +1,5 @@
-<form action="/edit_task_details" method="post" id="form_edit_details" class="needs-validation" novalidate>
+<form action="/edit-task-details" method="post" id="form_edit_details"
+class="needs-validation" novalidate>
   <script>
     $(document).ready(function() {
       $("#form_edit_details").submit(function(event) {
@@ -32,11 +33,13 @@
   </script>
   <div class="form-group">
     <label for="title">Name</label> <span class="required">*</span>
-    <input type="text" class="form-control" name="iteration_title" id="edit_task_title" value="..." required>
+    <input type="text" class="form-control" name="iteration_title" id="edit_task_title"
+    value="..." required>
   </div>
   <div class="form-group">
     <label for="class_id">Class</label>
-    <input type="text" class="form-control" name="class_id" id="edit_class_id" value="..." disabled required>
+    <input type="text" class="form-control" name="class_id" id="edit_class_id"
+    value="..." disabled required>
   </div>
   <div class="form-group">
     <label for="priority">Priority</label>
@@ -57,11 +60,13 @@
   </div>
   <div class="form-group">
     <label for="est_time">Estimated Completion Time</label> <span class="required">*</span>
-    <input type="number" step="0.1" min="0" max="99.9" class="form-control" name="est_time" id="edit_est_time" placeholder="e.g. 4.5" required>
+    <input type="number" step="0.1" min="0" max="99.9" class="form-control"
+    name="est_time" id="edit_est_time" placeholder="e.g. 4.5" required>
   </div>
   <div class="form-group">
     <label for="link">Link</label>
-    <input type="url" class="form-control" name="link" id="edit_link" value="..." placeholder="e.g. https://example.com">
+    <input type="url" class="form-control" name="link" id="edit_link"
+    value="..." placeholder="e.g. https://example.com">
   </div>
   <div class="form-group">
     <label for="due_date">Due Date</label> <span class="required">*</span>

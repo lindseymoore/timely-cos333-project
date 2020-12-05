@@ -1,6 +1,5 @@
 """Functions to fetch class and task information."""
 
-from datetime import date, datetime, timedelta
 from operator import itemgetter
 from typing import List
 
@@ -34,21 +33,32 @@ def fetch_class_list(username: str) -> List[dict]:
 
 
 def fetch_task_list_view(username: str, sort: str = "due_date") -> List[dict]:
-    task_list = [] 
+    """
+    Take a user with username, query the database to search for all tasks the user has inputted.
+    Return a list of task dictionaries with keys:
+        title, class, task_id, priority, repeat, est_time, timely_pred, link, notes, due_date,
+        repeat_freq, repeat_end, completed, iteration, color, actual_time, iteration_title.
+
+    Additionally, a parameter sort is passed, which is set by default to due_date. The options for
+    sort are:
+        due_date, priority, class, title
+    and they sort the returned list of tasks by due_date, priority, class, and title respectively.
+    """
+    task_list = []
     tasks = db.session.query(Task, Class).filter(Task.username == username
                 ).join(Class, Class.class_id == Task.class_id).all()
-    
+
     for (task, course) in tasks:
         task_iteration = db.session.query(TaskIteration).filter( \
                 (TaskIteration.username == username) & \
                 (TaskIteration.task_id == task.task_id) & \
                     (TaskIteration.completed == False)).order_by(TaskIteration.iteration).first()
-        
+
         if task_iteration is not None:
             repeat_freq = None
             repeat_end = None
 
-            # If the task is repeating, make an additional query to find it's repeat_freq and repeat_end
+            # If the task is repeating, make an additional query to find repeat_freq and repeat_end
             if task.repeat:
                 repeat_freq = task.repeat_freq
                 repeat_end = task.repeat_end
@@ -56,11 +66,13 @@ def fetch_task_list_view(username: str, sort: str = "due_date") -> List[dict]:
             # Create task_obj dictionary with all columns that will be displayed to the user
             task_obj = {'title': task.title, 'class': course.title, 'task_id': task.task_id,
                         'priority': task_iteration.priority, 'repeat': task.repeat,
-                        'est_time': task_iteration.est_time, 'timely_pred': task_iteration.timely_pred,
+                        'est_time': task_iteration.est_time,
+                        'timely_pred': task_iteration.timely_pred,
                         'link': task_iteration.link, 'notes': task_iteration.notes,
                         'due_date': task_iteration.due_date.strftime("%m/%d/%y"),
                         'repeat_freq': repeat_freq, 'repeat_end': repeat_end,
-                        'completed': task_iteration.completed, 'iteration': task_iteration.iteration,
+                        'completed': task_iteration.completed,
+                        'iteration': task_iteration.iteration,
                         'color': course.color, 'actual_time': task_iteration.actual_time,
                         'iteration_title': task_iteration.iteration_title}
 
@@ -78,7 +90,7 @@ def fetch_task_list_view(username: str, sort: str = "due_date") -> List[dict]:
             repeat_freq = None
             repeat_end = None
 
-            # If the task is repeating, make an additional query to find it's repeat_freq and repeat_end
+            # If the task is repeating, make an additional query to find repeat_freq and repeat_end
             if task.repeat:
                 repeat_freq = task.repeat_freq
                 repeat_end = task.repeat_end
@@ -86,11 +98,13 @@ def fetch_task_list_view(username: str, sort: str = "due_date") -> List[dict]:
             # Create task_obj dictionary with all columns that will be displayed to the user
             task_obj = {'title': task.title, 'class': course.title, 'task_id': task.task_id,
                         'priority': completed_iteration.priority, 'repeat': task.repeat,
-                        'est_time': completed_iteration.est_time, 'timely_pred': completed_iteration.timely_pred,
+                        'est_time': completed_iteration.est_time,
+                        'timely_pred': completed_iteration.timely_pred,
                         'link': completed_iteration.link, 'notes': completed_iteration.notes,
                         'due_date': completed_iteration.due_date.strftime("%m/%d/%y"),
                         'repeat_freq': repeat_freq, 'repeat_end': repeat_end,
-                        'completed': completed_iteration.completed, 'iteration': completed_iteration.iteration,
+                        'completed': completed_iteration.completed,
+                        'iteration': completed_iteration.iteration,
                         'color': course.color, 'actual_time': completed_iteration.actual_time,
                         'iteration_title': completed_iteration.iteration_title}
 
@@ -98,9 +112,15 @@ def fetch_task_list_view(username: str, sort: str = "due_date") -> List[dict]:
                 task_obj['timely_pred'] = 0
 
             task_list.append(task_obj)
-    
+
     if sort == "due_date":
-        task_list = sorted(task_list, key = lambda task: task["due_date"], reverse=False)
+        active_task_list = list(filter(lambda task: task['completed'] is False, task_list))
+        active_task_list = sorted(active_task_list, key = lambda task: task["due_date"])
+        completed_task_list = list(filter(lambda task: task['completed'], task_list))
+        completed_task_list = sorted(completed_task_list, \
+            key = lambda task: task["due_date"], reverse=True)
+
+        task_list = active_task_list + completed_task_list
     if sort == "priority":
         task_list = sorted(task_list, key = lambda task: task["priority"], reverse=True)
     if sort == "class":
@@ -113,7 +133,8 @@ def fetch_task_list_view(username: str, sort: str = "due_date") -> List[dict]:
 
 def fetch_task_calendar_view(username: str) -> List[dict]:
     """
-    Take a user with username, query the database to search for all tasks the user has inputted.
+    Take a user with username.
+    Query the database to search for all tasks the user has inputted.
     Return a list of task dictionaries with keys:
         task_id, iteration
         title, class
@@ -122,7 +143,6 @@ def fetch_task_calendar_view(username: str) -> List[dict]:
         priority, link, notes, completed, color
     """
     task_list = []
-
 
     # JOIN query to get information from task, Class, and TaskIteration tables
     task_info = db.session.query(Task, Class, TaskIteration
@@ -160,9 +180,18 @@ def fetch_task_calendar_view(username: str) -> List[dict]:
 
 def fetch_task_details(task_id: int, iteration: int, username: str):
     """
-    Given a user with username and task with task_id, query the database to search for the details
-    of the class the user has clicked on. Return a dictionary representing the details of one task.
-    Fetches title, class, repeat, iteration, priority, link, due_date, notes, est_time.
+    Take a user with username and task with task_id.
+    Query the database to search for the details of the class the user has clicked on.
+    Return a dictionary representing the details of one task, with keys
+        title
+        class
+        repeat
+        iteration
+        priority
+        link
+        due_date
+        notes
+        est_time
     """
     task_details_obj = {}
 
@@ -172,10 +201,10 @@ def fetch_task_details(task_id: int, iteration: int, username: str):
     if user_access is None:
         return None
 
-    task, task_iteration = db.session.query(Task, TaskIteration).filter((Task.username == username) &
-            (Task.task_id == task_id)).join(TaskIteration, (TaskIteration.username == Task.username)
-            & (TaskIteration.task_id == Task.task_id) & (TaskIteration.iteration == iteration)).first()
-    
+    task, task_iteration = db.session.query(Task, TaskIteration).filter((Task.username == username)\
+        & (Task.task_id == task_id)).join(TaskIteration, (TaskIteration.username == Task.username)\
+        & (TaskIteration.task_id == Task.task_id) & (TaskIteration.iteration == iteration)).first()
+
     task_details_obj = {"group_title": task.title, "class": get_class_title(task.class_id),
                 "id": task.task_id, "repeat_freq": task.repeat_freq, "repeat_end": task.repeat_end,
                 "repeating": task.repeat, "iteration": task_iteration.iteration,
@@ -191,9 +220,13 @@ def fetch_task_details(task_id: int, iteration: int, username: str):
 
 def fetch_class_details(class_id: int, username: str):
     """
-    Given a user with username and task with task_id, query the database to search for the details
-    of the class the user has clicked on. Return a dictionary representing the details of one class.
-    Fetches title, dept, num, color.
+    Take a user with username and task with task_id.
+    Query the database to search for the details of the class the user has clicked on.
+    Return a dictionary representing the details of one class, with keys
+        title
+        dept
+        num
+        color
     """
     class_details_obj = {}
 
@@ -206,76 +239,10 @@ def fetch_class_details(class_id: int, username: str):
     class_details = db.session.query(Class).filter((Class.username == username) &
             (Class.class_id == class_id)).first()
 
-    class_details_obj = {"title": class_details.title, "id": class_details.class_id, 
+    class_details_obj = {"title": class_details.title, "id": class_details.class_id,
                 "dept": class_details.dept, "num": class_details.num, "color": class_details.color}
 
     return class_details_obj
-
-
-def fetch_curr_week():
-    curr_date = date.today()
-    offset = curr_date.weekday() #where 0 is monday
-
-    #Determine what date corresponds to Sunday
-    increment = timedelta(days=offset+1)
-    day = curr_date - increment #initially sunday
-
-    if offset == 6:  # If current date is Sunday
-        day = curr_date
-    
-    #Create a dict of dates based on the sunday
-    week = {}
-    for ii in range(0, 7):
-        week[ii] = day.strftime("%m/%d/%y")
-        day += timedelta(days=1)
-
-    return week
-
-
-def fetch_week(week_dates: str, prev: bool):
-    curr_sunday = week_dates
-    sunday = datetime.strptime(curr_sunday, '%m/%d/%y')
-
-    #Determine what date corresponds to prev or next Sunday
-    if prev: 
-        day = sunday - timedelta(days=7) 
-    else:
-        day = sunday + timedelta(days=7)
-
-    #Create a dict of dates based on the sunday
-    week = {}
-    for ii in range(0, 7):
-        week[ii] = day.strftime("%m/%d/%y")
-        day += timedelta(days=1)
-
-    return week
-
-
-def mark_task_complete(task_id: int, iteration: int, username: str):
-    """Update the task given by task_id as complete in the db."""
-    # pylint: disable=singleton-comparison
-    task_iteration = db.session.query(TaskIteration).filter( \
-                (TaskIteration.username == username) & \
-                (TaskIteration.task_id == task_id) & \
-                (TaskIteration.iteration == int(iteration))).first()
-   
-    # pylint: enable=singleton-comparison
-
-    task_iteration.completed = True
-    db.session.commit()
-
-def uncomplete_task(task_id: int, iteration: int, username: str):
-    """Update the task given by task_id as complete in the db."""
-    # pylint: disable=singleton-comparison
-    task_iteration = db.session.query(TaskIteration).filter( \
-                (TaskIteration.username == username) & \
-                (TaskIteration.task_id == task_id) & \
-                (TaskIteration.iteration == int(iteration))).first()
-   
-    # pylint: enable=singleton-comparison
-
-    task_iteration.completed = False
-    db.session.commit()
 
 
 def get_class_id(class_title: str) -> int:
@@ -315,21 +282,6 @@ def get_next_task_iteration(task_id: int) -> int:
     return iteration.iteration+1
 
 
-def delete_class(class_id: int):
-    """Delete a class and all associated tasks."""
-    db.session.query(Class).filter(Class.class_id == class_id).delete()
-    db.session.query(Task).filter(Task.class_id == class_id).delete()
-    db.session.query(TaskIteration).filter(TaskIteration.class_id == class_id).delete()
-    db.session.commit()
-
-
-def delete_task(task_id: int):
-    """Delete a task and all associated instances."""
-    db.session.query(Task).filter(Task.task_id == task_id).delete()
-    db.session.query(TaskIteration).filter(TaskIteration.task_id == task_id).delete()
-    db.session.commit()
-
-
 def get_api_key(username: str):
     """Fetch a user's Canvas API Key given their username."""
     user = db.session.query(User).filter(User.username == username).first()
@@ -337,18 +289,18 @@ def get_api_key(username: str):
 
 
 def fetch_user(username: str):
-    """Returns True if a user is in the User table and False otherwise."""
+    """Return True if a user is in the User table and False otherwise."""
     user = db.session.query(User).filter(User.username == username).first()
     if user is None:
         return False
     return True
-    
+
 
 def get_class_id_canvas(canvas_id: int, username: str):
-    """Returns the class_id of a class with a given canvas_id set by Canvas."""
-    class_id = db.session.query(Class).filter((Class.canvas_id == canvas_id) & 
+    """Return the class_id of a class with a given canvas_id set by Canvas."""
+    class_id = db.session.query(Class).filter((Class.canvas_id == canvas_id) &
         (Class.username == username)).first()
-    
+
     if class_id is None:
         return None
 
@@ -356,27 +308,29 @@ def get_class_id_canvas(canvas_id: int, username: str):
 
 
 def canvas_task_in_db(canvas_id: int, username: str):
-    """Returns a tuple (True, task_info) if a task with canvas_id is already in the database, and 
-       False otherwise. When working with this function, if it returns False call db.add to add a 
-       new entry. Otherwise just call db.commit to update the current database entry."""
+    """
+    Return a tuple (True, task_info) if a task with canvas_id is already in the database, and
+    False otherwise.
+    When working with this function, if it returns False call db.add to add a new entry.
+    Otherwise just call db.commit to update the current database entry.
+    """
     details = db.session.query(Task, TaskIteration).filter(TaskIteration.username == username
     ).filter(TaskIteration.canvas_id == canvas_id).filter(TaskIteration.task_id == Task.task_id
     ).first()
     if details is None:
-        #print("No details")
         return (False, None)
-    
+
     task_info = {"due_date": None, "link": None, "title": None}
     task, task_iteration = details
     task_info["due_date"] = task_iteration.due_date
     task_info["link"] = task_iteration.link
     task_info["title"] = task.title
-    
+
     return (True, task_info)
 
 
 def get_class_color(class_id: int):
-    """Returns the color of a class with a given class_id"""
+    """Return the color of a class with a given class_id"""
     color = db.session.query(Class).filter(Class.class_id == class_id).first()
     if color is None:
         return None
@@ -384,7 +338,7 @@ def get_class_color(class_id: int):
 
 
 def get_task_groups(username: str, class_id: int):
-    """Returns the task groups (repeating tasks) for a user within a class with a given class_id."""
+    """Return the task groups (repeating tasks) for a user within a class with a given class_id."""
     task_group = db.session.query(Task).filter((Task.username == username) & (
         Task.class_id == class_id) & (Task.repeat)).all()
 
@@ -397,9 +351,18 @@ def get_task_groups(username: str, class_id: int):
 
 
 def fetch_tasks_from_class(class_id: int, username: str):
-    """Returns all tasks for a given user in a given class with class_id."""
-    # task_id, task_title, repeating
-    # If only one iteration, show due date
+    """Returns all tasks for a given user in a given class with class_id. Returns tasks as a list of
+    dictionaries with keys:
+        task_id
+        title
+        repeat
+        due_date
+        color
+        class_title
+        num_iterations
+        due_date
+        iteration_title
+    """
     task_groups = []
     task_ids = []
 
@@ -419,10 +382,12 @@ def fetch_tasks_from_class(class_id: int, username: str):
         if num_iterations == 0:
             # Based on bug where ghost tasks are appearing - remove task if there are no iterations
             task_ids.pop(task_ids.index(task_id))
-            task_groups.pop(next((index for (index, d) in enumerate(task_groups) if d['task_id'] == task_id), None))
+            task_groups.pop(next((index for (index, d) in enumerate(task_groups) \
+                if d['task_id'] == task_id), None))
             continue
 
-        list(filter(lambda task: task["task_id"] == task_id, task_groups))[0]["num_iterations"] = num_iterations
+        list(filter(lambda task: task["task_id"] == task_id, task_groups) \
+            )[0]["num_iterations"] = num_iterations
 
         if num_iterations == 1:
             iteration = db.session.query(TaskIteration).filter(
@@ -432,23 +397,24 @@ def fetch_tasks_from_class(class_id: int, username: str):
             iteration_title = iteration.iteration_title
 
             # Find dict where task_id is correct, set due_date
-            list(filter(lambda task: task["task_id"] == task_id, task_groups))[0]["due_date"] = due_date
-            list(filter(lambda task: task["task_id"] == task_id, task_groups))[0]["iteration_title"] = iteration_title
+            list(filter(lambda task: task["task_id"] == task_id, task_groups) \
+                )[0]["due_date"] = due_date
+            list(filter(lambda task: task["task_id"] == task_id, task_groups) \
+                )[0]["iteration_title"] = iteration_title
 
-    #print(task_groups)
     return task_groups
 
 
 def fetch_task_due_date(task_id: int, username: str):
-    """Fetches due date for task with given task_id."""
+    """Fetch the due date for task with given task_id."""
     task_iteration = db.session.query(TaskIteration).filter((TaskIteration.username == username)
         & (TaskIteration.task_id == task_id)).first()
 
     return task_iteration.due_date
-  
+
 
 def fetch_available_colors(username: str):
-    """Fetches all un-used class colors for a given user."""
+    """Fetch all un-used class colors for a given user."""
     classes = db.session.query(Class).filter(Class.username == username).all()
 
     # UPDATE TO INCLUDE COMPREHENSIVE LIST OF COLORS
@@ -460,7 +426,7 @@ def fetch_available_colors(username: str):
 
 
 def classes_from_canvas(username: str):
-    """Fetches all classes that a given user has imported from Canvas. Returns list of canvas_ids
+    """Fetch all classes that a given user has imported from Canvas. Returns list of canvas_ids
     of classes from Canvas."""
     classes = db.session.query(Class).filter(Class.username == username).all()
 

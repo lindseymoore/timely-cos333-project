@@ -1,4 +1,7 @@
-"""A module with functions that are used to handle CAS authentication"""
+"""
+A module with functions that are used to handle CAS authentication.
+Code written by Professor Robert Dondero and published in associated COS333 lecture files.
+"""
 
 from urllib.request import urlopen
 from urllib.parse import quote
