@@ -3,10 +3,11 @@
 from flask import redirect, render_template, request
 
 from timely import app
+from timely.calendar import fetch_curr_week, fetch_week
 from timely.cas_client import CASClient
 from timely.db_queries import (fetch_available_colors, fetch_class_list,
-                               fetch_curr_week, fetch_task_calendar_view,
-                               fetch_task_list_view, fetch_user, fetch_week)
+                               fetch_task_calendar_view, fetch_task_list_view,
+                               fetch_user)
 
 # NOTE: To run the application locally with CAS authentication, check out:
 # "https://stackoverflow.com/questions/50236117/"

@@ -5,11 +5,12 @@ import json
 from flask import request
 
 from timely import app, db
-from timely.canvas_handler import fetch_canvas_courses, fetch_canvas_tasks, fetch_current_semester
+from timely.canvas_handler import (fetch_canvas_courses, fetch_canvas_tasks,
+                                   fetch_current_semester)
 from timely.cas_client import CASClient
-from timely.db_queries import (delete_class, delete_task, fetch_class_details,
-                               fetch_class_list, fetch_task_details,
-                               fetch_tasks_from_class, mark_task_complete,
+from timely.db_queries import (fetch_class_details, fetch_class_list,
+                               fetch_task_details, fetch_tasks_from_class)
+from timely.db_updates import (delete_class, delete_task, mark_task_complete,
                                uncomplete_task)
 from timely.form_handler import (class_handler, create_new_group,
                                  insert_canvas_tasks, task_handler,
