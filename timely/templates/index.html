@@ -9,8 +9,6 @@
 {% block content %}
   <div class="container full-height pb-4" style="max-width: 900px">
     {% include "components/navbar.html" %}
-
-    <!-- TODO: Remove lazy styling helper classes -->
     <div class="row flex-grow-1 overflow-auto full-page-content" style="background: var(--dark-4);">
       <div class="col-md-4 overflow-auto py-3">
         <div class="d-flex justify-content-between align-items-center pb-3">
@@ -44,11 +42,13 @@
               </script>
             {% endif %}
             {% if user_info == false %}
-              <button data-toggle="modal" data-toggle="tooltip" data-target="#canvasKeyModal" class="btn btn-secondary mr-2" title="Add Canvas Key">
+              <button data-toggle="modal" data-toggle="tooltip" data-target="#canvasKeyModal"
+              class="btn btn-secondary mr-2" title="Add Canvas Key">
                 Canvas Key
               </button>
             {% endif %}
-            <i class="fa fa-plus add ml-2" data-toggle="modal" data-toggle="tooltip" data-target="#classModal" title="Add Class"></i>
+            <i class="fa fa-plus add ml-2" data-toggle="modal" data-toggle="tooltip"
+            data-target="#classModal" title="Add Class"></i>
           </div>
         </div>
 
@@ -78,7 +78,8 @@
           <div class="d-flex align-items-center">
             <h3 class="mb-0 mr-3">Tasks</h3>
             <div class="dropdown">
-              <button class="dropdown-toggle btn btn-small btn-custom" href="#" id="sortingDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <button class="dropdown-toggle btn btn-small btn-custom" href="#" id="sortingDropdown"
+              role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 Sort
               </button>
               <div class="dropdown-menu">
@@ -90,7 +91,8 @@
             </div>
           </div>
           <div class="d-flex align-items-center">
-            <button data-toggle="modal" data-target="#groupTasksModal" class="btn btn-secondary mr-2">
+            <button data-toggle="modal" data-target="#groupTasksModal"
+            class="btn btn-secondary mr-2">
               Group
             </button>
             <!-- TODO: Remove -->
@@ -100,7 +102,8 @@
                 height="24px">
               </a>
             {% endif %}
-            <i class="fa fa-plus add ml-2" data-toggle="modal" data-toggle="tooltip" data-target="#taskModal" title="Add Task"></i>
+            <i class="fa fa-plus add ml-2" data-toggle="modal" data-toggle="tooltip"
+            data-target="#taskModal" title="Add Task"></i>
           </div>
         </div>
         <!-- Retrieves the task list and displays the task details -->
@@ -114,7 +117,8 @@
                       <div class="pill-left">
                         <!-- Maybe an error here.-->
                         <a data-toggle="modal" data-target="#taskDetailsModal"
-                        data-id="?task_id={{task['task_id']}}&iteration={{task['iteration']}}" class="title-link open-TaskDetails">
+                        data-id="?task_id={{task['task_id']}}&iteration={{task['iteration']}}"
+                        class="title-link open-TaskDetails">
                           {{task["iteration_title"]}}
                         </a>
                       </div>
@@ -170,15 +174,21 @@
                   <div class="d-flex justify-content-between">
                     <div class="pill-left d-flex">
                       <div style="overflow: hidden; text-overflow: ellipsis;">
-                        <a data-toggle="modal" data-target="#taskDetailsModal" data-id="?task_id={{task['task_id']}}&iteration={{task['iteration']}}" class="title-link open-TaskDetails">
+                        <a data-toggle="modal" data-target="#taskDetailsModal"
+                        data-id="?task_id={{task['task_id']}}&iteration={{task['iteration']}}"
+                        class="title-link open-TaskDetails">
                           <del>{{task["iteration_title"]}}</del>
                         </a>
                       </div>
                       <div>
-                        <i href="/uncomplete?task_id={{task['task_id']}}&iteration={{task['iteration']}}" id="uncomplete-{{task['task_id']}}-{{task['iteration']}}" class="fa fa-check-square ml-1"></i>
+                        <i href="/uncomplete?task_id={{task['task_id']}}&
+                        iteration={{task['iteration']}}"
+                        id="uncomplete-{{task['task_id']}}-{{task['iteration']}}"
+                        class="fa fa-check-square ml-1"></i>
                         <script>
                           $(document).ready(function() {
-                            $("#uncomplete-{{task['task_id']}}-{{task['iteration']}}").click(function(event) {
+                            $("#uncomplete-{{task['task_id']}}-{{task['iteration']}}")
+                              .click(function(event) {
                               /* stop form from submitting normally */
                               event.preventDefault();
                 
