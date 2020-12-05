@@ -144,7 +144,7 @@ aria-labelledby="taskDetailsModal" aria-hidden="true">
     $(document).on("click", ".open-TaskDetails", function () {		
       let taskId = $(this).data('id');
       $("#form_edit_details").attr("action", $("#form_edit_details").attr("action") + taskId);
-      $.ajax({url: "/task_details" + taskId, dataType: 'json', 
+      $.ajax({url: "/task-details" + taskId, dataType: 'json', 
       error: function( data ) { window.location.replace("/403"); },
       success: function(task_details) {
         $("#display-details").append(
@@ -196,7 +196,7 @@ aria-labelledby="taskDetailsModal" aria-hidden="true">
 
         // Handle graph data
         if (task_details["repeating"]) {
-          $.getJSON({url: "/get_graph_data" + taskId, success: function(times) {
+          $.getJSON({url: "/get-graph-data" + taskId, success: function(times) {
             createChart(times);
             console.log(times)
           }});

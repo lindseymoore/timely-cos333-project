@@ -19,7 +19,7 @@ aria-labelledby="groupTasksModal" aria-hidden="true">
           <div class="pill-box"></div>
           <div id="class-loading-message">Loading Classes...</div>
         </div>
-        <form action="/group_task" method="post" id="group-task-form">
+        <form action="/group-task" method="post" id="group-task-form">
           <script>
             $(document).ready(function() {
               $("#group-task-form").submit(function(event) {
@@ -98,7 +98,7 @@ aria-labelledby="groupTasksModal" aria-hidden="true">
       });
 
       $('#groupTasksModal').on('shown.bs.modal', function (e) {
-        $.getJSON({url: "/get_classes", success: function(data) {
+        $.getJSON({url: "/get-classes", success: function(data) {
           if (data.length === 0) {
             $("#class-selection .pill-box").append(`<div class="mx-auto">No classes found</div>`);
           }
@@ -126,7 +126,7 @@ aria-labelledby="groupTasksModal" aria-hidden="true">
         $("#task-selection").removeClass("d-none");
         $("#btn-selectTasks").removeClass("d-none");
         
-        $.getJSON({url: `/get_tasks?class_id=${id}`, success: function(data) {
+        $.getJSON({url: `/get-tasks?class_id=${id}`, success: function(data) {
           // Hide Loading Message
           $("#task-loading-message").hide();
           

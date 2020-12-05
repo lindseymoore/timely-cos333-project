@@ -12,7 +12,7 @@ aria-labelledby="canvasImportModal" aria-hidden="true">
         </button>
       </div>
       <div class="modal-body px-3">
-        <form action="/canvas_import" method="post" id="canvas-import-form">
+        <form action="/canvas-task" method="post" id="canvas-import-form">
           <script>
             $(document).ready(function() {
               $("#canvas-import-form").submit(function(event) {
@@ -79,7 +79,7 @@ aria-labelledby="canvasImportModal" aria-hidden="true">
   </div>
   <script>
     $(document).ready(function() {
-      $.getJSON({url: "/get_canvas_tasks", success: function(data) {
+      $.getJSON({url: "/get-canvas-tasks", success: function(data) {
         // Hide Loading Message
         $("#loading-message").hide();
 

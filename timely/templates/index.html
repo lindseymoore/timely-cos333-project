@@ -18,7 +18,7 @@
           <div class="d-flex align-items-center">
             {% if user_info %}
               <img src="{{ url_for('static', filename='image/canvas-logo.png') }}"
-              height="24px" id="canvas-class-button" href='/canvas_class'>
+              height="24px" id="canvas-class-button" href='/canvas-class'>
               <script>
                 $(document).ready(function() {
                   $("#canvas-class-button").click(function(event) {
@@ -104,7 +104,7 @@
           </div>
         </div>
         <!-- Retrieves the task list and displays the task details -->
-        <form action="/completion_form" name="task_list">
+        <form action="/completion-form" name="task_list">
           <div class="pill-box">
             {% for task in task_list: %}
               {% if task["completed"] == false %}
@@ -237,7 +237,7 @@
 
   {% include "components/task-completion.html" %}
 
-  {% include "components/canvas-import.html" %}
+  {% include "components/canvas-task.html" %}
 
   {% include "components/group-tasks.html" %}
 {% endblock %}
