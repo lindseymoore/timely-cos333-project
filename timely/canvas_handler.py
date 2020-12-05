@@ -120,3 +120,16 @@ def fetch_canvas_tasks(curr_semester: str, username: str):
     updated_tasks = sorted(updated_tasks, key = lambda task: task["due_date"], reverse=True)
     all_tasks = {"new": new_tasks, "updated": updated_tasks}
     return all_tasks
+
+
+def fetch_current_semester():
+    """Returns the current semester based on the current date."""
+    curr_date = datetime.today()
+    curr_year = curr_date.year
+    curr_month = curr_date.month
+    curr_day = curr_date.day
+    sem = 'S'
+    if curr_month > 7 or (curr_month == 1 and curr_day > 15):
+        sem = 'F'
+          
+    return sem + str(curr_year)
