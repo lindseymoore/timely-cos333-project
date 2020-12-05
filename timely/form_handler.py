@@ -305,17 +305,10 @@ def insert_canvas_tasks(task_list: list, username: str):
                 TaskIteration.canvas_id == task["canvas_task_id"]).filter(
                     TaskIteration.task_id == Task.task_id).first()
 
-            # print(update_task.title)
-            # print(task_iteration.link, task_iteration.due_date)
-
             update_task.title = task["title"]
-            #print(task["title"])
             task_iteration.link = task["link"]
-            #print(task["link"])
             task_iteration.due_date = datetime.strptime(task["due_date"], '%Y-%m-%d')
-            #print(datetime.strptime(task["due_date"], '%Y-%m-%d'))
             task_iteration.completed = task["completed"]
-            #print(task["completed"])
 
             db.session.commit()
 
