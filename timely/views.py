@@ -15,7 +15,6 @@ from timely.db_queries import (fetch_available_colors, fetch_class_list,
 
 
 @app.route("/list")
-@app.route("/index")
 def index():
     """Return the index page."""
     username = CASClient().authenticate()
@@ -28,7 +27,7 @@ def index():
     tasks = fetch_task_list_view(username, sort)
     user = fetch_user(username)
     colors = fetch_available_colors(username)
-    return render_template("index.html",
+    return render_template("views/list.html",
                 class_list=classes,
                 task_list=tasks,
                 user_info = user,
@@ -42,7 +41,7 @@ def landing():
     try:
         CASClient().authenticate()
     except:
-        return render_template("landing.html")
+        return render_template("views/landing.html")
     else:
         return redirect("/list")
 
@@ -54,7 +53,7 @@ def calendar():
     classes = fetch_class_list(username)
     tasks = fetch_task_calendar_view(username)
     week_dates = fetch_curr_week()
-    return render_template("calendar.html",
+    return render_template("views/calendar.html",
                 class_list=classes,
                 task_list=tasks,
                 week_dates=week_dates)
@@ -68,7 +67,7 @@ def next_week():
     tasks = fetch_task_calendar_view(username)
     week_dates = request.args["week-dates"]
     next_week_dates = fetch_week(week_dates, False)
-    return render_template("calendar.html",
+    return render_template("views/calendar.html",
                 class_list=classes,
                 task_list=tasks,
                 week_dates=next_week_dates)
@@ -83,7 +82,7 @@ def prev_week():
     week_dates = request.args["week-dates"]
     # week_dates = eval(week_dates)
     prev_week_dates = fetch_week(week_dates, True)
-    return render_template("calendar.html",
+    return render_template("views/calendar.html",
                 class_list=classes,
                 task_list=tasks,
                 week_dates=prev_week_dates)
@@ -96,7 +95,7 @@ def about():
         public = True
     else:
         public = False
-    return render_template("about.html", public=public)
+    return render_template("views/about.html", public=public)
 
 
 @app.route("/feedback")
@@ -106,7 +105,7 @@ def feedback():
         public = True
     else:
         public = False
-    return render_template("feedback.html", public=public)
+    return render_template("views/feedback.html", public=public)
 
 
 @app.route('/logout', methods=['GET'])
@@ -121,16 +120,16 @@ def logout():
 @app.route("/403")
 def forbidden(e):
     """Return the 403 page."""
-    return render_template("403.html"), 403
+    return render_template("views/403.html"), 403
 
 
 @app.errorhandler(404)
 def page_not_found(e):
     """Return the 404 page."""
-    return render_template("404.html"), 404
+    return render_template("views/404.html"), 404
 
 
 @app.errorhandler(500)
 def server_error(e):
     """Return the 500 page."""
-    return render_template("500.html"), 404
+    return render_template("views/500.html"), 404
