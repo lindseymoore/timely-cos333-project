@@ -14,6 +14,19 @@ from timely.db_queries import (fetch_available_colors, fetch_class_list,
 # It may be necessary to install certificates
 
 
+@app.route("/")
+@app.route("/landing")
+def landing():
+    """Return the landing page."""
+    # Redirects to list if user is logged in
+    try:
+        CASClient().authenticate()
+    except:
+        return render_template("views/landing.html")
+    else:
+        return redirect("/list")
+
+
 @app.route("/list")
 def index():
     """Return the index page."""
@@ -32,18 +45,6 @@ def index():
                 task_list=tasks,
                 user_info = user,
                 colors = colors)
-
-
-@app.route("/")
-def landing():
-    """Return the landing page."""
-    # Redirects to list if user is logged in
-    try:
-        CASClient().authenticate()
-    except:
-        return render_template("views/landing.html")
-    else:
-        return redirect("/list")
 
 
 @app.route("/calendar")
@@ -91,21 +92,23 @@ def prev_week():
 @app.route("/about")
 def about():
     """Display about page."""
-    if "public" in request.args.keys():
-        public = True
+    try:
+        CASClient().authenticate()
+    except:
+        return render_template("views/about.html", public=True)
     else:
-        public = False
-    return render_template("views/about.html", public=public)
+        return render_template("views/about.html", public=False)
 
 
 @app.route("/feedback")
 def feedback():
     """Display the feedback page."""
-    if "public" in request.args.keys():
-        public = True
+    try:
+        CASClient().authenticate()
+    except:
+        return render_template("views/feedback.html", public=True)
     else:
-        public = False
-    return render_template("views/feedback.html", public=public)
+        return render_template("views/feedback.html", public=False)
 
 
 @app.route('/logout', methods=['GET'])
