@@ -34,6 +34,17 @@ def fetch_class_list(username: str) -> List[dict]:
 
 
 def fetch_task_list_view(username: str, sort: str = "due_date") -> List[dict]:
+    """
+    Take a user with username, query the database to search for all tasks the user has inputted.
+    Return a list of task dictionaries with keys:
+        title, class, task_id, priority, repeat, est_time, timely_pred, link, notes, due_date,
+        repeat_freq, repeat_end, completed, iteration, color, actual_time, iteration_title.
+    
+    Additionally, a parameter sort is passed, which is set by default to due_date. The options for
+    sort are:
+        due_date, priority, class, title
+    and they sort the returned list of tasks by due_date, priority, class, and title respectively. 
+    """
     task_list = [] 
     tasks = db.session.query(Task, Class).filter(Task.username == username
                 ).join(Class, Class.class_id == Task.class_id).all()
@@ -218,6 +229,10 @@ def fetch_class_details(class_id: int, username: str):
 
 
 def fetch_curr_week():
+    """
+    Fetches the current week based on today's date. Returns the week (from Sunday to Saturday) that
+    today's date is a part of as a dictionary of weekdays (as date formatted strings).
+    """
     curr_date = date.today()
     offset = curr_date.weekday() #where 0 is monday
 
@@ -238,12 +253,17 @@ def fetch_curr_week():
 
 
 def fetch_week(week_dates: str, prev: bool):
+    """
+    Fetches a week based on a provided Sunday's date (week_dates). If prev is True, returns the
+    week preceding the given Sunday. Otherwise fetches the week following the given Sunday. Returns
+    the associated dictionary of weekdays (as date formatted strings).
+    """
     curr_sunday = week_dates
     sunday = datetime.strptime(curr_sunday, '%m/%d/%y')
 
     #Determine what date corresponds to prev or next Sunday
-    if prev: 
-        day = sunday - timedelta(days=7) 
+    if prev:
+        day = sunday - timedelta(days=7)
     else:
         day = sunday + timedelta(days=7)
 
@@ -402,9 +422,18 @@ def get_task_groups(username: str, class_id: int):
 
 
 def fetch_tasks_from_class(class_id: int, username: str):
-    """Returns all tasks for a given user in a given class with class_id."""
-    # task_id, task_title, repeating
-    # If only one iteration, show due date
+    """Returns all tasks for a given user in a given class with class_id. Returns tasks as a list of
+    dictionaries with keys:
+        task_id
+        title
+        repeat
+        due_date
+        color
+        class_title
+        num_iterations
+        due_date
+        iteration_title
+    """
     task_groups = []
     task_ids = []
 
@@ -424,10 +453,12 @@ def fetch_tasks_from_class(class_id: int, username: str):
         if num_iterations == 0:
             # Based on bug where ghost tasks are appearing - remove task if there are no iterations
             task_ids.pop(task_ids.index(task_id))
-            task_groups.pop(next((index for (index, d) in enumerate(task_groups) if d['task_id'] == task_id), None))
+            task_groups.pop(next((index for (index, d) in enumerate(task_groups) \
+                if d['task_id'] == task_id), None))
             continue
 
-        list(filter(lambda task: task["task_id"] == task_id, task_groups))[0]["num_iterations"] = num_iterations
+        list(filter(lambda task: task["task_id"] == task_id, task_groups) \
+            )[0]["num_iterations"] = num_iterations
 
         if num_iterations == 1:
             iteration = db.session.query(TaskIteration).filter(
@@ -437,10 +468,11 @@ def fetch_tasks_from_class(class_id: int, username: str):
             iteration_title = iteration.iteration_title
 
             # Find dict where task_id is correct, set due_date
-            list(filter(lambda task: task["task_id"] == task_id, task_groups))[0]["due_date"] = due_date
-            list(filter(lambda task: task["task_id"] == task_id, task_groups))[0]["iteration_title"] = iteration_title
+            list(filter(lambda task: task["task_id"] == task_id, task_groups) \
+                )[0]["due_date"] = due_date
+            list(filter(lambda task: task["task_id"] == task_id, task_groups) \
+                )[0]["iteration_title"] = iteration_title
 
-    #print(task_groups)
     return task_groups
 
 
@@ -450,7 +482,7 @@ def fetch_task_due_date(task_id: int, username: str):
         & (TaskIteration.task_id == task_id)).first()
 
     return task_iteration.due_date
-  
+
 
 def fetch_available_colors(username: str):
     """Fetches all un-used class colors for a given user."""
