@@ -10,8 +10,8 @@ from timely.canvas_handler import (fetch_canvas_courses, fetch_canvas_tasks,
 from timely.cas_client import CASClient
 from timely.db_queries import (fetch_class_details, fetch_class_list,
                                fetch_task_details, fetch_tasks_from_class)
-from timely.db_updates import (delete_class, delete_task, mark_task_complete,
-                               uncomplete_task)
+from timely.db_updates import (delete_class, delete_all_iterations, delete_iteration, 
+                                mark_task_complete, uncomplete_task)
 from timely.form_handler import (class_handler, create_new_group,
                                  insert_canvas_tasks, task_handler,
                                  update_class_details, update_task_details)
@@ -163,8 +163,8 @@ def delete_class_endpoint():
         return json.dumps({"success": True})
 
 
-@app.route("/delete-task", methods=["POST"])
-def delete_task_endpoint():
+@app.route("/delete-all-iterations", methods=["POST"])
+def delete_all_iterations_endpoint():
     """
     Method(s): POST
 
@@ -174,7 +174,24 @@ def delete_task_endpoint():
     Delete a task and all its associated iterations.
     """
     try:
-        delete_task(request.args["task_id"])
+        delete_all_iterations(request.args["task_id"])
+    except:
+        return json.dumps({"success": False})
+    else:
+        return json.dumps({"success": True})
+
+@app.route("/delete-iteration", methods=["POST"])
+def delete_iteration_endpoint():
+    """
+    Method(s): POST
+
+    Take request args of the following fields:
+        task_id: int
+
+    Delete a task iteration.
+    """
+    try:
+        delete_iteration(request.args["task_id"], request.args["iteration"])
     except:
         return json.dumps({"success": False})
     else:

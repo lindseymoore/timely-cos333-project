@@ -34,8 +34,18 @@ def delete_class(class_id: int):
     db.session.commit()
 
 
-def delete_task(task_id: int):
+def delete_all_iterations(task_id: int):
     """Delete a task and all associated instances."""
     db.session.query(Task).filter(Task.task_id == task_id).delete()
     db.session.query(TaskIteration).filter(TaskIteration.task_id == task_id).delete()
+    db.session.commit()
+
+def delete_iteration(task_id: int, iteration: int):
+    """Delete a task and all associated instances."""
+    db.session.query(TaskIteration).filter((TaskIteration.task_id == task_id) & \
+                                            (TaskIteration.iteration == iteration)).delete()
+    next_iterations = db.session.query(TaskIteration).filter((TaskIteration.task_id == task_id) & \
+                                            (TaskIteration.iteration > iteration)).all()
+    for i in next_iterations:
+        i.iteration = i.iteration - 1
     db.session.commit()
