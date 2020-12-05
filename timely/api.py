@@ -5,7 +5,7 @@ import json
 from flask import request
 
 from timely import app, db
-from timely.canvas_handler import fetch_canvas_courses, fetch_canvas_tasks
+from timely.canvas_handler import fetch_canvas_courses, fetch_canvas_tasks, fetch_current_semester
 from timely.cas_client import CASClient
 from timely.db_queries import (delete_class, delete_task, fetch_class_details,
                                fetch_class_list, fetch_task_details,
@@ -217,7 +217,7 @@ def canvas_class():
     """
     username = CASClient().authenticate()
     try:
-        fetch_canvas_courses("F2020", username)
+        fetch_canvas_courses(fetch_current_semester(), username)
     except:
         return json.dumps({"success": False})
     else:
@@ -425,7 +425,7 @@ def get_canvas_tasks():
     Return JSON of the current user's canvas tasks.
     """
     try:
-        tasks = fetch_canvas_tasks("F2020", CASClient().authenticate())
+        tasks = fetch_canvas_tasks(fetch_current_semester(), CASClient().authenticate())
     except:
         return json.dumps({"success": False}), 500
     return json.dumps(tasks, default=str)
