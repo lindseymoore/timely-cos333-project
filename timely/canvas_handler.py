@@ -14,8 +14,6 @@ from timely.db_queries import (canvas_task_in_db, classes_from_canvas,
 from timely.models import Class
 
 API_URL = "https://princeton.instructure.com"
-#API_KEY = "12465~RpGmbRqf0075STEfJkuwt72NzzYs5Zv1dglYd5vIPKqEtkrF2EztidbzCRLg8cFy"
-#canvas = Canvas(API_URL, API_KEY)
 
 
 def fetch_canvas_courses(curr_semester: str, username: str):
@@ -28,7 +26,7 @@ def fetch_canvas_courses(curr_semester: str, username: str):
     canvas = Canvas(API_URL, api_key)
     classes = []
     colors = fetch_available_colors(username)
-    current_canvas_classes = classes_from_canvas(username) #Classes from Canvas already in db
+    current_canvas_classes = classes_from_canvas(username) # Classes from Canvas already in db
 
     for course in canvas.get_courses():
         # Check if this course is already in the db
@@ -47,12 +45,10 @@ def fetch_canvas_courses(curr_semester: str, username: str):
             new_class.dept = course.course_code[:3]
             new_class.num = int(course.course_code[3:6])
 
-            #TODO implement edit class button to change the color afterwards
             if len(colors) > 0:
                 new_class.color = random.choice(colors)
                 colors.pop(colors.index(new_class.color))
             else:
-                #TODO MAKE CONDITION MORE ELABORATE
                 new_class.color = 'red'
 
             new_class.canvas_id = course.id
@@ -85,7 +81,6 @@ def fetch_canvas_tasks(curr_semester: str, username: str):
             canvas_class_id = course.id
             class_id = get_class_id_canvas(canvas_class_id, username)
 
-            # TODO figure out if a task from Canvas is repeating or not, defaulting to false
             for assignment in course.get_assignments():
                 if assignment.due_at is None:
                     continue
@@ -95,7 +90,6 @@ def fetch_canvas_tasks(curr_semester: str, username: str):
                 datetime_due = assignment.due_at.split('T')
                 due_date = datetime.strptime(datetime_due[0], '%Y-%m-%d')
                 completed = False
-                #due_time = datetime.strptime(datetime_due[1][:-1], '%H:%M:%S')
 
                 if due_date < datetime.today():
                     completed = True
@@ -112,7 +106,8 @@ def fetch_canvas_tasks(curr_semester: str, username: str):
                 # it's new
                 task_in_db = canvas_task_in_db(canvas_task_id, username)
                 if task_in_db[0] is False:
-                    task_info["priority"] = 1 # set priority to 1 by default for new Canvas tasks
+                    # set priority to 1 by default for new Canvas tasks
+                    task_info["priority"] = 1
                     new_tasks.append(task_info)
                 else:
                     current_task = task_in_db[1]
@@ -125,3 +120,16 @@ def fetch_canvas_tasks(curr_semester: str, username: str):
     updated_tasks = sorted(updated_tasks, key = lambda task: task["due_date"], reverse=True)
     all_tasks = {"new": new_tasks, "updated": updated_tasks}
     return all_tasks
+
+
+def fetch_current_semester():
+    """Returns the current semester based on the current date."""
+    curr_date = datetime.today()
+    curr_year = curr_date.year
+    curr_month = curr_date.month
+    curr_day = curr_date.day
+    sem = 'S'
+    if curr_month > 7 or (curr_month == 1 and curr_day > 15):
+        sem = 'F'
+          
+    return sem + str(curr_year)

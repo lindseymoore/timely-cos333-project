@@ -12,5 +12,5 @@ app.secret_key = b'\x8c\x86\xa6\tRQ\xf3|\xff\xfc\xb2\x8bz\xfe\xe4S' # Generated 
 db = SQLAlchemy(app)
 
 # pylint: disable=wrong-import-position
-from timely import models, views
+from timely import models, views, api
 # pylint: enable=wrong-import-position

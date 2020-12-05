@@ -1,0 +1,210 @@
+{% extends "base.html" %}
+
+{% block head %}
+  {{ super() }}
+  <!-- pill-box CSS -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='style/pill-box.css') }}">
+{% endblock %}
+
+{% block content %}
+  <div class="container full-height pb-4" style="max-width: 1200px;">
+    {% include "components/navbar.html" %}
+    <div class="full-page-content">
+      <!-- Header Row  -->
+      <!-- Retrieves the task list and displays the task details in a weekly calendar view -->
+      <form action="/completion-form" name="task_list">
+        <div class= "weekly-header mx-sm-3">
+          <div class="text-light" style="font-weight:bold;">
+            <div class="row text-center pt-4 pb-2 pb-md-4"
+            style="background: var(--dark-3); margin-bottom: 3px;">
+              <div class="arrow-container">
+                <a href="/calendar/prev_week?week-dates={{week_dates[0]}}">
+                  <i class="fa fa-arrow-circle-left fa-2x arrow-left-icon ml-1" id="prev_week"></i>
+                </a>
+              </div>
+              <div class="col p-0">
+                <h4 class="d-none d-sm-block"><b>Sun</b></h4>
+                <h4 class="d-block d-sm-none"><b>S</b></h4>
+                <small class="calendar-date">{{week_dates[0]}}</small>
+              </div>
+              <div class="col p-0">
+                <h4 class="d-none d-sm-block"><b>Mon</b></h4>
+                <h4 class="d-block d-sm-none pb-4"><b>M</b></h4>
+                <small class="calendar-date">{{week_dates[1]}}</small>
+              </div>
+              <div class="col p-0">
+                <h4 class="d-none d-sm-block"><b>Tue</b></h4>
+                <h4 class="d-block d-sm-none"><b>T</b></h4>
+                <small class="calendar-date">{{week_dates[2]}}</small>
+              </div>
+              <div class="col p-0">
+                <h4 class="d-none d-sm-block"><b>Wed</b></h4>
+                <h4 class="d-block d-sm-none pb-4"><b>W</b></h4>
+                <small class="calendar-date">{{week_dates[3]}}</small>
+              </div>
+              <div class="col p-0">
+                <h4 class="d-none d-sm-block"><b>Thu</b></h4>
+                <h4 class="d-block d-sm-none"><b>T</b></h4>
+                <small class="calendar-date">{{week_dates[4]}}</small>
+              </div>
+              <div class="col p-0">
+                <h4 class="d-none d-sm-block"><b>Fri</b></h4>
+                <h4 class="d-block d-sm-none pb-4"><b>F</b></h4>
+                <small class="calendar-date">{{week_dates[5]}}</small>
+              </div>
+              <div class="col p-0">
+                <h4 class="d-none d-sm-block"><b>Sat</b></h4>
+                <h4 class="d-block d-sm-none"><b>S</b></h4>
+                <small class="calendar-date">{{week_dates[6]}}</small>
+              </div>
+              <div class="arrow-container">
+                <a href="/calendar/next_week?week-dates={{week_dates[0]}}">
+                  <i class="fa fa-arrow-circle-right fa-2x arrow-right-icon" id="next_week"></i>
+                </a>
+              </div>
+            </div>
+            <div class="row flex-grow-1 overflow-auto border-left-2"
+            style="background: var(--dark-4);">
+              {% for count in range (0,7) %}
+                <div class="col week-day px-1 py-3 vertical-align-center">
+                  <div class="pill-box calendar-uncompleted">
+                    {% for task in task_list: %}
+                      {% if task["completed"] == false and task["due_date"] == week_dates[count]%}
+                        <div class="pill-row small-pill">
+                          <div class="pill" style="border-left-color: var(--hl-{{task['color']}})">
+                            <div class="d-flex justify-content-between">
+                              <div class="pill-left">
+                                <!-- Maybe an error here -->
+                                <a data-toggle="modal" data-target="#taskDetailsModal"
+                                data-id="?task_id={{task['task_id']}}&
+                                iteration={{task['iteration']}}"
+                                class="title-link open-TaskDetails">
+                                  {{task["iteration_title"]}}
+                                </a>
+                              </div>
+                              <div>
+                                <i class="fa fa-check-square open-CompleteTask
+                                  d-inline-block d-sm-none"
+                                  data-toggle="modal" data-toggle="tooltip"
+                                  data-target="#taskCompletionModal" data-id="{{task['task_id']}}" 
+                                  data-iteration="{{task['iteration']}}" title="Complete Task">
+                                </i>
+                              </div>
+                              <div class="d-none d-sm-inline">
+                                {% if task["repeat"] %}
+                                  <span class="fa fa-repeat mr-1"></span>
+                                {% endif %}
+                                {% if task['iteration'] > 2 %}
+                                  <b id="timely-time-calendar" style="color: var(--hl-blue);"
+                                  data-toggle="tooltip" data-placement="right"
+                                    title="Timely Predicted Time">
+                                {% endif %}
+                                {{task["timely_pred"]}} h
+                                {% if task['iteration'] > 2 %}
+                                  </b>
+                                {% endif %}
+                              </div>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                              <div class="subtle pill-left">{{task["class"]}}</div>
+                              <div>
+                                <i class="fa fa-check-square open-CompleteTask d-none d-sm-inline"
+                                data-toggle="modal" data-toggle="tooltip"
+                                data-target="#taskCompletionModal" data-id="{{task['task_id']}}" 
+                                data-iteration="{{task['iteration']}}" title="Complete Task">
+                                </i>
+                                <i class="fa fa-trash ml-1 open-DeleteTask" data-toggle="modal"
+                                data-toggle="tooltip" data-target="#deleteTaskModal"
+                                data-id="{{task['task_id']}}" title="Delete Task">
+                                </i>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      {% endif %}
+                    {% endfor %}
+                  </div>
+                  <div class="pill-box">
+                    {% for task in task_list: %}
+                      {% if task["completed"] == true and task["due_date"] == week_dates[count]%}
+                        <div class="pill-row small-pill">
+                          <div class="pill" style="border-left-color: var(--hl-{{task['color']}})">
+                            <div class="d-flex justify-content-between">
+                              <div class="pill-left">
+                                <a data-toggle="modal" data-target="#taskDetailsModal"
+                                data-id="?task_id={{task['task_id']}}&
+                                iteration={{task['iteration']}}"
+                                class="title-link open-TaskDetails">
+                                  <del>{{task["iteration_title"]}}</del>
+                                </a>
+                              </div>
+                              <div>
+                                <i href="/uncomplete?task_id={{task['task_id']}}&
+                                iteration={{task['iteration']}}"
+                                id="uncomplete-{{task['task_id']}}-{{task['iteration']}}"
+                                class="fa fa-check-square"></i>
+                                <script>
+                                  $(document).ready(function() {
+                                    $("#uncomplete-{{task['task_id']}}-{{task['iteration']}}")
+                                      .click(function(event) {
+                                      /* stop form from submitting normally */
+                                      event.preventDefault();
+                        
+                                      /* get the action attribute from the <form action=""> element */
+                                      let $button = $(this),
+                                        url = $button.attr('href');
+                        
+                                      /* Send the data using post with element id name and name2*/
+                                      let posting = $.post(url);
+                                      
+                                      $(this).removeClass("fa-check-square");
+                                      $(this).addClass("fa-spinner");
+  
+                                      /* Alerts the results */
+                                      posting.done(function() {
+                                        location.reload(true);
+                                      });
+                                      posting.fail(function() {
+                                        console.log("failed");
+                                      });
+                                    });
+                                  });
+                                </script>
+                                <i class="fa fa-trash ml-1 open-DeleteTask d-none d-sm-inline"
+                                data-toggle="modal"
+                                    data-target="#deleteTaskModal" data-id="{{task['task_id']}}">
+                                </i>
+                              </div>
+                            </div>
+                            <div class="d-flex justify-content-between" style="min-height: 15px;">
+                              <div class="subtle pill-left">{{task["class"]}}</div>
+                              <div class="subtle d-none d-sm-block"> {{task["actual_time"]}} h</div>
+                              <i class="fa fa-trash ml-1 open-DeleteTask d-inline d-sm-none"
+                                data-toggle="modal"
+                                data-target="#deleteTaskModal" data-id="{{task['task_id']}}">
+                              </i>
+                            </div>
+                          </div>
+                        </div>
+                      {% endif %}
+                    {% endfor %}
+                  </div> 
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  {% include "components/create-task.html" %}
+  {% include "components/create-class.html" %}
+
+  {% include "components/details-task.html" %}
+
+  {% include "components/delete-class.html" %}
+  {% include "components/delete-task.html" %}
+
+  {% include "components/complete-task.html" %}
+{% endblock %}

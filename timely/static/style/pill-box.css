@@ -1,4 +1,4 @@
-/* General container for displaying multiple classes/tasks containers*/
+/* General container for displaying multiple classes/tasks containers */
 .pill-box {
     display: flex;
     flex-direction: column;
@@ -20,25 +20,11 @@
     flex-grow: 1;
 }
 
+/* Limits the length of titles */
 .pill-left {
     max-width: 80%;
     overflow: hidden;
     text-overflow: ellipsis;
-}
-
-.pill-row:first-child .pill {
-    border-radius: 10px 10px 0px 0px;
-}
- /* Ensures that the last entry of class/task displayed does not show a bottom line */
-.pill-row:last-child .pill {
-    border-bottom-width: 0px ;
-    box-shadow: 0 0;
-    margin-bottom: 0px;
-    border-radius: 0px 0px 10px 10px;
-}
-
-.pill-row:only-child .pill {
-    border-radius: 10px;
 }
 
 .pill-row {
@@ -46,7 +32,21 @@
     flex-direction: row;
     align-items: center;
 }
+.pill-row:first-child .pill {
+    border-radius: 10px 10px 0px 0px;
+}
+/* Ensures that the last entry of class/task displayed does not show a bottom line */
+.pill-row:last-child .pill {
+    border-bottom-width: 0px ;
+    box-shadow: 0 0;
+    margin-bottom: 0px;
+    border-radius: 0px 0px 10px 10px;
+}
+.pill-row:only-child .pill {
+    border-radius: 10px;
+}
 
+/* For resizing pills in the calendar mobile view */
 @media (max-width: 768px) {
     .small-pill:first-child .pill {
         border-radius: 5px 5px 0px 0px;

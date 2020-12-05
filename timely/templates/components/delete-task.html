@@ -49,7 +49,7 @@ aria-labelledby="deleteTaskModal" aria-hidden="true">
       $(document).on("click", ".open-DeleteTask", function () {
         let taskId = $(this).data('id');
         $(".modal-footer #btn-deleteTask").attr("href",
-        "/delete_task" + "?task_id=" + taskId);
+        "/delete-task" + "?task_id=" + taskId);
       });
     });
   </script>

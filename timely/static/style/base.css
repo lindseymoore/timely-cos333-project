@@ -247,3 +247,11 @@ hr {
     size: 5em;
 }
 
+.full-page-content {
+    max-height: 75vh;
+    min-height: 75vh;
+}
+
+.calendar-uncompleted .pill-row:last-child {
+    margin-bottom: 4px;
+}
