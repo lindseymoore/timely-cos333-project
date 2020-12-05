@@ -125,9 +125,9 @@ def task_form():
     Entries being inserted into tables: task, task_details, task_time, repeating_task.
     """
     username = CASClient().authenticate()
-    details = {'task_title': None, 'class_id': None, 'dept' : None, 'num': None,
-    'priority': None, 'est_time': None, 'link': None, 'notes': None, 'due_date': None,
-    'due_time': None, 'repeat_freq': None, 'repeat_end': None, 'username': username}
+    details = {'task_title': None, 'class_id': None, 'priority': None, 'est_time': None,
+    'link': None, 'notes': None, 'due_date': None, 'repeat_freq': None, 'repeat_end': None,
+    'username': username}
 
     for key, item in request.form.items():
         details[key] = item

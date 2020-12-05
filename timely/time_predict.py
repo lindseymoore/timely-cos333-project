@@ -22,7 +22,8 @@ def fetch_task_times(task_id: str, username: str) -> List[dict]:
 
     times = []
     for iteration in query_result:
-        if iteration.actual_time is not None: # Only includes completed tasks in which the user typed actual time
+        # Only includes completed tasks in which the user typed actual time
+        if iteration.actual_time is not None: 
             times.append({"iteration": iteration.iteration,
                 "est_time": iteration.est_time, "actual_time": iteration.actual_time,
                 "timely_pred": iteration.timely_pred, "completed": iteration.completed})
@@ -47,7 +48,8 @@ def find_avg_prediction(iteration_times: List[dict]) -> float:
     recent_num_completed = 0
     num_completed = 0
 
-    weighted = 3.0 # number of most recent iterations that are given greater weight
+    # number of most recent iterations that are given greater weight
+    weighted = 3.0 
 
     num_iterations_compl = len(iteration_times) - 1
     weighted_start = num_iterations_compl - weighted + 1
@@ -82,13 +84,13 @@ def find_avg_prediction(iteration_times: List[dict]) -> float:
             weighted_time = recent_time/num_completed
         return round(weighted_time * 2)/ 2
 
-    # if there are no iterations for the task
+    # Return est_time of first iteration if there are no more iterations for the task
     return iteration_times[0]["est_time"]
 
 
 def update_completion_time(task_id: int, iteration: int, username: str, actual_time: float):
     """
-    Take task_id, iteration, and username.
+    Take task_id, iteration, username, and actual_time.
     Update the actual_time it takes to complete a task upon completion for the task.
     """
     task_iteration = db.session.query(TaskIteration).filter( \
@@ -107,10 +109,11 @@ def update_timely_pred(task_id: int, iteration: int, username: str):
     """
     times = fetch_task_times(task_id, username)
 
+    # .all() accounts for all subsequent iterations
     next_iterations = db.session.query(TaskIteration).filter( \
                 (TaskIteration.username == username) & \
                 (TaskIteration.task_id == task_id) & \
-                (TaskIteration.iteration > int(iteration))).all() # account for all subsequent iterations
+                (TaskIteration.iteration > int(iteration))).all()
 
     for next_iteration in next_iterations:
         next_iteration.timely_pred = find_avg_prediction(times)
@@ -118,6 +121,17 @@ def update_timely_pred(task_id: int, iteration: int, username: str):
 
 
 def fetch_graph_times(task_id: int, iteration: int, username: str):
+    """ 
+    Takes a task_id, iteration, and username.
+    Fetches the actual times and predicted times for all previous iterations of a given task 
+    to be displayed on the time graph for the given task iteration.
+    Returns a dictionary with keys:
+        actual_times
+        predicted_times
+        labels
+    representing the actual_times for previous iterations, predicted_times for previous iterations,
+    and labels indicating which iteration each time is associated with.
+    """
     curr_iteration = db.session.query(TaskIteration).filter( \
                     (TaskIteration.username == username) & \
                     (TaskIteration.task_id == task_id) & \
@@ -126,7 +140,8 @@ def fetch_graph_times(task_id: int, iteration: int, username: str):
                     (TaskIteration.username == username) & \
                     (TaskIteration.task_id == task_id) & \
                     (TaskIteration.completed == True) & \
-                    (TaskIteration.iteration < int(iteration))).order_by(TaskIteration.iteration).all()
+                    (TaskIteration.iteration < int(iteration)) \
+                    ).order_by(TaskIteration.iteration).all()
 
     actual_times = []       
     predicted_times = []
