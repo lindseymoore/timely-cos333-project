@@ -1,4 +1,4 @@
-""" Predict the time it will take user to complete a task based on previous iterations """
+"""Predict the time it will take user to complete a task based on previous iterations."""
 
 from typing import List
 
@@ -23,7 +23,7 @@ def fetch_task_times(task_id: str, username: str) -> List[dict]:
     times = []
     for iteration in query_result:
         # Only includes completed tasks in which the user typed actual time
-        if iteration.actual_time is not None: 
+        if iteration.actual_time is not None:
             times.append({"iteration": iteration.iteration,
                 "est_time": iteration.est_time, "actual_time": iteration.actual_time,
                 "timely_pred": iteration.timely_pred, "completed": iteration.completed})
@@ -43,7 +43,7 @@ def find_avg_prediction(iteration_times: List[dict]) -> float:
     recent_time = 0
     recent_task_weight = 0.60
     older_task_weight = 0.40
-    
+
     older_num_completed = 0
     recent_num_completed = 0
     num_completed = 0
@@ -121,9 +121,9 @@ def update_timely_pred(task_id: int, iteration: int, username: str):
 
 
 def fetch_graph_times(task_id: int, iteration: int, username: str):
-    """ 
+    """
     Takes a task_id, iteration, and username.
-    Fetches the actual times and predicted times for all previous iterations of a given task 
+    Fetches the actual times and predicted times for all previous iterations of a given task
     to be displayed on the time graph for the given task iteration.
     Returns a dictionary with keys:
         actual_times
@@ -143,7 +143,7 @@ def fetch_graph_times(task_id: int, iteration: int, username: str):
                     (TaskIteration.iteration < int(iteration)) \
                     ).order_by(TaskIteration.iteration).all()
 
-    actual_times = []       
+    actual_times = []     
     predicted_times = []
     labels = []
     i = 0
@@ -160,7 +160,7 @@ def fetch_graph_times(task_id: int, iteration: int, username: str):
             else:
                 predicted_times.append(prev.timely_pred)
             labels.append(i)
-    
+
     if curr_iteration.completed:
         i+=1
         actual_times.append(curr_iteration.actual_time)
