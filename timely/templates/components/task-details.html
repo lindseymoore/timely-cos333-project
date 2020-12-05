@@ -198,7 +198,6 @@ aria-labelledby="taskDetailsModal" aria-hidden="true">
         if (task_details["repeating"]) {
           $.getJSON({url: "/get-graph-data" + taskId, success: function(times) {
             createChart(times);
-            console.log(times)
           }});
         }
       }});
