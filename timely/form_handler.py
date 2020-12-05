@@ -129,7 +129,7 @@ def update_task_details(task_details: dict):
 
     if task_details["repeat_freq"] != "None" and task_details["repeat_freq"] is not None:
         task.repeat = True
-        if task.repeat_freq != task_details["repeat_freq"]:
+        if task.repeat_freq != task_details["repeat_freq"] and task_details["repeat_freq"] != "irregular":
             task.repeat_freq = task_details["repeat_freq"]
             increment = _fetch_increment(task.repeat_freq)
             _update_repeat_freq(task, task_id, increment, int(iteration), task_details)
@@ -292,6 +292,8 @@ def _fetch_increment(frequency: str):
         increment = timedelta(days=14)
     elif frequency == "monthly":
         increment = timedelta(weeks=4)
+    elif frequency == "irregular":
+        increment = timedelta(days=0)
 
     return increment
 
