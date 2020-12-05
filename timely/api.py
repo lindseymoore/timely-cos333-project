@@ -187,6 +187,7 @@ def delete_iteration_endpoint():
 
     Take request args of the following fields:
         task_id: int
+        iteration: int
 
     Delete a task iteration.
     """

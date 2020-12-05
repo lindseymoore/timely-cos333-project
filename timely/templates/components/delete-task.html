@@ -10,7 +10,9 @@ aria-labelledby="deleteTaskModal" aria-hidden="true">
         </button>
       </div>
       <div class="modal-body">
-        Are you sure you want to delete this task? "Delete" will delete the selected iteration. 
+        Are you sure you want to delete this task?<br>
+        <br>
+        "Delete" will delete the selected iteration.<br>
         "Delete All" will delete all iterations of the selected task.
       </div>
       <div class="modal-footer justify-content-center">
@@ -82,7 +84,7 @@ aria-labelledby="deleteTaskModal" aria-hidden="true">
       $(document).on("click", ".open-DeleteTask", function () {
         let taskId = $(this).data('id');
         let iteration = $(this).data('iteration');
-        $(".modal-footer #btn-deletIteration").attr("href",
+        $(".modal-footer #btn-deleteIteration").attr("href",
         "/delete-iteration" + "?task_id=" + taskId + "&iteration=" + iteration);
       });
     });
