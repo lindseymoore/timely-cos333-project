@@ -33,6 +33,8 @@ class Task(db.Model):
         The frequency at which an task is repeated (i.e. weekly, biweekly, monthly, etc.)
     repeat_end: Date
         Due Date of last occurrence of the repeated task
+    grouped: Boolean
+        True if task was created using grouping modal
      """
     __tablename__ = "task"
     username = Column(String, primary_key=True)
@@ -42,6 +44,7 @@ class Task(db.Model):
     repeat = Column(Boolean)
     repeat_freq = Column(String)
     repeat_end = Column(Date)
+    grouped = Column(Boolean)
 
 
 class TaskIteration(db.Model):
@@ -94,7 +97,6 @@ class TaskIteration(db.Model):
     completed = Column(Boolean)
     link = Column(String)
     due_date = Column(Date)
-    due_time = Column(Time)
     notes = Column(String)
     est_time = Column(Float)
     timely_pred = Column(Float)
@@ -124,9 +126,6 @@ class User(db.Model):
      """
     __tablename__ = "user"
     username = Column(String, primary_key=True)
-    password = Column(String)
-    school = Column(String)
-    email = Column(String)
     api_key = Column(String)
 
 

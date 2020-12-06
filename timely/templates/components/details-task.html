@@ -196,6 +196,14 @@ aria-labelledby="taskDetailsModal" aria-hidden="true">
           $("#task-current-freq").html("Current: Does Not Repeat");
           $("#task-current-freq").attr("value", "None");
         }
+        if (task_details['grouped'] == true) {
+          $("#edit_repeat_freq").prop("disabled", true);
+          $("#repeat-tooltip").show();
+        }
+        else {
+          $("#repeat-tooltip").hide();
+          $("#edit_repeat_freq").prop("disabled", false);
+        }
         $("#edit_repeat_end").attr("value", task_details['repeat_end']);
         $("#edit_notes").attr("value", task_details['notes']);
 

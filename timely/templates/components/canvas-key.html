@@ -46,6 +46,7 @@ aria-labelledby="canvasKeyModal" aria-hidden="true">
               /* Alerts the results */
               posting.done(function() {
                 $("#canvasKeyModal").modal("hide");
+                location.reload(true);
               });
               posting.fail(function() {
                 console.log("failed");

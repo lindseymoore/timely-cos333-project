@@ -254,6 +254,7 @@ def create_new_group(task_ids: list, group_title: str, username: str):
         (Task.task_id == group_task_id)).first()
     task.repeat = True
     task.repeat_freq = "irregular"
+    task.grouped = True
     task.title = group_title
     db.session.commit()
 
