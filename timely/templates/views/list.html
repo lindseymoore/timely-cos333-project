@@ -137,7 +137,8 @@
                         data-iteration="{{task['iteration']}}">
                         </i>
                         <i class="fa fa-trash ml-1 open-DeleteTask" data-toggle="modal"
-                        data-target="#deleteTaskModal" data-id="{{task['task_id']}}">
+                        data-target="#deleteTaskModal" data-id="{{task['task_id']}}" 
+                        data-iteration="{{task['iteration']}}">
                         </i>
                       </div>
                     </div>
@@ -181,8 +182,7 @@
                         </a>
                       </div>
                       <div>
-                        <i href="/uncomplete?task_id={{task['task_id']}}&
-                        iteration={{task['iteration']}}"
+                        <i href="/uncomplete?task_id={{task['task_id']}}&iteration={{task['iteration']}}"
                         id="uncomplete-{{task['task_id']}}-{{task['iteration']}}"
                         class="fa fa-check-square ml-1"></i>
                         <script>
@@ -210,7 +210,8 @@
                           });
                         </script>
                         <i class="fa fa-trash ml-1 open-DeleteTask" data-toggle="modal"
-                            data-target="#deleteTaskModal" data-id="{{task['task_id']}}">
+                            data-target="#deleteTaskModal" data-id="{{task['task_id']}}"
+                            data-iteration="{{task['iteration']}}">
                         </i>
                       </div>
                     </div>
