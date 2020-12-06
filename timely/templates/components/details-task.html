@@ -141,9 +141,9 @@ aria-labelledby="taskDetailsModal" aria-hidden="true">
       $('#form_edit_details').removeClass("was-validated");
     });
 
-    $(document).on("click", ".open-TaskDetails", function () {		
-      let taskId = $(this).data('id');
-      $("#form_edit_details").attr("action", $("#form_edit_details").attr("action") + taskId);
+    $(document).on("click", ".open-TaskDetails", function () {
+      let taskId = $(this).data('id'); // format: ?task_id=_____&iteration=_____
+      $("#form_edit_details").attr("action", "/edit-task-details" + taskId);
       $.ajax({url: "/task-details" + taskId, dataType: 'json', 
       error: function( data ) { window.location.replace("/403"); },
       success: function(task_details) {
@@ -188,12 +188,14 @@ aria-labelledby="taskDetailsModal" aria-hidden="true">
         $("#edit_link").attr("value", task_details['link']);
         $("#edit_due_date").attr("value", task_details['due_date']);
         $("#task-current-freq").attr("value", task_details['repeat_freq']);
-        if (task_details['repeat_freq'] != null)
+        if (task_details['repeat_freq'] != null){
           $("#task-current-freq").html("Current: " + 
             task_details['repeat_freq'].charAt(0).toUpperCase() +
             task_details["repeat_freq"].slice(1));
-        else
-        $("#task-current-freq").html("Current: None");
+        }else{
+          $("#task-current-freq").html("Current: Does Not Repeat");
+          $("#task-current-freq").attr("value", "None");
+        }
         if (task_details['grouped'] == true) {
           $("#edit_repeat_freq").prop("disabled", true);
           $("#repeat-tooltip").show();
