@@ -73,7 +73,15 @@ class="needs-validation" novalidate>
     <input type="text" class="form-control" name="due_date" id="edit_due_date" required>
   </div>
   <div class="form-group">
-    <label for="repeat_freq">Repeat</label>
+    <label for="repeat_freq">Repeat</label> <i class="fa fa-question-circle" id="repeat-tooltip"
+      data-toggle="tooltip" data-placement="top"
+      title="Manually grouped tasks must be of the irregular repeat type.">
+    </i>
+    <script>
+      $(document).ready(function() {
+        $('#repeat-tooltip').tooltip({html: true});
+      });
+    </script>
     <select class="form-control green-check" name="repeat_freq" id="edit_repeat_freq">
       <option id="task-current-freq" value="...">
         Current: ...
