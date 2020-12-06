@@ -37,7 +37,7 @@ def fetch_task_list_view(username: str, sort: str = "due_date") -> List[dict]:
     Take a user with username, query the database to search for all tasks the user has inputted.
     Return a list of task dictionaries with keys:
         title, class, task_id, priority, repeat, est_time, timely_pred, link, notes, due_date,
-        repeat_freq, repeat_end, completed, iteration, color, actual_time, iteration_title, grouped.
+        repeat_freq, repeat_end, completed, iteration, color, actual_time, iteration_title.
 
     Additionally, a parameter sort is passed, which is set by default to due_date. The options for
     sort are:
@@ -74,7 +74,7 @@ def fetch_task_list_view(username: str, sort: str = "due_date") -> List[dict]:
                         'completed': task_iteration.completed,
                         'iteration': task_iteration.iteration,
                         'color': course.color, 'actual_time': task_iteration.actual_time,
-                        'iteration_title': task_iteration.iteration_title, 'grouped': task.grouped}
+                        'iteration_title': task_iteration.iteration_title}
 
             if task_obj['timely_pred'] is None:
                 task_obj['timely_pred'] = 0
@@ -106,8 +106,7 @@ def fetch_task_list_view(username: str, sort: str = "due_date") -> List[dict]:
                         'completed': completed_iteration.completed,
                         'iteration': completed_iteration.iteration,
                         'color': course.color, 'actual_time': completed_iteration.actual_time,
-                        'iteration_title': completed_iteration.iteration_title,
-                        'grouped': task.grouped}
+                        'iteration_title': completed_iteration.iteration_title}
 
             if task_obj['timely_pred'] is None:
                 task_obj['timely_pred'] = 0
@@ -138,7 +137,7 @@ def fetch_task_calendar_view(username: str) -> List[dict]:
     Query the database to search for all tasks the user has inputted.
     Return a list of task dictionaries with keys:
         group_title, class, task_id, priority, repeat, est_time, timely_pred, link, notes, due_date,
-        repeat_freq, repeat_end, completed, iteration, color, actual_time, iteration_title, grouped.
+        repeat_freq, repeat_end, completed, iteration, color, actual_time, iteration_title.
     """
     task_list = []
 
@@ -166,7 +165,7 @@ def fetch_task_calendar_view(username: str) -> List[dict]:
                     'repeat_freq': repeat_freq, 'repeat_end': repeat_end,
                     'completed': task_iteration.completed, 'iteration': task_iteration.iteration,
                     'color': course.color, 'actual_time': task_iteration.actual_time,
-                    'iteration_title': task_iteration.iteration_title, 'grouped': task.grouped}
+                    'iteration_title': task_iteration.iteration_title}
 
         if task_obj['timely_pred'] is None:
             task_obj['timely_pred'] = 0
@@ -190,6 +189,7 @@ def fetch_task_details(task_id: int, iteration: int, username: str):
         due_date
         notes
         est_time
+        grouped
     """
     task_details_obj = {}
 
@@ -209,7 +209,7 @@ def fetch_task_details(task_id: int, iteration: int, username: str):
                 "priority": task_iteration.priority, "link": task_iteration.link,
                 "due_date": task_iteration.due_date.strftime("%m/%d/%y"),
                 "notes": task_iteration.notes, "est_time": task_iteration.est_time,
-                "iteration_title": task_iteration.iteration_title}
+                "iteration_title": task_iteration.iteration_title, "grouped": task.grouped}
     if task_details_obj['est_time'] is None:
         task_details_obj['est_time'] = 0
 
