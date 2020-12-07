@@ -1,5 +1,6 @@
 """Functions to fetch class and task information."""
 
+from datetime import datetime
 from operator import itemgetter
 from typing import List
 
@@ -115,10 +116,11 @@ def fetch_task_list_view(username: str, sort: str = "due_date") -> List[dict]:
 
     if sort == "due_date":
         active_task_list = list(filter(lambda task: task['completed'] is False, task_list))
-        active_task_list = sorted(active_task_list, key = lambda task: task["due_date"])
+        active_task_list = sorted(active_task_list, key = lambda task: \
+            datetime.strptime(task["due_date"], "%m/%d/%y"))
         completed_task_list = list(filter(lambda task: task['completed'], task_list))
         completed_task_list = sorted(completed_task_list, \
-            key = lambda task: task["due_date"], reverse=True)
+            key = lambda task: datetime.strptime(task["due_date"], "%m/%d/%y"), reverse=True)
 
         task_list = active_task_list + completed_task_list
     if sort == "priority":
