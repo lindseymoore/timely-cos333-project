@@ -145,14 +145,16 @@ aria-labelledby="taskModal" aria-hidden="true">
     });
     $(".custom-flatpickr").keypress(() => false);
 
-    $("#due_date").change(function() {
-      let date = $('#due_date').attr("value");
-      console.log(date); // this will return the correct value
-      $("#repeat_end").flatpickr( {
-        minDate: date,
-      });
+    let repeat = $("#repeat_end").flatpickr( {
+        minDate: '2020-01-01', // Placeholder
     });
 
+    $("#due_date").flatpickr( {
+        onChange: function(selectedDates, dateStr, instance) {
+          console.log(dateStr)
+          repeat.set('minDate', dateStr)
+        }
+    });
   });
 </script>
 
@@ -165,17 +167,5 @@ aria-labelledby="taskModal" aria-hidden="true">
           $(this).validate().resetForm();
         });
     });
-
-    $("#repeat_freq").change(function() {
-      let value = $(this).attr("value");
-      if(value != "") {
-          console.log("Repeat")
-          $("#repeat_end").prop('required', true);
-      } else {
-          console.log("Non-repeating")
-          $("#repeat_end").prop('required', false);
-      }
-    });
   });
-
 </script>
