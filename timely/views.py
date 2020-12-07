@@ -121,18 +121,18 @@ def logout():
 
 @app.errorhandler(403)
 @app.route("/403")
-def forbidden(e):
+def forbidden(e=None):
     """Return the 403 page."""
     return render_template("views/403.html"), 403
 
 
 @app.errorhandler(404)
-def page_not_found(e):
+def page_not_found(e=None):
     """Return the 404 page."""
     return render_template("views/404.html"), 404
 
 
 @app.errorhandler(500)
-def server_error(e):
+def server_error(e=None):
     """Return the 500 page."""
     return render_template("views/500.html"), 404
