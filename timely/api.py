@@ -10,8 +10,9 @@ from timely.canvas_handler import (fetch_canvas_courses, fetch_canvas_tasks,
 from timely.cas_client import CASClient
 from timely.db_queries import (fetch_class_details, fetch_class_list,
                                fetch_task_details, fetch_tasks_from_class)
-from timely.db_updates import (delete_class, delete_all_iterations, delete_iteration, 
-                                mark_task_complete, uncomplete_task)
+from timely.db_updates import (delete_all_iterations, delete_class,
+                               delete_iteration, insert_canvas_key,
+                               mark_task_complete, uncomplete_task)
 from timely.form_handler import (class_handler, create_new_group,
                                  insert_canvas_tasks, task_handler,
                                  update_class_details, update_task_details)
@@ -216,14 +217,7 @@ def canvas_key():
         return json.dumps({"success": False}), 400
 
     try:
-        user = db.session.query(User).filter(User.username == username).first()
-        if user is None:
-            new_user = User(username = username, api_key = api_key)
-            db.session.add(new_user)
-            db.session.commit()
-        else:
-            user.api_key = api_key
-            db.session.commit()
+        insert_canvas_key(username, api_key)
     except:
         return json.dumps({"success": False}), 500
     else:
