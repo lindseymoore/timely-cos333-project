@@ -147,7 +147,7 @@ h1, h2, h3, h4, h5 {
 .time-prediction {
     margin-bottom: 0;
     width: 3em;
-    font-size: 1.5rem;
+    font-size: 1.4rem;
 }
 
 .week-day {
@@ -255,3 +255,9 @@ hr {
 .calendar-uncompleted .pill-row:last-child {
     margin-bottom: 4px;
 }
+
+.form-control::-webkit-input-placeholder { 
+    /* Chrome, Firefox, Opera, Safari 10.1+ */
+    color: rgb(161, 161, 161);
+    opacity: 1; /* Firefox */
+  }

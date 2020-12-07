@@ -119,9 +119,33 @@ aria-labelledby="taskModal" aria-hidden="true">
           </div>
           <div class="form-group">
             <label for="repeat_end">Recurrence End Date</label>
+            <span class="required d-none" id="require-end-date-star">*</span>
             <input type="text" class="form-control custom-flatpickr"
             name="repeat_end" id="repeat_end">
           </div>
+          <script>
+            $(document).ready(function() {
+              $("#repeat_freq").on("change", updateEndDate)
+              $("#taskModal").on("shown.bs.modal", updateEndDate);
+
+              function updateEndDate() {
+                if ($("#repeat_freq").find(":selected").attr("value") != "" &&
+                    $("#repeat_freq").find(":selected").attr("value") != "irregular") {
+                  $("#require-end-date-star").removeClass("d-none");
+                  $("#repeat_end").prop("required", true);
+                  $("#repeat_end").prop("disabled", false);
+                }
+                else {
+                  $("#require-end-date-star").addClass("d-none");
+                  $('#repeat_end').flatpickr({
+                    allowInput:true
+                  }).clear();
+                  $("#repeat_end").prop("required", false);
+                  $("#repeat_end").prop("disabled", true);
+                }
+              }
+            });
+          </script>
           <div class="form-group">
             <label for="notes">Notes</label>
             <textarea type="text" class="form-control" name="notes" id="notes"></textarea>

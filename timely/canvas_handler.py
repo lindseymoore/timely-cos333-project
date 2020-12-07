@@ -131,5 +131,19 @@ def fetch_current_semester():
     sem = 'S'
     if curr_month > 7 or (curr_month == 1 and curr_day > 15):
         sem = 'F'
-          
+
     return sem + str(curr_year)
+
+
+def validate_api_key(api_key: str):
+    """Function to check whether or not a Canvas API key is valid. Returns True if api_key is valid,
+    False otherwise."""
+    canvas = Canvas(API_URL, api_key)
+    valid_key = True
+
+    try:
+        canvas.get_courses()[0]
+    except:
+        valid_key = False
+
+    return valid_key
