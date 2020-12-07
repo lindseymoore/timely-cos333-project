@@ -317,13 +317,7 @@ def _create_all_iterations(task, iteration: int, due_date, details: dict):
     increment = timedelta(weeks=10) # for non-repeating task
     if task.repeat:
         increment = _fetch_increment(task.repeat_freq)
-        if task.repeat_end < due_date:
-            end_date = due_date
-            task.repeat_end = due_date
-            db.session.commit()
-            print("LESS")
-        else:
-            end_date = task.repeat_end
+        end_date = task.repeat_end
     elif task.repeat_end is None:
         increment = timedelta(days=1)
         end_date = due_date
