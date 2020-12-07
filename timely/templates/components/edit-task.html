@@ -119,7 +119,15 @@ class="needs-validation" novalidate>
 
 <script>
   $(document).ready(function() {
-    $("#edit_due_date").flatpickr();
-    $("#edit_repeat_end").flatpickr();
+    let repeat = $("#edit_repeat_end").flatpickr( {
+        minDate: '2020-01-01', // Placeholder
+    });
+
+    $("#edit_due_date").flatpickr( {
+      onChange: function(selectedDates, dateStr, instance) {
+        console.log(dateStr)
+        repeat.set('minDate', dateStr)
+      }
+    });
   });
 </script>

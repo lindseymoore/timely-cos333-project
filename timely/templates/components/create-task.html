@@ -164,12 +164,20 @@ aria-labelledby="taskModal" aria-hidden="true">
 
 <script>
   $(document).ready(function() {
-    $(".custom-flatpickr").each(function() {
-      $(this).flatpickr({
-        allowInput:true
-      });
-      $(this).keypress(() => false);
-    })
+    $(".custom-flatpickr").keypress(() => false);
+
+    let repeat = $("#repeat_end").flatpickr( {
+        allowInput:true,
+        minDate: '2020-01-01', // Placeholder
+    });
+
+    $("#due_date").flatpickr( {
+      allowInput:true,
+      onChange: function(selectedDates, dateStr, instance) {
+        console.log(dateStr)
+        repeat.set('minDate', dateStr)
+      }
+    });
   });
 </script>
 
@@ -180,7 +188,7 @@ aria-labelledby="taskModal" aria-hidden="true">
         $('#create-task-form').removeClass("was-validated");
         $("#create-task-form").each(function(){
           $(this).validate().resetForm();
-      });
+        });
     });
   });
 </script>
