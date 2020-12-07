@@ -331,10 +331,13 @@ def _create_all_iterations(task, iteration: int, due_date, details: dict):
         # Insert into TaskIteration table
         task_iteration.username = details["username"]
         task_iteration.task_id = task.task_id
-        task_iteration.class_id = details['class_id']
+        task_iteration.class_id = details["class_id"]
         task_iteration.iteration_title = details["task_title"]
+        print("assigned task title")
         task_iteration.iteration = iteration
+        print("iteration")
         task_iteration.priority = details["priority"]
+        print("priority")
         task_iteration.link = details["link"]
         task_iteration.due_date = new_date
 
@@ -352,6 +355,7 @@ def _create_all_iterations(task, iteration: int, due_date, details: dict):
         iteration += 1
 
         new_date += increment
+        print("new date ", new_date)
 
 
 def _update_repeat_freq(task, task_id, increment, iteration: int, task_details: dict):
