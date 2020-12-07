@@ -125,9 +125,22 @@ aria-labelledby="taskModal" aria-hidden="true">
           </div>
           <script>
             $(document).ready(function() {
+              $(".custom-flatpickr").keypress(() => false);
               $("#repeat_freq").on("change", updateEndDate)
               $("#taskModal").on("shown.bs.modal", updateEndDate);
 
+              let repeat = $("#repeat_end").flatpickr( {
+                  allowInput:true,
+                  minDate: '2020-01-01', // Placeholder
+              });
+
+              $("#due_date").flatpickr( {
+                allowInput:true,
+                onChange: function(selectedDates, dateStr, instance) {
+                  console.log(dateStr)
+                  repeat.set('minDate', dateStr)
+                }
+              });
               function updateEndDate() {
                 if ($("#repeat_freq").find(":selected").attr("value") != "" &&
                     $("#repeat_freq").find(":selected").attr("value") != "irregular") {
@@ -137,9 +150,7 @@ aria-labelledby="taskModal" aria-hidden="true">
                 }
                 else {
                   $("#require-end-date-star").addClass("d-none");
-                  $('#repeat_end').flatpickr({
-                    allowInput:true
-                  }).clear();
+                  repeat.clear();
                   $("#repeat_end").prop("required", false);
                   $("#repeat_end").prop("disabled", true);
                 }
@@ -161,25 +172,6 @@ aria-labelledby="taskModal" aria-hidden="true">
     </div>
   </div>
 </div>
-
-<script>
-  $(document).ready(function() {
-    $(".custom-flatpickr").keypress(() => false);
-
-    let repeat = $("#repeat_end").flatpickr( {
-        allowInput:true,
-        minDate: '2020-01-01', // Placeholder
-    });
-
-    $("#due_date").flatpickr( {
-      allowInput:true,
-      onChange: function(selectedDates, dateStr, instance) {
-        console.log(dateStr)
-        repeat.set('minDate', dateStr)
-      }
-    });
-  });
-</script>
 
 <script>
   $(document).ready(function() {
