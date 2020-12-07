@@ -12,14 +12,18 @@ aria-labelledby="groupTasksModal" aria-hidden="true">
         </button>
       </div>
       <div class="modal-body px-3">
-        <p>Grouping tasks turns all selected tasks (or task groups) into a single repeating task.</p>
-        <p><em><b>Timely Pro Tip : </b>This is particularly useful for tasks imported from Canvas!</em></p>
+        <p>
+          Grouping tasks turns all selected tasks (or task groups) into a single repeating task.
+        </p>
+        <p><em>
+          <b>Timely Pro Tip : </b>This is particularly useful for tasks imported from Canvas!
+        </em></p>
         <div id="class-selection">
           <h5>Select a Class</h5>
           <div class="pill-box"></div>
           <div id="class-loading-message">Loading Classes...</div>
         </div>
-        <form action="/group_task" method="post" id="group-task-form">
+        <form action="/group-task" method="post" id="group-task-form">
           <script>
             $(document).ready(function() {
               $("#group-task-form").submit(function(event) {
@@ -62,9 +66,15 @@ aria-labelledby="groupTasksModal" aria-hidden="true">
             </div>
           </div>
           <div class="modal-footer justify-content-center">
-            <button type="button" id="btn-selectTasks" class="btn btn-primary d-none" disabled>Select</button>
-            <button type="submit" id="btn-groupTasks" class="btn btn-primary d-none">Group</button>
-            <button type="button" class="btn btn-secondary ml-3" data-dismiss="modal">Cancel</button>
+            <button type="button" id="btn-selectTasks" class="btn btn-primary d-none" disabled>
+              Select
+            </button>
+            <button type="submit" id="btn-groupTasks" class="btn btn-primary d-none">
+              Group
+            </button>
+            <button type="button" class="btn btn-secondary ml-3" data-dismiss="modal">
+              Cancel
+            </button>
           </div>
         </form>
       </div>
@@ -98,7 +108,7 @@ aria-labelledby="groupTasksModal" aria-hidden="true">
       });
 
       $('#groupTasksModal').on('shown.bs.modal', function (e) {
-        $.getJSON({url: "/get_classes", success: function(data) {
+        $.getJSON({url: "/get-classes", success: function(data) {
           if (data.length === 0) {
             $("#class-selection .pill-box").append(`<div class="mx-auto">No classes found</div>`);
           }
@@ -106,7 +116,8 @@ aria-labelledby="groupTasksModal" aria-hidden="true">
           $.each(data, function(index, classVar) {
             $("#class-selection .pill-box").append(
               `<div class="pill-row">
-                <div class="pill" style="border-left-color: var(--hl-${classVar['color']})" data-id="${classVar['class_id']}">
+                <div class="pill" style="border-left-color: var(--hl-${classVar['color']})"
+                data-id="${classVar['class_id']}">
                   ${classVar["title"]}<br>
                   <div class="d-flex justify-content-between">
                     <div class="subtle">${classVar["dept"]}${classVar["num"]}</div>
@@ -126,7 +137,7 @@ aria-labelledby="groupTasksModal" aria-hidden="true">
         $("#task-selection").removeClass("d-none");
         $("#btn-selectTasks").removeClass("d-none");
         
-        $.getJSON({url: `/get_tasks?class_id=${id}`, success: function(data) {
+        $.getJSON({url: `/get-tasks?class_id=${id}`, success: function(data) {
           // Hide Loading Message
           $("#task-loading-message").hide();
           
@@ -146,7 +157,8 @@ aria-labelledby="groupTasksModal" aria-hidden="true">
                   <input name="task${count}" class="pill-check" type="checkbox"
                   id="task${count}">
                 </div>
-                <label for="task${count}" class="pill mr-3" style="border-left-color: var(--hl-${task["color"]})">
+                <label for="task${count}" class="pill mr-3"
+                style="border-left-color: var(--hl-${task["color"]})">
                   <div class="d-flex justify-content-between">
                     <div class="pill-left">
                       ${task["title"]}
@@ -168,12 +180,14 @@ aria-labelledby="groupTasksModal" aria-hidden="true">
           if ($("#group-list").children().length > 10) {
             $("#group-list").children().slice(10).hide();
             $("#group .show-more-div").append(
-              '<button class="btn btn-custom" type="button" id="group-show-more" data-count="10">Show More</button>'
+              '<button class="btn btn-custom" type="button" id="group-show-more"data-count="10">' +
+                'Show More' + '</button>'
             );
             $("#group-show-more").on("click", function() {
               let currentCount = $("#group-show-more").data("count");
               $("#group-show-more").data("count", currentCount + 10);
-              $("#group-list").children().slice(currentCount, Math.min(currentCount + 10, data.length)).show();
+              $("#group-list").children()
+                .slice(currentCount, Math.min(currentCount + 10, data.length)).show();
               if (currentCount + 10 >= data.length) {
                 $("#group-show-more").hide();
               }

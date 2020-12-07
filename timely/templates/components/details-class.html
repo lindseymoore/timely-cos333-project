@@ -39,8 +39,9 @@ aria-labelledby="classDetailsModal" aria-hidden="true">
 
     $(document).on("click", ".open-ClassDetails", function () {		
       let classId = $(this).data('id');
-      $("#form_edit_class").attr("action", $("#form_edit_class").attr("action") + "?class_id=" + classId);
-      $.ajax({url: "/class_details?class_id=" + classId, dataType: 'json', 
+      $("#form_edit_class")
+      .attr("action", $("#form_edit_class").attr("action") + "?class_id=" + classId);
+      $.ajax({url: "/class-details?class_id=" + classId, dataType: 'json', 
       error: function( data ) { window.location.replace("/403"); },
       success: function(class_details) {
         $("#display-class").append(
