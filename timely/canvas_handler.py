@@ -131,7 +131,7 @@ def fetch_current_semester():
     sem = 'S'
     if curr_month > 7 or (curr_month == 1 and curr_day > 15):
         sem = 'F'
-          
+
     return sem + str(curr_year)
 
 
