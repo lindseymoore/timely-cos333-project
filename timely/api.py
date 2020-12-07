@@ -55,9 +55,9 @@ def create_task_form():
     try:
         task_handler(details)
     except:
-        return json.dumps({"success": False})
+        return json.dumps({"success": False}), 500
     else:
-        return json.dumps({"success": True})
+        return json.dumps({"success": True}), 200
 
 
 @app.route("/create-class-form", methods=["POST"])
@@ -83,9 +83,9 @@ def create_class_form():
     try:
         class_handler(class_details)
     except:
-        return json.dumps({"success": False})
+        return json.dumps({"success": False}), 500
     else:
-        return json.dumps({"success": True})
+        return json.dumps({"success": True}), 200
 
 
 @app.route("/completion-form", methods=["POST"])
@@ -112,9 +112,9 @@ def completion_form():
         update_completion_time(task_id, iteration, username, time)
         update_timely_pred(task_id, iteration, username)
     except:
-        return json.dumps({"success": False})
+        return json.dumps({"success": False}), 500
     else:
-        return json.dumps({"success": True})
+        return json.dumps({"success": True}), 200
 
 
 @app.route("/uncomplete", methods=["POST"])
@@ -140,9 +140,9 @@ def uncomplete():
         if int(iteration) > 1:
             update_timely_pred(task_id, iteration, username)
     except:
-        return json.dumps({"success": False})
+        return json.dumps({"success": False}), 500
     else:
-        return json.dumps({"success": True})
+        return json.dumps({"success": True}), 200
 
 
 @app.route("/delete-class", methods=["POST"])
@@ -158,9 +158,9 @@ def delete_class_endpoint():
     try:
         delete_class(request.args["class_id"])
     except:
-        return json.dumps({"success": False})
+        return json.dumps({"success": False}), 500
     else:
-        return json.dumps({"success": True})
+        return json.dumps({"success": True}), 200
 
 
 @app.route("/delete-all-iterations", methods=["POST"])
@@ -176,9 +176,9 @@ def delete_all_iterations_endpoint():
     try:
         delete_all_iterations(request.args["task_id"])
     except:
-        return json.dumps({"success": False})
+        return json.dumps({"success": False}), 500
     else:
-        return json.dumps({"success": True})
+        return json.dumps({"success": True}), 200
 
 @app.route("/delete-iteration", methods=["POST"])
 def delete_iteration_endpoint():
@@ -194,9 +194,9 @@ def delete_iteration_endpoint():
     try:
         delete_iteration(request.args["task_id"], request.args["iteration"])
     except:
-        return json.dumps({"success": False})
+        return json.dumps({"success": False}), 500
     else:
-        return json.dumps({"success": True})
+        return json.dumps({"success": True}), 200
 
 
 @app.route("/canvas-key", methods=["POST"])
@@ -213,7 +213,7 @@ def canvas_key():
     api_key = request.form["api_key"]
 
     if validate_api_key(api_key) is False:
-        print("ERROR ERROR ERROR")
+        return json.dumps({"success": False}), 400
 
     try:
         user = db.session.query(User).filter(User.username == username).first()
@@ -225,9 +225,9 @@ def canvas_key():
             user.api_key = api_key
             db.session.commit()
     except:
-        return json.dumps({"success": False})
+        return json.dumps({"success": False}), 500
     else:
-        return json.dumps({"success": True})
+        return json.dumps({"success": True}), 200
 
 
 @app.route("/canvas-class", methods=["POST"])
@@ -241,9 +241,9 @@ def canvas_class():
     try:
         fetch_canvas_courses(fetch_current_semester(), username)
     except:
-        return json.dumps({"success": False})
+        return json.dumps({"success": False}), 500
     else:
-        return json.dumps({"success": True})
+        return json.dumps({"success": True}), 200
 
 
 @app.route("/edit-task-details", methods=["POST"])
@@ -285,9 +285,9 @@ def edit_task_details():
     try:
         update_task_details(task_details)
     except:
-        return json.dumps({"success": False})
+        return json.dumps({"success": False}), 500
     else:
-        return json.dumps({"success": True})
+        return json.dumps({"success": True}), 200
 
 
 @app.route("/edit-class-details", methods=["POST"])
@@ -315,9 +315,9 @@ def edit_class_details():
     try:
         update_class_details(class_details)
     except:
-        return json.dumps({"success": False})
+        return json.dumps({"success": False}), 500
     else:
-        return json.dumps({"success": True})
+        return json.dumps({"success": True}), 200
 
 
 @app.route("/canvas-task", methods=["POST"])
@@ -338,9 +338,9 @@ def canvas_task():
     try:
         insert_canvas_tasks(task_list, username)
     except:
-        return json.dumps({"success": False})
+        return json.dumps({"success": False}), 500
     else:
-        return json.dumps({"success": True})
+        return json.dumps({"success": True}), 200
 
 
 @app.route("/group-task", methods=["POST"])
@@ -366,9 +366,9 @@ def group_tasks():
     try:
         create_new_group(task_ids, group_title, username)
     except:
-        return json.dumps({"success": False})
+        return json.dumps({"success": False}), 500
     else:
-        return json.dumps({"success": True})
+        return json.dumps({"success": True}), 200
 
 
 @app.route("/task-details", methods=['GET'])
