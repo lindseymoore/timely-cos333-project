@@ -6,7 +6,7 @@ from flask import request
 
 from timely import app, db
 from timely.canvas_handler import (fetch_canvas_courses, fetch_canvas_tasks,
-                                   fetch_current_semester)
+                                   fetch_current_semester, validate_api_key)
 from timely.cas_client import CASClient
 from timely.db_queries import (fetch_class_details, fetch_class_list,
                                fetch_task_details, fetch_tasks_from_class)
@@ -211,6 +211,9 @@ def canvas_key():
     """
     username = CASClient().authenticate()
     api_key = request.form["api_key"]
+
+    if validate_api_key(api_key) is False:
+        print("ERROR ERROR ERROR")
 
     try:
         user = db.session.query(User).filter(User.username == username).first()
