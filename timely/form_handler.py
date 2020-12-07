@@ -129,9 +129,7 @@ def update_task_details(task_details: dict):
 
     if task_details["repeat_freq"] != "None" and task_details["repeat_freq"] is not None:
         task.repeat = True
-        print("before check for changing freq")
         if task.repeat_freq != task_details["repeat_freq"]:
-            print("after changing freq check")
             task.repeat_freq = task_details["repeat_freq"]
             increment = _fetch_increment(task.repeat_freq)
             _update_repeat_freq(task, task_id, increment, int(iteration), task_details)
@@ -315,7 +313,6 @@ def _create_all_iterations(task, iteration: int, due_date, details: dict):
         group_title
     Creates all iterations of this given task and adds them to the task_iteration table.
     """
-    print("start creating")
     # Create new task iteration if it is a repeating task
     increment = timedelta(weeks=10) # for non-repeating task
     if task.repeat:
@@ -325,31 +322,19 @@ def _create_all_iterations(task, iteration: int, due_date, details: dict):
         increment = timedelta(days=1)
         end_date = due_date
 
-    print("Check task repeat")
-
     # Creates the next iteration of a task upon completion if the repeat end is not specified
     # or next due date is before the repeat end date
     new_date = due_date
 
-    print("new", new_date, "end", end_date)
-    print("before while loop")
     while new_date <= end_date:
-        print("start while")
         task_iteration = TaskIteration()
-        print("iteration")
         # Insert into TaskIteration table
         task_iteration.username = details["username"]
-        print("username")
         task_iteration.task_id = task.task_id
-        print("task id")
         task_iteration.class_id = details["class_id"]
-        print("class id")
         task_iteration.iteration_title = details["iteration_title"]
-        print("assigned task title")
         task_iteration.iteration = iteration
-        print("iteration")
         task_iteration.priority = details["priority"]
-        print("priority")
         task_iteration.link = details["link"]
         task_iteration.due_date = new_date
 
@@ -367,7 +352,6 @@ def _create_all_iterations(task, iteration: int, due_date, details: dict):
         iteration += 1
 
         new_date += increment
-        print("new date ", new_date)
 
 
 def _update_repeat_freq(task, task_id, increment, iteration: int, task_details: dict):
@@ -377,7 +361,6 @@ def _update_repeat_freq(task, task_id, increment, iteration: int, task_details: 
     dictionary as update_task_details, and takes as input a task object, task_id, iteration, and
     a time increment (as a timedelta object).
     """
-    print("start of update")
     curr_iteration =  db.session.query(TaskIteration).filter((TaskIteration.task_id == task_id) & \
         (TaskIteration.iteration == int(iteration)) & \
         (TaskIteration.completed == False)).first()
@@ -386,13 +369,10 @@ def _update_repeat_freq(task, task_id, increment, iteration: int, task_details: 
     curr_due_date += increment
 
     # Delete all subsequent tasks upon editing task repeat freq
-    print("delete old iterations")
     db.session.query(TaskIteration).filter((TaskIteration.task_id == task_id) & \
         (TaskIteration.iteration > int(iteration)) & \
         (TaskIteration.completed == False)).delete()
     db.session.commit()
 
     iteration += 1
-    print("create new")
     _create_all_iterations(task, iteration, curr_due_date, task_details)
-    print("update freq")
