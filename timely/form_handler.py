@@ -127,23 +127,31 @@ def update_task_details(task_details: dict):
                 (TaskIteration.task_id == Task.task_id) & \
                 (TaskIteration.iteration == iteration)).first()
 
-    if task_details["repeat_freq"] != "None" and task_details["repeat_freq"] is not None:
+    if task.repeat and task.repeat_freq == "irregular":
+        task.repeat = True
+    elif task_details["repeat_freq"] != "None" and task_details["repeat_freq"] is not None:
         task.repeat = True
         if task.repeat_freq != task_details["repeat_freq"]:
             task.repeat_freq = task_details["repeat_freq"]
-            increment = _fetch_increment(task.repeat_freq)
-            _update_repeat_freq(task, task_id, increment, int(iteration), task_details)
+            if task_details["repeat_freq"] != "irregular":
+                increment = _fetch_increment(task.repeat_freq)
+                _update_repeat_freq(task, task_id, increment, int(iteration), task_details)
 
-        if task_details["repeat_end"] != "None":
+        if task_details["repeat_end"] is not None:
             task.repeat_end = task_details["repeat_end"]
         else:
             task.repeat_end = None
+    elif task.repeat_freq == "irregular":
+        task.repeat = True
     else:
         task.repeat = False
 
-    if task.repeat:
-        task.repeat_freq = task_details['repeat_freq']
-        task.repeat_end = task_details['repeat_end']
+    # if task.repeat:
+    #     task.repeat_freq = task_details['repeat_freq']
+    #     task.repeat_end = task_details['repeat_end']
+
+    # task.repeat_freq = task_details['repeat_freq']
+    # task.repeat_end = task_details['repeat_end']
 
     if task_details['priority'] == 'None' or task_details['priority'] is None:
         task_iteration.priority = None
