@@ -127,7 +127,7 @@ def update_task_details(task_details: dict):
                 (TaskIteration.task_id == Task.task_id) & \
                 (TaskIteration.iteration == iteration)).first()
 
-    if task.repeat and task.repeat_freq == "irregular":
+    if task.grouped:
         task.repeat = True
     elif task_details["repeat_freq"] != "None" and task_details["repeat_freq"] is not None:
         task.repeat = True
