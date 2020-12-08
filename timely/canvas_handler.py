@@ -36,7 +36,7 @@ def fetch_canvas_courses(curr_semester: str, username: str):
         term = course.course_code[-5:]
         if term == curr_semester:
             new_class = Class(username = username, active_status = True)
-          
+
             # find and insert course title
             name_idx = course.name.find(curr_semester) + len(curr_semester) + 1
             new_class.title = course.name[name_idx:]

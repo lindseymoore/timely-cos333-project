@@ -105,8 +105,43 @@ class="needs-validation" novalidate>
   </div>
   <div class="form-group">
     <label for="repeat_end">Recurrence End Date</label>
-    <input type="text" class="form-control" name="repeat_end" id="edit_repeat_end">
+    <span class="required d-none" id="require-edit-end-date-star">*</span>
+    <input type="text" class="form-control custom-flatpickr"
+    name="repeat_end" id="edit_repeat_end">
   </div>
+  <script>
+    $(document).ready(function() {
+      $(".custom-flatpickr").keypress(() => false);
+      $("#edit_repeat_freq").on("change", updateEndDate)
+      $("#taskModal").on("shown.bs.modal", updateEndDate);
+
+      let repeat = $("#edit_repeat_end").flatpickr( {
+          allowInput:true,
+          minDate: '2020-01-01', // Placeholder
+      });
+
+      $("#due_date").flatpickr( {
+        allowInput:true,
+        onChange: function(selectedDates, dateStr, instance) {
+          repeat.set('minDate', dateStr)
+        }
+      });
+      function updateEndDate() {
+        if ($("#edit_repeat_freq").find(":selected").attr("value") != "" &&
+            $("#edit_repeat_freq").find(":selected").attr("value") != "irregular") {
+          $("#require-edit-end-date-star").removeClass("d-none");
+          $("#edit_repeat_end").prop("required", true);
+          $("#edit_repeat_end").prop("disabled", false);
+        }
+        else {
+          $("#require-edit-end-date-star").addClass("d-none");
+          repeat.clear();
+          $("#edit_repeat_end").prop("required", false);
+          $("#edit_repeat_end").prop("disabled", true);
+        }
+      }
+    });
+  </script>
   <div class="form-group">
     <label for="notes">Notes</label>
     <input type="text" class="form-control" name="notes" id="edit_notes" value="...">
@@ -116,18 +151,3 @@ class="needs-validation" novalidate>
     <button type="submit" class="btn btn-primary">Submit</button>
   </div>
 </form>
-
-<script>
-  $(document).ready(function() {
-    let repeat = $("#edit_repeat_end").flatpickr( {
-        minDate: '2020-01-01', // Placeholder
-    });
-
-    $("#edit_due_date").flatpickr( {
-      onChange: function(selectedDates, dateStr, instance) {
-        console.log(dateStr)
-        repeat.set('minDate', dateStr)
-      }
-    });
-  });
-</script>

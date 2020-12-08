@@ -177,9 +177,6 @@ aria-labelledby="taskModal" aria-hidden="true">
     $('#taskModal').on('hidden.bs.modal', function(){
         $('#create-task-form').trigger("reset");
         $('#create-task-form').removeClass("was-validated");
-        $("#create-task-form").each(function(){
-          $(this).validate().resetForm();
-        });
     });
   });
 </script>
