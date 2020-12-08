@@ -32,7 +32,7 @@ def class_handler(class_iteration: dict):
 def task_handler(details: dict):
     """
     Takes details dictionary (user inputted fields in new Task form) with keys:
-        task_title
+        iteration_title
         class_id
         priority
         est_time
@@ -300,7 +300,7 @@ def _fetch_increment(frequency: str):
 def _create_all_iterations(task, iteration: int, due_date, details: dict):
     """Creates all iterations of a given repeating task, given a task object (task), a starting
     iteration (iteration) an initial due_date (due_date), and details dict with keys:
-        task_title
+        iteration_title
         class_id
         priority
         est_time
@@ -331,8 +331,8 @@ def _create_all_iterations(task, iteration: int, due_date, details: dict):
         # Insert into TaskIteration table
         task_iteration.username = details["username"]
         task_iteration.task_id = task.task_id
-        task_iteration.class_id = details['class_id']
-        task_iteration.iteration_title = details["task_title"]
+        task_iteration.class_id = details["class_id"]
+        task_iteration.iteration_title = details["iteration_title"]
         task_iteration.iteration = iteration
         task_iteration.priority = details["priority"]
         task_iteration.link = details["link"]

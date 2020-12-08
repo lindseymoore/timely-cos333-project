@@ -145,14 +145,10 @@
                   </div>
                   <div class="text-right">
                     <h2 class="time-prediction">
-                      {% if task['iteration'] > 2 %}
-                        <b id="timely-time-info" data-toggle="tooltip" data-placement="right"
-                          title="Timely Predicted Time">
-                      {% endif %}
-                      {{task["timely_pred"]}} h
-                      {% if task['iteration'] > 2 %}
-                        </b>
-                      {% endif %}
+                      <p id="timely-time-info" data-toggle="tooltip" data-placement="right"
+                        title="Timely Predicted Time">
+                        {{task["timely_pred"]}} h
+                      </p>
                     </h2>
                   </div>
                 </div>
@@ -219,7 +215,9 @@
                   </div>
                   <div class="d-flex justify-content-between">
                     <div class="subtle pill-left">{{task["class"]}}</div>
-                    <div class="subtle">{{task["actual_time"]}} h</div>
+                    {% if task["actual_time"] %}
+                      <div class="subtle">{{task["actual_time"]}} h</div>
+                    {% endif %}
                   </div>
                 </div>
               </div>

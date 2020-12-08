@@ -259,10 +259,10 @@ def get_class_title(class_id: int) -> str:
     return class_info.title
 
 
-def get_task_id(task_title: str, class_id: int) -> int:
-    """Return task_id for a given task_title and class_id, where task_id is autoincrementing."""
+def get_task_id(iteration_title: str, class_id: int) -> int:
+    """Return task_id for a given iteration_title and class_id, where task_id is autoincrementing."""
     task_info = db.session.query(Task).filter((Task.class_id == class_id) &
-                (Task.title == task_title)).first()
+                (Task.title == iteration_title)).first()
     return task_info.task_id
 
 
