@@ -28,7 +28,7 @@ def landing():
 
 
 @app.route("/list")
-def index():
+def list_view():
     """Return the index page."""
     username = CASClient().authenticate()
     if "sort" in request.args:

@@ -31,7 +31,7 @@ def create_task_form():
     Method(s): POST
 
     Take a form of the following fields:
-        task_title: str
+        iteration_title: str
         class_id: int
         priority: int
         est_time: float
@@ -44,14 +44,14 @@ def create_task_form():
     Create a new task.
     """
     username = CASClient().authenticate()
-    details = {'task_title': None, 'class_id': None,
+    details = {'iteration_title': None, 'class_id': None,
     'priority': None, 'est_time': None, 'link': None, 'notes': None, 'due_date': None,
     'repeat_freq': None, 'repeat_end': None, 'username': username}
 
     for key, item in request.form.items():
         details[key] = item
 
-    details['group_title'] = details['task_title']
+    details['group_title'] = details['iteration_title']
 
     try:
         task_handler(details)

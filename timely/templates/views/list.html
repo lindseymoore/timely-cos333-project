@@ -16,7 +16,7 @@
           <div class="d-flex align-items-center">
             {% if user_info %}
               <img src="{{ url_for('static', filename='image/canvas-logo.png') }}"
-              height="24px" data-toggle="tooltip" id="canvas-class-button" href='/canvas-class' title="Import from Canvas">
+              height="24px" data-toggle="tooltip" id="canvas-class-button" href='/canvas-class' title="Import Class from Canvas">
               <script>
                 $(document).ready(function() {
                   $("#canvas-class-button").click(function(event) {
@@ -97,7 +97,7 @@
             </button>
             <!-- TODO: Remove -->
             {% if user_info %}
-              <a data-toggle="modal" data-target="#canvasImportModal">
+              <a data-toggle="modal" data-target="#canvasImportModal" data-toggle="tooltip" title="Import Task from Canvas">
                 <img src="{{ url_for('static', filename='image/canvas-logo.png') }}"
                 height="24px">
               </a>
@@ -215,7 +215,9 @@
                   </div>
                   <div class="d-flex justify-content-between">
                     <div class="subtle pill-left">{{task["class"]}}</div>
-                    <div class="subtle">{{task["actual_time"]}} h</div>
+                    {% if task["actual_time"] %}
+                      <div class="subtle">{{task["actual_time"]}} h</div>
+                    {% endif %}
                   </div>
                 </div>
               </div>
