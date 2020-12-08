@@ -113,22 +113,21 @@ class="needs-validation" novalidate>
     $(document).ready(function() {
       $(".custom-flatpickr").keypress(() => false);
       $("#edit_repeat_freq").on("change", updateEndDate)
-      $("#taskModal").on("shown.bs.modal", updateEndDate);
+      $("#taskDetailsModal").on("shown.bs.modal", updateEndDate);
 
       let repeat = $("#edit_repeat_end").flatpickr( {
           allowInput:true,
           minDate: '2020-01-01', // Placeholder
       });
 
-      $("#due_date").flatpickr( {
+      $("#edit_due_date").flatpickr( {
         allowInput:true,
         onChange: function(selectedDates, dateStr, instance) {
           repeat.set('minDate', dateStr)
         }
       });
       function updateEndDate() {
-        if ($("#edit_repeat_freq").find(":selected").attr("value") != "" &&
-            $("#edit_repeat_freq").find(":selected").attr("value") != "irregular") {
+        if ($("#edit_repeat_freq").find(":selected").attr("value") != "None") {
           $("#require-edit-end-date-star").removeClass("d-none");
           $("#edit_repeat_end").prop("required", true);
           $("#edit_repeat_end").prop("disabled", false);

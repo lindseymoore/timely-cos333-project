@@ -141,8 +141,7 @@ aria-labelledby="taskModal" aria-hidden="true">
                 }
               });
               function updateEndDate() {
-                if ($("#repeat_freq").find(":selected").attr("value") != "" &&
-                    $("#repeat_freq").find(":selected").attr("value") != "irregular") {
+                if ($("#repeat_freq").find(":selected").attr("value") != "") {
                   $("#require-end-date-star").removeClass("d-none");
                   $("#repeat_end").prop("required", true);
                   $("#repeat_end").prop("disabled", false);
