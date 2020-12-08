@@ -137,7 +137,6 @@ aria-labelledby="taskModal" aria-hidden="true">
               $("#due_date").flatpickr( {
                 allowInput:true,
                 onChange: function(selectedDates, dateStr, instance) {
-                  console.log(dateStr)
                   repeat.set('minDate', dateStr)
                 }
               });
