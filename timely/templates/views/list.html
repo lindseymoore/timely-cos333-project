@@ -215,7 +215,9 @@
                   </div>
                   <div class="d-flex justify-content-between">
                     <div class="subtle pill-left">{{task["class"]}}</div>
-                    <div class="subtle">{{task["actual_time"]}} h</div>
+                    {% if task["actual_time"] %}
+                      <div class="subtle">{{task["actual_time"]}} h</div>
+                    {% endif %}
                   </div>
                 </div>
               </div>
