@@ -128,10 +128,19 @@ aria-labelledby="taskModal" aria-hidden="true">
               $(".custom-flatpickr").keypress(() => false);
               $("#repeat_freq").on("change", updateEndDate)
               $("#taskModal").on("shown.bs.modal", updateEndDate);
+              
+              const defaultDate = '2020-01-01';
 
               let repeat = $("#repeat_end").flatpickr( {
                   allowInput:true,
-                  minDate: '2020-01-01', // Placeholder
+                  minDate: defaultDate, // Placeholder
+              });
+
+              $('#taskModal').on('hidden.bs.modal', function(){
+                $('#create-task-form').trigger("reset");
+                $('#create-task-form').removeClass("was-validated");
+                // Reset min date on modal hidden to default
+                repeat.set('minDate', defaultDate);
               });
 
               $("#due_date").flatpickr( {
@@ -170,12 +179,3 @@ aria-labelledby="taskModal" aria-hidden="true">
     </div>
   </div>
 </div>
-
-<script>
-  $(document).ready(function() {
-    $('#taskModal').on('hidden.bs.modal', function(){
-        $('#create-task-form').trigger("reset");
-        $('#create-task-form').removeClass("was-validated");
-    });
-  });
-</script>

@@ -115,9 +115,11 @@ class="needs-validation" novalidate>
       $("#edit_repeat_freq").on("change", updateEndDate)
       $("#taskDetailsModal").on("shown.bs.modal", updateEndDate);
 
+      const defaultDate = '2020-01-01';
+
       let repeat = $("#edit_repeat_end").flatpickr( {
           allowInput:true,
-          minDate: '2020-01-01', // Placeholder
+          minDate: defaultDate, // Placeholder
       });
 
       $("#edit_due_date").flatpickr( {
@@ -126,7 +128,10 @@ class="needs-validation" novalidate>
           repeat.set('minDate', dateStr)
         }
       });
+
       function updateEndDate() {
+        // Reset min date on recurrence end to current due date
+        repeat.set("minDate", $("#edit_due_date").attr("value"));
         if ($("#edit_repeat_freq").find(":selected").attr("value") != "None") {
           $("#require-edit-end-date-star").removeClass("d-none");
           $("#edit_repeat_end").prop("required", true);
