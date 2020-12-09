@@ -260,4 +260,8 @@ hr {
     /* Chrome, Firefox, Opera, Safari 10.1+ */
     color: rgb(161, 161, 161);
     opacity: 1; /* Firefox */
-  }
+}
+
+input[type="text"]:disabled {
+    background: #bbbbbb;
+}
