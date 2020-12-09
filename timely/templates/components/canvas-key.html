@@ -77,3 +77,12 @@ aria-labelledby="canvasKeyModal" aria-hidden="true">
     </div>
   </div>
 </div>
+
+<script>
+  $(document).ready(function() {
+    $("#canvasKeyModal").on("hidden.bs.modal", function() {
+      $("#invalid-canvas-key-alert").addClass("d-none");
+      $("#canvas-key-form").trigger("reset");
+    });
+  });
+</script>
