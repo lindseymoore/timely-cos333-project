@@ -127,23 +127,37 @@ def update_task_details(task_details: dict):
                 (TaskIteration.task_id == Task.task_id) & \
                 (TaskIteration.iteration == iteration)).first()
 
-    if task_details["repeat_freq"] != "None" and task_details["repeat_freq"] is not None:
+    # TODO ADD IN CHECK IF REPEAT_END BEFORE DUE_DATE
+
+    # If task is grouped, do nothing
+    if task.grouped:
         task.repeat = True
-        if task.repeat_freq != task_details["repeat_freq"]:
+
+    # If task is currently not repeating
+    elif not task.repeat:
+        # If we're changing it to be repeating, update repeat frequency and end date
+        if task_details["repeat_freq"] != "None" and task_details["repeat_freq"] is not None:
+            task.repeat = True
             task.repeat_freq = task_details["repeat_freq"]
-            increment = _fetch_increment(task.repeat_freq)
+            increment = _fetch_increment(task_details["repeat_freq"])
+            if task_details["repeat_end"] is not None:
+                task.repeat_end = task_details["repeat_end"]
             _update_repeat_freq(task, task_id, increment, int(iteration), task_details)
 
-        if task_details["repeat_end"] != "None":
-            task.repeat_end = task_details["repeat_end"]
+    # If task is repeating but not grouped
+    elif task.repeat and not task.grouped:
+        # If we're changing it's repeat frequency:
+        if task_details["repeat_freq"] != "None" and task_details["repeat_freq"] is not None:
+            task.repeat_freq = task_details["repeat_freq"]
+            increment = _fetch_increment(task_details["repeat_freq"])
+            if task_details["repeat_end"] is not None:
+                task.repeat_end = task_details["repeat_end"]    
+            _update_repeat_freq(task, task_id, increment, int(iteration), task_details)
+        # If we're making it non-repeating (SHOULD WE ALLOW THIS?)
         else:
-            task.repeat_end = None
-    else:
-        task.repeat = False
+            task.repeat = False
+            _update_repeat_freq(task, task_id, timedelta(days=0), int(iteration), task_details)
 
-    if task.repeat:
-        task.repeat_freq = task_details['repeat_freq']
-        task.repeat_end = task_details['repeat_end']
 
     if task_details['priority'] == 'None' or task_details['priority'] is None:
         task_iteration.priority = None

@@ -112,9 +112,9 @@ aria-labelledby="taskModal" aria-hidden="true">
               <option value="monthly">
                 Monthly
               </option>
-              <option value="irregular">
+              <!-- <option value="irregular">
                 Irregular
-              </option>
+              </option> -->
             </select>
           </div>
           <div class="form-group">
@@ -128,22 +128,29 @@ aria-labelledby="taskModal" aria-hidden="true">
               $(".custom-flatpickr").keypress(() => false);
               $("#repeat_freq").on("change", updateEndDate)
               $("#taskModal").on("shown.bs.modal", updateEndDate);
+              
+              const defaultDate = '2020-01-01';
 
               let repeat = $("#repeat_end").flatpickr( {
                   allowInput:true,
-                  minDate: '2020-01-01', // Placeholder
+                  minDate: defaultDate, // Placeholder
+              });
+
+              $('#taskModal').on('hidden.bs.modal', function(){
+                $('#create-task-form').trigger("reset");
+                $('#create-task-form').removeClass("was-validated");
+                // Reset min date on modal hidden to default
+                repeat.set('minDate', defaultDate);
               });
 
               $("#due_date").flatpickr( {
                 allowInput:true,
                 onChange: function(selectedDates, dateStr, instance) {
-                  console.log(dateStr)
                   repeat.set('minDate', dateStr)
                 }
               });
               function updateEndDate() {
-                if ($("#repeat_freq").find(":selected").attr("value") != "" &&
-                    $("#repeat_freq").find(":selected").attr("value") != "irregular") {
+                if ($("#repeat_freq").find(":selected").attr("value") != "") {
                   $("#require-end-date-star").removeClass("d-none");
                   $("#repeat_end").prop("required", true);
                   $("#repeat_end").prop("disabled", false);
@@ -172,15 +179,3 @@ aria-labelledby="taskModal" aria-hidden="true">
     </div>
   </div>
 </div>
-
-<script>
-  $(document).ready(function() {
-    $('#taskModal').on('hidden.bs.modal', function(){
-        $('#create-task-form').trigger("reset");
-        $('#create-task-form').removeClass("was-validated");
-        $("#create-task-form").each(function(){
-          $(this).validate().resetForm();
-        });
-    });
-  });
-</script>

@@ -69,15 +69,14 @@
                 <div class="col week-day px-1 py-3 vertical-align-center">
                   <div class="pill-box calendar-uncompleted">
                     {% for task in task_list: %}
-                      {% if task["completed"] == false and task["due_date"] == week_dates[count]%}
+                      {% if task["completed"] == false and task["due_date_str"] == week_dates[count]%}
                         <div class="pill-row small-pill">
                           <div class="pill" style="border-left-color: var(--hl-{{task['color']}})">
                             <div class="d-flex justify-content-between">
                               <div class="pill-left">
                                 <!-- Maybe an error here -->
                                 <a data-toggle="modal" data-target="#taskDetailsModal"
-                                data-id="?task_id={{task['task_id']}}&
-                                iteration={{task['iteration']}}"
+                                data-id="?task_id={{task['task_id']}}&iteration={{task['iteration']}}"
                                 class="title-link open-TaskDetails">
                                   {{task["iteration_title"]}}
                                 </a>
@@ -122,14 +121,13 @@
                   </div>
                   <div class="pill-box">
                     {% for task in task_list: %}
-                      {% if task["completed"] == true and task["due_date"] == week_dates[count]%}
+                      {% if task["completed"] == true and task["due_date_str"] == week_dates[count]%}
                         <div class="pill-row small-pill">
                           <div class="pill" style="border-left-color: var(--hl-{{task['color']}})">
                             <div class="d-flex justify-content-between">
                               <div class="pill-left">
                                 <a data-toggle="modal" data-target="#taskDetailsModal"
-                                data-id="?task_id={{task['task_id']}}&
-                                iteration={{task['iteration']}}"
+                                data-id="?task_id={{task['task_id']}}&iteration={{task['iteration']}}"
                                 class="title-link open-TaskDetails">
                                   <del>{{task["iteration_title"]}}</del>
                                 </a>

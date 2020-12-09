@@ -70,7 +70,7 @@ def fetch_task_list_view(username: str, sort: str = "due_date") -> List[dict]:
                         'est_time': task_iteration.est_time,
                         'timely_pred': task_iteration.timely_pred,
                         'link': task_iteration.link, 'notes': task_iteration.notes,
-                        'due_date': task_iteration.due_date.strftime("%m/%d/%y"),
+                        'due_date': task_iteration.due_date.strftime('%Y-%m-%d'),
                         'repeat_freq': repeat_freq, 'repeat_end': repeat_end,
                         'completed': task_iteration.completed,
                         'iteration': task_iteration.iteration,
@@ -102,7 +102,7 @@ def fetch_task_list_view(username: str, sort: str = "due_date") -> List[dict]:
                         'est_time': completed_iteration.est_time,
                         'timely_pred': completed_iteration.timely_pred,
                         'link': completed_iteration.link, 'notes': completed_iteration.notes,
-                        'due_date': completed_iteration.due_date.strftime("%m/%d/%y"),
+                        'due_date': completed_iteration.due_date.strftime('%Y-%m-%d'),
                         'repeat_freq': repeat_freq, 'repeat_end': repeat_end,
                         'completed': completed_iteration.completed,
                         'iteration': completed_iteration.iteration,
@@ -117,10 +117,10 @@ def fetch_task_list_view(username: str, sort: str = "due_date") -> List[dict]:
     if sort == "due_date":
         active_task_list = list(filter(lambda task: task['completed'] is False, task_list))
         active_task_list = sorted(active_task_list, key = lambda task: \
-            datetime.strptime(task["due_date"], "%m/%d/%y"))
+            datetime.strptime(task["due_date"], "%Y-%m-%d"))
         completed_task_list = list(filter(lambda task: task['completed'], task_list))
         completed_task_list = sorted(completed_task_list, \
-            key = lambda task: datetime.strptime(task["due_date"], "%m/%d/%y"), reverse=True)
+            key = lambda task: datetime.strptime(task["due_date"], "%Y-%m-%d"), reverse=True)
 
         task_list = active_task_list + completed_task_list
     if sort == "priority":
@@ -163,7 +163,8 @@ def fetch_task_calendar_view(username: str) -> List[dict]:
                     'priority': task_iteration.priority, 'repeat': task.repeat,
                     'est_time': task_iteration.est_time, 'timely_pred': task_iteration.timely_pred,
                     'link': task_iteration.link, 'notes': task_iteration.notes,
-                    'due_date': task_iteration.due_date.strftime("%m/%d/%y"),
+                    'due_date': task_iteration.due_date.strftime('%Y-%m-%d'),
+                    'due_date_str': task_iteration.due_date.strftime('%m/%d/%y'),
                     'repeat_freq': repeat_freq, 'repeat_end': repeat_end,
                     'completed': task_iteration.completed, 'iteration': task_iteration.iteration,
                     'color': course.color, 'actual_time': task_iteration.actual_time,
@@ -209,7 +210,7 @@ def fetch_task_details(task_id: int, iteration: int, username: str):
                 "id": task.task_id, "repeat_freq": task.repeat_freq, "repeat_end": task.repeat_end,
                 "repeating": task.repeat, "iteration": task_iteration.iteration,
                 "priority": task_iteration.priority, "link": task_iteration.link,
-                "due_date": task_iteration.due_date.strftime("%m/%d/%y"),
+                "due_date": task_iteration.due_date.strftime('%Y-%m-%d'),
                 "notes": task_iteration.notes, "est_time": task_iteration.est_time,
                 "iteration_title": task_iteration.iteration_title, "grouped": task.grouped}
     if task_details_obj['est_time'] is None:

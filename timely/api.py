@@ -276,6 +276,8 @@ def edit_task_details():
     task_details["task_id"] = int(request.args["task_id"])
     task_details["iteration"] = int(request.args["iteration"])
 
+    print(task_details)
+
     try:
         update_task_details(task_details)
     except:
