@@ -421,7 +421,8 @@ def fetch_available_colors(username: str):
     # UPDATE TO INCLUDE COMPREHENSIVE LIST OF COLORS
     all_colors = ['red', 'green', 'purple', 'orange', 'pink', 'blue', 'yellow', 'white']
     for course in classes:
-        all_colors.pop(all_colors.index(course.color))
+        if course.color is not None: 
+            all_colors.pop(all_colors.index(course.color))
 
     return all_colors
 
