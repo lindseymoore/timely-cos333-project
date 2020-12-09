@@ -423,7 +423,6 @@ def fetch_available_colors(username: str):
     for course in classes:
         if course.color is not None: 
             all_colors.pop(all_colors.index(course.color))
-
     return all_colors
 
 

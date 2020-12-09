@@ -135,7 +135,7 @@
                               <div>
                                 <i href="/uncomplete?task_id={{task['task_id']}}&iteration={{task['iteration']}}"
                                 id="uncomplete-{{task['task_id']}}-{{task['iteration']}}"
-                                class="fa fa-check-square"></i>
+                                class="fa fa-check-square" title="Uncomplete Task"></i>
                                 <script>
                                   $(document).ready(function() {
                                     $("#uncomplete-{{task['task_id']}}-{{task['iteration']}}")
@@ -166,7 +166,7 @@
                                 <i class="fa fa-trash ml-1 open-DeleteTask d-none d-sm-inline"
                                 data-toggle="modal"
                                     data-target="#deleteTaskModal" data-id="{{task['task_id']}}"
-                                    data-iteration="{{task['iteration']}}">
+                                    data-iteration="{{task['iteration']}}" title="Delete Task">
                                 </i>
                               </div>
                             </div>
@@ -174,7 +174,7 @@
                               <div class="subtle pill-left">{{task["class"]}}</div>
                               <div class="subtle d-none d-sm-block"> {{task["actual_time"]}} h</div>
                               <i class="fa fa-trash ml-1 open-DeleteTask d-inline d-sm-none"
-                                data-toggle="modal"
+                                data-toggle="modal" title="Delete Task"
                                 data-target="#deleteTaskModal" data-id="{{task['task_id']}}">
                               </i>
                             </div>
