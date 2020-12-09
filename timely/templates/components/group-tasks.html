@@ -7,7 +7,7 @@ aria-labelledby="groupTasksModal" aria-hidden="true">
         <div class="d-flex align-items-center">
           <h3 class="modal-title" id="classModal">Group Tasks</h3>
         </div>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" title="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -91,6 +91,7 @@ aria-labelledby="groupTasksModal" aria-hidden="true">
         $("#btn-selectTasks").addClass("d-none");
         $("#task-loading-message").show();
         $("#class-loading-message").show();
+        $("#btn-groupTasks").addClass("d-none");
       });
 
       // Select tasks button action
@@ -99,11 +100,13 @@ aria-labelledby="groupTasksModal" aria-hidden="true">
         $("#btn-selectTasks").addClass("d-none");
         $("#task-selection").addClass("d-none");
         $("#title-selection").removeClass("d-none");
+        // Load titles and counts into array 
         let iterationCounts = [];
         $(".pill-check:checkbox:checked").each(function () {
-          iterationCounts.push({title: $(this).data("title"), count: $(this).data("count")});
+          iterationCounts.push({title: $(this).data("title"), count: $(this).data("num_iterations")});
         });
-        iterationCounts.sort((a, b) => (b.count > a.count));
+        // Sort array and get most used value 
+        iterationCounts.sort((a, b) => (b.count - a.count));
         $("#group-title").attr("value", iterationCounts[0].title);
       });
 

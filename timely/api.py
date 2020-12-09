@@ -83,6 +83,8 @@ def create_class_form():
 
     try:
         class_handler(class_details)
+    except NameError: # An error such that the user reached the max limit of classes
+        return json.dumps({"success": False}), 409 # Conflict
     except:
         return json.dumps({"success": False}), 500
     else:

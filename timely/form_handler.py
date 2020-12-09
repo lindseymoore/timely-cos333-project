@@ -20,7 +20,8 @@ def class_handler(class_iteration: dict):
     as input.
     Configures this dictionary into Class object and inputs it as new entry in the class table.
     """
-
+    if class_iteration["color"] is None:
+        raise NameError('Current Color is None and thus the user has reached the max limit of classes')
     new_class = Class(username = class_iteration["username"], title = class_iteration["title"],
                 dept = class_iteration["dept"], num = class_iteration["num"],
                 active_status = True, color = class_iteration["color"])
@@ -163,6 +164,7 @@ def update_task_details(task_details: dict):
         task_iteration.priority = None
     else:
         task_iteration.priority = task_details['priority']
+ 
     task_iteration.link = task_details['link']
     task_iteration.due_date = task_details['due_date']
     task_iteration.notes = task_details['notes']

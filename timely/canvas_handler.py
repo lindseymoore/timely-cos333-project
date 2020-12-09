@@ -48,12 +48,11 @@ def fetch_canvas_courses(curr_semester: str, username: str):
             if len(colors) > 0:
                 new_class.color = random.choice(colors)
                 colors.pop(colors.index(new_class.color))
+
+                new_class.canvas_id = course.id
+                classes.append(new_class)
             else:
                 new_class.color = 'red'
-
-            new_class.canvas_id = course.id
-
-            classes.append(new_class)
 
     for course in classes:
         db.session.add(course)

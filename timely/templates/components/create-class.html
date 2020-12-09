@@ -5,11 +5,17 @@ aria-labelledby="classModal" aria-hidden="true">
     <div class="modal-content">
       <div class="modal-header">
         <h3 class="modal-title">New Class</h3>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" title="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
+        <div class="alert alert-danger d-none" role="alert" id="class-limit-alert">
+          You have reached the class limit of 8 classes.
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
         <form action="/create-class-form" method="post" id="create-class-form"
         class="needs-validation" novalidate>
           <script>
@@ -35,11 +41,16 @@ aria-labelledby="classModal" aria-hidden="true">
 
                 /* Alerts the results */
                 posting.done(function() {
+                  $("#classModal").modal("hide");
                   location.reload(true);
                 });
                 posting.fail(function() {
+                  $("#class-limit-alert").removeClass("d-none");
+                  $("#create-class-form :submit").prop("disabled", false);
+                  $("#create-class-form :submit").text("Submit");
                   console.log("failed");
                 });
+                
               });
             });
           </script>
@@ -85,7 +96,7 @@ aria-labelledby="classModal" aria-hidden="true">
     $('#classModal').on('hidden.bs.modal', function(){
         $('#create-class-form').trigger("reset");
         $('#create-class-form').removeClass("was-validated");
+        $("#class-limit-alert").addClass("d-none");
     });
   });
 </script>
-

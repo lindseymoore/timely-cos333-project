@@ -132,7 +132,8 @@ class="needs-validation" novalidate>
       function updateEndDate() {
         // Reset min date on recurrence end to current due date
         repeat.set("minDate", $("#edit_due_date").attr("value"));
-        if ($("#edit_repeat_freq").find(":selected").attr("value") != "None") {
+        if ($("#edit_repeat_freq").find(":selected").attr("value") != "None" && 
+        $("#edit_repeat_freq").find(":selected").attr("value") != "irregular" ){
           $("#require-edit-end-date-star").removeClass("d-none");
           $("#edit_repeat_end").prop("required", true);
           $("#edit_repeat_end").prop("disabled", false);
