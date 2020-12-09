@@ -265,3 +265,7 @@ hr {
 input[type="text"]:disabled {
     background: #bbbbbb;
 }
+
+.time-prediction p {
+    margin-bottom: 0px;
+}
