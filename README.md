@@ -1,6 +1,6 @@
 # Timely: A COS333 Project
 
-Timely is a homework and productivity manager.
+Timely is a homework and productivity manager. It can be accessed by Princeton students at https://timely-hw.herokuapp.com/.
 
 Created by: Mariah Crawford, David Lipman, Lindsey Moore, and Jorge Zreik
 
